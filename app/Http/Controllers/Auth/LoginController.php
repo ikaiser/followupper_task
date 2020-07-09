@@ -29,7 +29,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/projects';
+    protected $redirectTo = '/';
 
 
     public function __construct()
