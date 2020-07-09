@@ -6,7 +6,6 @@
         <div class="card-content">
             <div class="row">
                 <div class="col s12 m3">
-                    <img style="max-width: 100%;" src="{{asset('followupper.png')}}" />
                 </div>
                 <div class="col s12 m6 my-2">
                     <span class="card-title">

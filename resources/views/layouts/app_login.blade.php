@@ -68,7 +68,6 @@
 <!-- <script src="{{ asset('templates/js/scripts/dashboard-ecommerce.js') }}"></script> -->
 <script src="{{ asset('templates/js/scripts/ui-alerts.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap_file.js') }}"></script>
-<script src="{{ asset('js/custom.js') }}"></script>
 
 <!-- END PAGE LEVEL JS-->
 

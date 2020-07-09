@@ -1,26 +1,25 @@
 <!-- BEGIN: SideNav-->
 <aside class="sidenav-main nav-expanded nav-lock nav-collapsible sidenav-dark sidenav-active-rounded">
-    <div class="brand-sidebar hide-on-med-and-down white">
-        <!-- <h1 class="logo-wrapper mt-2"><a class="brand-logo darken-1" href="/">Followupper</a></h1> -->
-        <h1 class="logo-wrapper"><a class="darken-1" href="/"><img class="hide-on-med-and-down ml-4" src="{{asset('followupper.png')}}" alt="logo" style="height: 60px"/><img class="show-on-medium-and-down hide-on-med-and-up" src="{{asset('followupper.png')}}" alt="materialize logo" style="height: 60px"/></a><!--<a class="navbar-toggler" href="#"><i class="material-icons">radio_button_checked</i></a>--></h1>
+    <div class="brand-sidebar hide-on-med-and-down">
+        <h1 class="logo-wrapper mt-2"><a class="brand-logo darken-1" href="/">Followupper</a></h1>
+        <!-- <h1 class="logo-wrapper"><a class="darken-1" href="/"><img class="hide-on-med-and-down ml-4" src="{{asset('followupper.png')}}" alt="logo" style="height: 60px"/><img class="show-on-medium-and-down hide-on-med-and-up" src="{{asset('followupper.png')}}" alt="materialize logo" style="height: 60px"/></a><!--<a class="navbar-toggler" href="#"><i class="material-icons">radio_button_checked</i></a> </h1> -->
     </div>
     <div class="divider"></div>
     <ul class="sidenav sidenav-collapsible leftside-navigation collapsible sidenav-fixed menu-shadow" id="slide-out" data-menu="menu-navigation" data-collapsible="accordion">
         @if(\Illuminate\Support\Facades\Auth::user()->roles->first()->id == 1)
             <li class="bold">
-                <a class="waves-effect waves-cyan " href="{{ route('roles.index') }}"><i class="material-icons">panorama_fish_eye</i><span class="menu-title" data-i18n="Mail"> @lang('Roles') </span></a>
+                <a class="waves-effect waves-cyan " href="{{ route('roles.index') }}"><i class="material-icons">panorama_fish_eye</i><span class="menu-title"> @lang('Roles') </span></a>
             </li>
         @endif
         @if(\Illuminate\Support\Facades\Auth::user()->roles->first()->id <= 3)
             <li class="bold">
-                <a class="waves-effect waves-cyan " href="{{ route('users.index') }}"><i class="material-icons">person</i><span class="menu-title" data-i18n="Mail"> @lang('Users') </span></a>
+                <a class="waves-effect waves-cyan " href="{{ route('users.index') }}"><i class="material-icons">person</i><span class="menu-title"> @lang('Users') </span></a>
             </li>
         @endif
-        <li class="bold">
-            <a class="waves-effect waves-cyan " href="{{ route('projects.index') }}"><i class="material-icons">description</i><span class="menu-title" data-i18n="Mail"> @lang('Projects') </span></a>
-        </li>
-        @if(isset($project) && !isset($projects) && !empty($project->logo))
-            <img class="responsive-img" style="padding: 0.5rem;" src="{{Storage::url("/project/{$project->id}/") . $project->logo}}"/>
+        @if(\Illuminate\Support\Facades\Auth::user()->roles->first()->id <= 3)
+            <li class="bold">
+                <a class="waves-effect waves-cyan " href="{{ route('quotations.index') }}"><i class="material-icons">dehaze</i><span class="menu-title"> @lang('Quotations') </span></a>
+            </li>
         @endif
     </ul>
 
