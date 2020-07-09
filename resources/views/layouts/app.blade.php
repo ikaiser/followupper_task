@@ -23,6 +23,13 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('templates/css/pages/dashboard.css') }}">
     <!-- END: Page Level CSS-->
 
+    <!-- BEGIN: DATATABLE CSS -->
+    <link rel="stylesheet" type="text/css" href="{{ asset('templates/vendors/flag-icon/css/flag-icon.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('templates/vendors/data-tables/css/jquery.dataTables.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('templates/vendors/data-tables/extensions/responsive/css/responsive.dataTables.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('templates/vendors/data-tables/css/select.dataTables.min.css') }}">
+    <!-- END: DATATABLE CSS -->
+
     <!-- BEGIN: Custom CSS-->
     <link rel="stylesheet" type="text/css" href="{{ asset('templates/css/custom/custom.css') }}">
     <!-- END: Custom CSS-->
@@ -70,8 +77,13 @@
     <!-- <script src="{{ asset('templates/js/scripts/dashboard-ecommerce.js') }}"></script> -->
     <script src="{{ asset('templates/js/scripts/ui-alerts.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap_file.js') }}"></script>
-
     <!-- END PAGE LEVEL JS-->
+
+    <!-- BEGIN DATATABLE JS -->
+    <script src="{{asset('templates/vendors/data-tables/js/jquery.dataTables.min.js')}}"></script>
+    <script src="{{asset('templates/vendors/data-tables/extensions/responsive/js/dataTables.responsive.min.js')}}"></script>
+    <script src="{{asset('templates/vendors/data-tables/js/dataTables.select.min.js')}}"></script>
+    <!-- END DATATABLE JS -->
 
     @section('js') @show
     <script>

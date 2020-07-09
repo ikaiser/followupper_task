@@ -70,18 +70,11 @@
 @endsection
 
 @section('css')
-    <link rel="stylesheet" type="text/css" href="{{ asset('templates/vendors/flag-icon/css/flag-icon.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('templates/vendors/data-tables/css/jquery.dataTables.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('templates/vendors/data-tables/extensions/responsive/css/responsive.dataTables.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('templates/vendors/data-tables/css/select.dataTables.min.css') }}">
+
 @endsection
 
 @section('js')
     @parent
-
-    <script src="{{asset('templates/vendors/data-tables/js/jquery.dataTables.min.js')}}"></script>
-    <script src="{{asset('templates/vendors/data-tables/extensions/responsive/js/dataTables.responsive.min.js')}}"></script>
-    <script src="{{asset('templates/vendors/data-tables/js/dataTables.select.min.js')}}"></script>
     <script src="{{ asset('js/users.js') }}"></script>
     <script>
         $(document).ready(function() {
