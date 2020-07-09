@@ -57,33 +57,13 @@ class User extends Authenticatable
         return $this->belongsTo(User::class, 'created_by', 'id');
     }
 
-    public function files()
+    public function quotations()
     {
-        return $this->hasMany(DatacurationElement::class, 'user_id', 'id');
+        return $this->hasMany(Quotation::class, 'user_id', 'id');
     }
 
-    public function comments()
+    public function quotations_assigned()
     {
-        return $this->hasMany(Comment::class, 'user_id', 'id');
-    }
-
-    public function tasks()
-    {
-        return $this->hasMany(Task::class, 'user_id', 'id');
-    }
-
-    public function tasks_assigned()
-    {
-        return $this->belongsToMany(Task::class, 'task_user', 'user_id', 'task_id');
-    }
-
-    public function projects()
-    {
-        return $this->belongsToMany(Project::class, 'project_user', 'user_id', 'project_id');
-    }
-
-    public function dcs()
-    {
-        return $this->belongsToMany(Datacuration::class, 'dc_user', 'user_id', 'dc_id');
+        return $this->belongsToMany(Quotation::class, 'invoice_user', 'user_id', 'invoice_id');
     }
 }
