@@ -95,9 +95,7 @@
                 'format' : 'dd-mm-yyyy',
             });
 
-            $('select').formSelect({
-                classes: 'room-select'
-            });
+            $('select').formSelect({});
             bsCustomFileInput.init();
 
             $('a.lang-button').click(function () {

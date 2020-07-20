@@ -18,7 +18,20 @@
         @endif
         @if(\Illuminate\Support\Facades\Auth::user()->roles->first()->id <= 3)
             <li class="bold">
+                <a class="waves-effect waves-cyan " href="{{ route('companies.index') }}"><i class="material-icons">contacts</i><span class="menu-title"> @lang('Companies') </span></a>
+            </li>
+        @endif
+        @if(\Illuminate\Support\Facades\Auth::user()->roles->first()->id <= 3)
+            <li class="bold">
                 <a class="waves-effect waves-cyan " href="{{ route('quotations.index') }}"><i class="material-icons">dehaze</i><span class="menu-title"> @lang('Quotations') </span></a>
+            </li>
+        @endif
+        @if(\Illuminate\Support\Facades\Request::is('*quotations*'))
+            <li class="bold">
+                <a class="waves-effect waves-cyan " href="{{ route('quotations_status.index') }}"><i class="material-icons" style="font-size: 0.7rem">radio_button_unchecked</i><span class="menu-title"> @lang('Quotation Status') </span></a>
+            </li>
+            <li class="bold">
+                <a class="waves-effect waves-cyan " href="{{ route('quotations_typology.index') }}"><i class="material-icons" style="font-size: 0.7rem">radio_button_unchecked</i><span class="menu-title"> @lang('Quotation Typology') </span></a>
             </li>
         @endif
     </ul>
