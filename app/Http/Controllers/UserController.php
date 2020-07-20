@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Permission;
-use App\Project;
 use App\Role;
 use App\User;
 use Illuminate\Http\Request;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
@@ -44,7 +43,7 @@ class UserController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function create()
     {
@@ -56,11 +55,10 @@ class UserController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
-        $logged_user = Auth::user();
 
         $rules = [
             'name'      => 'required|max:255|unique:users,name',
@@ -81,7 +79,6 @@ class UserController extends Controller
             'email'             => $request->get('email'),
             'password'          => $request->get('password'),
             'clear_password'    => $request->get('password'),
-            'created_by'        => $logged_user->id
         ]);
 
         if(!is_null($request->user_img))
@@ -95,6 +92,10 @@ class UserController extends Controller
 
             $request->file('user_img')->storeAs("public/users/", $user_img);
         }
+
+        $user->created_by = Auth::user()->id;
+        $user->company = $request->get('company');
+        $user->save();
 
         $user->roles()->attach($request->get('role'));
 
@@ -116,7 +117,7 @@ class UserController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function edit(User $user)
     {
@@ -130,7 +131,7 @@ class UserController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, User $user)
     {
@@ -182,15 +183,14 @@ class UserController extends Controller
             $user->roles()->attach($request->role);
         }
 
-        return redirect()->route('users.index')
-                        ->with('success', __('User Updated Successfully!') );
+        return redirect()->route('users.index')->with('success', __('User Updated Successfully!') );
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy($user_id)
     {
