@@ -11,7 +11,7 @@ class CompanyContact extends Model
      *
      * @var string
      */
-    protected $table = 'status';
+    protected $table = 'company_contact';
 
     /**
      * The attributes that are mass assignable.

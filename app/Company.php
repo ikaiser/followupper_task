@@ -31,4 +31,9 @@ class Company extends Model
     protected $hidden = [
 
     ];
+
+    public function contacts()
+    {
+        return $this->hasMany(CompanyContact::class, 'company_id', 'id');
+    }
 }
