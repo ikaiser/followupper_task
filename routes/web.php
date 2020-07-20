@@ -45,5 +45,45 @@ Route::middleware('auth')->group(function ()
     Route::prefix('/quotations/')->group(function ()
     {
         Route::get('/', 'QuotationController@index')->name('quotations.index');
+        Route::get('/create', 'QuotationController@create')->name('quotations.create');
+
+        Route::post('/save', 'QuotationController@store')->name('quotations.store');
+
+        //Status
+        Route::prefix('/status/')->group(function ()
+        {
+            Route::get('/', 'StatusController@index')->name('quotations_status.index');
+            Route::get('/create', 'StatusController@create')->name('quotations_status.create');
+            Route::get('/{status_id}/edit', 'StatusController@edit')->name('quotations_status.edit');
+            Route::get('{status_id}/remove', 'StatusController@destroy')->name('quotations_status.remove');
+
+            Route::post('{status_id}/update', 'StatusController@update')->name('quotations_status.update');
+            Route::post('/save', 'StatusController@store')->name('quotations_status.store');
+        });
+
+        //Typology
+        Route::prefix('/typology/')->group(function ()
+        {
+            Route::get('/', 'TypologyController@index')->name('quotations_typology.index');
+            Route::get('/create', 'TypologyController@create')->name('quotations_typology.create');
+            Route::get('/{status_id}/edit', 'TypologyController@edit')->name('quotations_typology.edit');
+            Route::get('{status_id}/remove', 'TypologyController@destroy')->name('quotations_typology.remove');
+
+            Route::post('{status_id}/update', 'TypologyController@update')->name('quotations_typology.update');
+            Route::post('/save', 'TypologyController@store')->name('quotations_typology.store');
+        });
+
+    });
+
+    //Company
+    Route::prefix('/company/')->group(function ()
+    {
+        Route::get('/', 'CompanyController@index')->name('companies.index');
+        Route::get('/create', 'CompanyController@create')->name('companies.create');
+        Route::get('/{company_id}/edit', 'CompanyController@edit')->name('companies.edit');
+        Route::get('{company_id}/remove', 'CompanyController@destroy')->name('companies.remove');
+
+        Route::post('{company_id}/update', 'CompanyController@update')->name('companies.update');
+        Route::post('/save', 'CompanyController@store')->name('companies.store');
     });
 });
