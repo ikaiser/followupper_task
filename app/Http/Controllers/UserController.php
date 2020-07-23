@@ -262,6 +262,31 @@ class UserController extends Controller
 
     }
 
+    function fetch_researchers(Request $request)
+    {
+        $user_id = Auth::user()->roles()->first()->id;
+        $query = $request->get('query');
+
+        $users = User::whereHas('roles', function($q) {$q->where('id', 3);})->where('name', 'LIKE', "%{$query}%");
+        if($user_id == '2')
+        {
+            $users = $users->where('created_by', $user_id);
+        }
+        elseif($user_id == '3')
+        {
+            $users = $users->where('created_by', Auth::user()->created_by);
+        }
+        $users = $users->get();
+
+        $output = '<ul class="collection" style="display:block; position:relative">';
+        foreach($users as $user)
+        {
+            $output .= '<li class="collection-item" data-ref="researcher" data-value="' . $user->id . '"><a href="#">' . $user->name . '</a></li>';
+        }
+        $output .= '</ul>';
+        echo $output;
+    }
+
     public function log($user_id)
     {
         $user = User::find($user_id);
