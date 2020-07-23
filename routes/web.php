@@ -31,11 +31,17 @@ Route::middleware('auth')->group(function ()
 {
     Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 
-    Route::get('/users/fetch', 'UserController@fetch');
-    Route::get('/users/company/fetch', 'UserController@fetch_company')->name('users.company.fetch');
-    Route::get('/users/log/{id}', 'UserController@log')->name('users.log');
+    //Users
+    Route::prefix('/users/')->group(function ()
+    {
+        Route::get('/company/fetch', 'UserController@fetch_company')->name('users.company.fetch');
+        Route::get('/destroy/{id}', 'UserController@destroy')->name('users.destroy');
+        Route::get('/fetch', 'UserController@fetch');
+        Route::get('/fetch_researchers', 'UserController@fetch_researchers')->name('users.fetch_researchers');
+        Route::get('/log/{id}', 'UserController@log')->name('users.log');
+    });
     Route::resource('users', 'UserController');
-    Route::get('users/destroy/{id}', 'UserController@destroy')->name('users.destroy');
+
     Route::resource('roles', 'RoleController');
 
 
@@ -46,7 +52,10 @@ Route::middleware('auth')->group(function ()
     {
         Route::get('/', 'QuotationController@index')->name('quotations.index');
         Route::get('/create', 'QuotationController@create')->name('quotations.create');
+        Route::get('/{quotation_id}/edit', 'QuotationController@edit')->name('quotations.edit');
+        Route::get('{quotation_id}/remove', 'QuotationController@destroy')->name('quotations.remove');
 
+        Route::post('{quotation_id}/update', 'QuotationController@update')->name('quotations.update');
         Route::post('/save', 'QuotationController@store')->name('quotations.store');
 
         //Status
@@ -79,9 +88,11 @@ Route::middleware('auth')->group(function ()
     Route::prefix('/company/')->group(function ()
     {
         Route::get('/', 'CompanyController@index')->name('companies.index');
-        Route::get('/create', 'CompanyController@create')->name('companies.create');
         Route::get('/{company_id}/edit', 'CompanyController@edit')->name('companies.edit');
-        Route::get('{company_id}/remove', 'CompanyController@destroy')->name('companies.remove');
+        Route::get('/{company_id}/remove', 'CompanyController@destroy')->name('companies.remove');
+        Route::get('/create', 'CompanyController@create')->name('companies.create');
+        Route::get('/fetch', 'CompanyController@fetch')->name('companies.fetch');
+        Route::get('/get_contacts', 'CompanyController@get_contacts')->name('companies.get_contacts');
 
         Route::post('{company_id}/update', 'CompanyController@update')->name('companies.update');
         Route::post('/save', 'CompanyController@store')->name('companies.store');
