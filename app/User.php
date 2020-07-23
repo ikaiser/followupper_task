@@ -64,6 +64,6 @@ class User extends Authenticatable
 
     public function quotations_assigned()
     {
-        return $this->belongsToMany(Quotation::class, 'invoice_user', 'user_id', 'invoice_id');
+        return $this->belongsToMany(Quotation::class, 'quotation_user', 'user_id', 'quotation_id');
     }
 }
