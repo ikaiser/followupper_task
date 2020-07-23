@@ -174,4 +174,28 @@ class CompanyController extends Controller
 
         return redirect()->route('companies.index')->with('message', __('Company Deleted Successfully!'));
     }
+
+    public function fetch(Request $request)
+    {
+        $query = $request->get('query');
+
+        $companies = Company::where('name', 'LIKE', "%{$query}%")->get();
+
+        $output = '<ul class="collection" style="display:block; position:relative">';
+        foreach($companies as $company)
+        {
+            $output .= '<li class="collection-item" data-ref="company" data-value="' . $company->id . '"><a href="#">' . $company->name . '</a></li>';
+        }
+        $output .= '</ul>';
+        echo $output;
+    }
+
+    public function get_contacts(Request $request)
+    {
+        $company_id = $request->get('company');
+
+        $company = Company::find($company_id);
+
+        return $company->contacts;
+    }
 }

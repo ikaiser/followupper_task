@@ -36,4 +36,9 @@ class CompanyContact extends Model
     {
         return $this->belongsTo(Company::class, 'company_id', 'id');
     }
+
+    public function quotations()
+    {
+        return $this->hasMany(Quotation::class, 'company_contact_id', 'id');
+    }
 }
