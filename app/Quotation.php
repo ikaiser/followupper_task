@@ -22,9 +22,11 @@ class Quotation extends Model
         'name',
         'user_id',
         'company_id',
+        'company_contact_id',
         'sequential_number',
         'code',
         'description',
+        'insertion_date',
         'deadline',
         'amount',
         'status_id',
@@ -51,12 +53,17 @@ class Quotation extends Model
 
     public function collaborators()
     {
-        return $this->belongsToMany(User::class, 'invoice_user', 'invoice_id', 'user_id');
+        return $this->belongsToMany(User::class, 'quotation_user', 'quotation_id', 'user_id');
     }
 
     public function company()
     {
         return $this->belongsTo(Company::class, 'company_id', 'id');
+    }
+
+    public function company_contact()
+    {
+        return $this->belongsTo(CompanyContact::class, 'company_contact_id', 'id');
     }
 
     public function status()
@@ -67,5 +74,10 @@ class Quotation extends Model
     public function typology()
     {
         return $this->belongsTo(Typology::class, 'typology_id', 'id');
+    }
+
+    public function history()
+    {
+        return $this->hasMany(QuotationHistory::class, 'quotation_id', 'id');
     }
 }
