@@ -1,7 +1,7 @@
 <!-- BEGIN: SideNav-->
 <aside class="sidenav-main nav-expanded nav-lock nav-collapsible sidenav-dark sidenav-active-rounded">
     <div class="brand-sidebar hide-on-med-and-down">
-        <h1 class="logo-wrapper mt-2"><a class="brand-logo darken-1" href="/">Followupper</a></h1>
+        <h1 class="logo-wrapper mt-2"><a class="brand-logo darken-1" href="/">Preventivi</a></h1>
         <!-- <h1 class="logo-wrapper"><a class="darken-1" href="/"><img class="hide-on-med-and-down ml-4" src="{{asset('followupper.png')}}" alt="logo" style="height: 60px"/><img class="show-on-medium-and-down hide-on-med-and-up" src="{{asset('followupper.png')}}" alt="materialize logo" style="height: 60px"/></a><!--<a class="navbar-toggler" href="#"><i class="material-icons">radio_button_checked</i></a> </h1> -->
     </div>
     <div class="divider"></div>
