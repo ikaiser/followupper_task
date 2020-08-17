@@ -79,7 +79,7 @@
     <script>
         $(document).ready(function() {
             $('#user_table').DataTable( {
-                "lengthChange": false,
+                "lengthChange": true,
                 'responsive'  : true,
                 fixedColumns:   {
                     heightMatch: 'none'
