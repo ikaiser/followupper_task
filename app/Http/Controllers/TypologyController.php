@@ -37,7 +37,7 @@ class TypologyController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'typology' => 'required',
+            'typology' => 'required|unique:typology,name',
         ]);
 
         $typology = new Typology();
@@ -71,7 +71,7 @@ class TypologyController extends Controller
     public function update(Request $request, $typology_id)
     {
         $request->validate([
-            'typology' => 'required',
+            'typology' => 'required|unique:typology,name,' . $typology_id,
         ]);
 
         $typology = Typology::find($typology_id);
