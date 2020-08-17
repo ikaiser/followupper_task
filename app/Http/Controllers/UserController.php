@@ -25,16 +25,26 @@ class UserController extends Controller
     public function index()
     {
         $user = Auth::user();
+        $role = $user->roles->first()->id;
 
-        switch(Auth::user()->roles->first()->id)
+        if($role == 1)
         {
-            case 1: $users = User::all(); break;
+            $users = User::all();
+        }
+        else
+        {
+            $users = $user->users;
+            $merging_users = User::whereHas('roles', function($q) use ($role) {$q->where('id', '>', $role);})->whereHas('projects', function($q) use ($user) {$q->whereIn('id', $user->projects()->pluck('id')); })->get();
 
-            case 2: $users = $user->users; $users = $users->merge(User::whereHas('roles', function($q) {$q->where('id', '>', '2');})->whereHas('projects', function($q) use ($user) {$q->whereIn('id', $user->projects()->pluck('id')); })->get());  break;
+            if($merging_users->count() > 0)
+            {
+                $users = $users->merge($merging_users);
+            }
 
-            case 3: $users = $user->users; $users = $users->merge(User::whereHas('roles', function($q) {$q->where('id', '>', '3');})->whereHas('projects', function($q) use ($user) {$q->whereIn('id', $user->projects()->pluck('id')); })->get());  break;
-
-            default: break;
+            if(is_null($users))
+            {
+                $users = array();
+            }
         }
 
         return view('users.index', ['users' => $users]);
