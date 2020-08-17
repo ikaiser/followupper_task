@@ -34,12 +34,6 @@ class UserController extends Controller
         else
         {
             $users = $user->users;
-            $merging_users = User::whereHas('roles', function($q) use ($role) {$q->where('id', '>', $role);})->whereHas('projects', function($q) use ($user) {$q->whereIn('id', $user->projects()->pluck('id')); })->get();
-
-            if($merging_users->count() > 0)
-            {
-                $users = $users->merge($merging_users);
-            }
 
             if(is_null($users))
             {
