@@ -179,7 +179,7 @@ class CompanyController extends Controller
     {
         $query = $request->get('query');
 
-        $companies = Company::where('name', 'LIKE', "%{$query}%")->get();
+        $companies = Company::where('name', 'LIKE', "%{$query}%")->orderBy('name')->get();
 
         $output = '<ul class="collection" style="display:block; position:relative">';
         foreach($companies as $company)
