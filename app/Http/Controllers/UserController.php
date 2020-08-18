@@ -67,7 +67,7 @@ class UserController extends Controller
         $rules = [
             'name'      => 'required|max:255|unique:users,name',
             'email'     => 'required|string|email:rfc,dns|unique:users,email',
-            'password'  => ['required', 'string', 'min:8',  'regex:/[a-z]/', 'regex:/[A-Z]/', 'regex:/[0-9]/',  'regex:/[@$!%*#?&]/',],
+            'password'  => ['required', 'string', 'min:8',  'regex:/[a-z]/', 'regex:/[A-Z]/', 'regex:/[0-9]/',  'regex:/[@$!%*#?&=-_]/',],
             'role'      => 'required|numeric',
             'user_img'  => 'image|nullable',
         ];
@@ -141,7 +141,7 @@ class UserController extends Controller
     {
         $rules = [
             'name' => 'required|unique:users,name,' . $user->id,
-            'password'  => ['string', 'min:8',  'regex:/[a-z]/', 'regex:/[A-Z]/', 'regex:/[0-9]/',  'regex:/[@$!%*#?&]/', 'nullable'],
+            'password'  => ['string', 'min:8',  'regex:/[a-z]/', 'regex:/[A-Z]/', 'regex:/[0-9]/',  'regex:/[@$!%*#?&=-_]/', 'nullable'],
             'email' => 'required',
             'user_img'  => 'image',
         ];
