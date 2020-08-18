@@ -57,6 +57,18 @@
                                             @endif
                                         </div>
 
+                                        @if(!is_null(old('researchers')))
+                                            @foreach(old('researchers') as $researcher)
+                                                @if(!is_null($researcher))
+                                                    <div class="input-field my-3">
+                                                        <label for="researchers"> @lang('Other Researchers') </label>
+                                                        <input type="text" name="researchers[]" autocomplete="off" class="my-2" style="width: 90%" value="{{$researcher}}">
+                                                        <button class="btn btn-small waves-effect waves-light red" type="button" name="deassign_researcher" style="padding: 0 1rem;"><i class="material-icons">delete</i></button>
+                                                    </div>
+                                                    <div style="display: none;"></div>
+                                                @endif
+                                            @endforeach
+                                        @endif
                                         <div class="input-field my-3">
                                             <label for="researchers" id="researcher_label"> @lang('Other Researchers') </label>
                                             <input type="text" name="researchers[]" autocomplete="off" class="my-2" style="width: 90%">
@@ -73,16 +85,29 @@
                                         </div>
 
                                         <div class="input-field my-3">
-                                            <select name="company_contact" id="company_contact">
-                                                <option value="" disabled hidden selected> @lang('Select a Contact') </option>
-                                            </select>
+                                            @if(!is_null(old('company_contact')))
+                                                @php
+                                                    $company = \App\Company::where('name', old('company'))->first();
+                                                    $contacts = $company->contacts;
+                                                @endphp
+                                                <select name="company_contact" id="company_contact">
+                                                    <option value="" disabled hidden> @lang('Select a Contact') </option>
+                                                    @foreach($contacts as $company_contact)
+                                                        <option value="{{$company_contact->id}}" {{$company_contact->id == old('$company_contact') ? 'selected' : ''}}> {{$company_contact->name}} </option>
+                                                    @endforeach
+                                                </select>
+                                            @else
+                                                <select name="company_contact" id="company_contact">
+                                                    <option value="" disabled hidden selected> @lang('Select a Contact') </option>
+                                                </select>
+                                            @endif
                                             <label for="company_contact"> @lang('Company Contact') </label>
                                         </div>
                                     </div>
 
                                     <div class="col l12">
                                         <div class="input-field my-3">
-                                            <label for="name"> @lang('Name') </label>
+                                            <label for="name"> @lang('Project Fantasy Name') </label>
                                             <input type="text" id="name" name="name" value="{{old('name')}}"/>
                                         </div>
 
