@@ -94,13 +94,13 @@
 
                                     <div class="col l12">
                                         <div class="input-field my-3">
-                                            <label for="name"> @lang('Name') </label>
+                                            <label for="name"> @lang('Project Fantasy Name') </label>
                                             <input type="text" id="name" name="name" value="{{$quotation->name}}"/>
                                         </div>
 
                                         <div class="input-field my-3">
                                             <label for="sequential"> @lang('Sequential Number') </label>
-                                            <input type="text" id="sequential" name="sequential" readonly value="{{$quotation->sequential_number}}" >
+                                            <input type="text" id="sequential" name="sequential" {{\Illuminate\Support\Facades\Auth::user()->roles->first()->id > 2 ? 'readonly' : ''}} value="{{$quotation->sequential_number}}" >
                                         </div>
 
                                         <div class="input-field my-3">
