@@ -43,8 +43,8 @@ class QuotationController extends Controller
      */
     public function create()
     {
-        $statuses = Status::all();
-        $typologies = Typology::all();
+        $statuses = Status::orderBy('name')->get();
+        $typologies = Typology::orderBy('name')->get();
 
         $researcher = '';
         if(Auth::user()->roles->first()->id == 3)
