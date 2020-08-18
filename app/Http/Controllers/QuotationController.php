@@ -246,6 +246,7 @@ class QuotationController extends Controller
         $quotation->name = $request->get('name');
         $quotation->user_id = $researcher->id;
         $quotation->company_id = $company->id;
+        $quotation->sequential_number = $request->get('sequential');
         $quotation->company_contact_id = $request->get('company_contact');
         $quotation->code = $request->get('code');
         $quotation->description = $request->get('description');
@@ -325,7 +326,7 @@ class QuotationController extends Controller
             'code'                  => $request->get('code'),
             'description'           => $request->get('description'),
             'insertion_date'        => date('Y-m-d', strtotime($request->get('insertion_date'))),
-            'deadline'              => date('Y-m-d', strtotime($request->get('end_date'))),
+            'deadline'              => date('Y-m-d', strtotime($request->get('project_delivery_date'))),
             'amount'                => $request->get('amount'),
             'status_id'             => $request->get('status'),
             'amount_acquired'       => $request->get('amount_acquired'),
@@ -347,15 +348,15 @@ class QuotationController extends Controller
 
                 switch($key)
                 {
-                    case 'user_id'              : $field = 'author';            break;
-                    case 'company_id'           : $field = 'company';           break;
-                    case 'company_contact_id'   : $field = 'company contact';   break;
-                    case 'deadline'             : $field = 'end date';          break;
-                    case 'status_id'            : $field = 'status';            break;
-                    case 'chance'               : $field = 'probability';       break;
-                    case 'closed'               : $field = 'project closed';    break;
-                    case 'typology_id'          : $field = 'test typology';     break;
-                    default                     : $field = $key;                break;
+                    case 'user_id'              : $field = 'author';                break;
+                    case 'company_id'           : $field = 'company';               break;
+                    case 'company_contact_id'   : $field = 'company contact';       break;
+                    case 'deadline'             : $field = 'project_delivery_date'; break;
+                    case 'status_id'            : $field = 'status';                break;
+                    case 'chance'               : $field = 'probability';           break;
+                    case 'closed'               : $field = 'project closed';        break;
+                    case 'typology_id'          : $field = 'test typology';         break;
+                    default                     : $field = $key;                    break;
                 }
 
                 $quotation_history = new QuotationHistory();
