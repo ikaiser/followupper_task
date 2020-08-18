@@ -50,6 +50,7 @@
                         <tr>
                             <th> @lang('Name') </th>
                             <th> @lang('Code') </th>
+                            <th> @lang('Type') </th>
                             <th> @lang('Actions') </th>
                         </tr>
                         </thead>
@@ -58,6 +59,7 @@
                             <tr>
                                 <td>{{$company->name}}</td>
                                 <td>{{$company->code}}</td>
+                                <td>{{$company->type}}</td>
                                 <td>
                                     <a href="{{ route('companies.edit', $company->id) }}"> @lang('Edit') </a>
                                     <a name="company_remove" class="mx-1 modal-trigger" href="#company_remove_modal" data-id="{{$company->id}}"> @lang('Delete') </a>

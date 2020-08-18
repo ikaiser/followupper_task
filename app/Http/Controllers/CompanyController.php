@@ -50,6 +50,7 @@ class CompanyController extends Controller
         $rules = [
             'name'      => 'required|unique:company,name',
             'code'      => 'required|size:3|unique:company,code',
+            'type'      => 'required',
             'contact'   => 'required|array',
             'contact.*' => 'required'
         ];
@@ -64,6 +65,7 @@ class CompanyController extends Controller
 
         $company->name = $request->get('name');
         $company->code = $request->get('code');
+        $company->type = $request->get('type');
         $company->save();
 
         foreach($request->get('contact') as $contact)
@@ -114,6 +116,7 @@ class CompanyController extends Controller
         $rules = [
             'name'      => 'required|unique:company,name,' . $company_id,
             'code'      => 'required|size:3|unique:company,code,' . $company_id,
+            'type'      => 'required',
             'contact'   => 'required|array',
             'contact.*' => 'required'
         ];
@@ -128,6 +131,7 @@ class CompanyController extends Controller
 
         $company->name = $request->get('name');
         $company->code = $request->get('code');
+        $company->type = $request->get('type');
         $company->save();
 
         foreach($company->contacts as $contact)

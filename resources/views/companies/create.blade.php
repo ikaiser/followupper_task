@@ -54,6 +54,16 @@
                                             <input type="text" name="code" id="code" value="{{old('code')}}">
                                         </div>
                                     </div>
+                                    <div class="col l12">
+                                        <div class="input-field my-3">
+                                            <select name="type" id="type">
+                                                <option value="" disabled hidden selected> @lang('Select a Type') </option>
+                                                <option value="customer" {{old('type') == 'customer' ? 'selected' : ''}}> @lang('Customer') </option>
+                                                <option value="institute" {{old('type') == 'institute' ? 'selected' : ''}}> @lang('Institute') </option>
+                                            </select>
+                                            <label for="type"> @lang('Company Type') </label>
+                                        </div>
+                                    </div>
 
                                     <div class="col l12">
                                         <div class="input-field my-3">

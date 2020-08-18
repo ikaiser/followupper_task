@@ -165,10 +165,10 @@
                                         </div>
 
                                         <div class="input-field my-3">
-                                            <select name="test_typology" id="test_typology">
-                                                <option value="" disabled hidden selected> @lang('Select a Test Typology') </option>
+                                            <select name="test_typology[]" id="test_typology" multiple>
+                                                <option value="" disabled> @lang('Select a Test Typology') </option>
                                                 @foreach($typologies as $typology)
-                                                    <option value="{{$typology->id}}" {{($quotation->typology_id == $typology->id) ? 'selected' : ''}}>{{$typology->name}}</option>
+                                                    <option value="{{$typology->id}}" {{$quotation->typologies->where('id', $typology->id)->count() == 1 ? 'selected' : ''}}>{{$typology->name}}</option>
                                                 @endforeach
                                             </select>
                                             <label for="status"> @lang('Test Typology') </label>

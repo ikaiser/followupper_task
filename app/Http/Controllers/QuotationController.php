@@ -119,6 +119,7 @@ class QuotationController extends Controller
         }
 
         $researchers = array_unique($request->get('researchers'));
+        $typologies = $request->get('test_typology');
 
         $quotation = new Quotation();
 
@@ -138,9 +139,13 @@ class QuotationController extends Controller
         $quotation->feedback = $request->get('feedback');
         $quotation->closed = $request->get('project_closed') == 'on' ? 1 : 0;
         $quotation->invoice_amount = $request->get('invoice_amount');
-        $quotation->typology_id = $request->get('test_typology');
 
         $quotation->save();
+
+        foreach($typologies as $typology)
+        {
+            $quotation->typologies()->attach($typology);
+        }
 
         foreach($researchers as $other_researcher)
         {
@@ -238,6 +243,7 @@ class QuotationController extends Controller
         $company = Company::where('name', $request->get('company'))->first();
 
         $researchers = array_unique($request->get('researchers'));
+        $typologies = $request->get('test_typology');
 
         $quotation = Quotation::find($quotation_id);
 
@@ -259,9 +265,9 @@ class QuotationController extends Controller
         $quotation->feedback = $request->get('feedback');
         $quotation->closed = $request->get('project_closed') == 'on' ? 1 : 0;
         $quotation->invoice_amount = $request->get('invoice_amount');
-        $quotation->typology_id = $request->get('test_typology');
         $quotation->save();
 
+        $quotation->typologies()->detach();
         $quotation->collaborators()->detach();
         foreach($researchers as $other_researcher)
         {
@@ -277,6 +283,11 @@ class QuotationController extends Controller
             $other_researcher = User::where('name', $other_researcher)->first();
 
             $quotation->collaborators()->attach($other_researcher->id);
+        }
+        
+        foreach($typologies as $typology)
+        {
+            $quotation->typologies()->attach($typology);
         }
 
         return redirect()->route('quotations.index')->with('message', __('Quotation Updated Successfully!'));
