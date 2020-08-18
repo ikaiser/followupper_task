@@ -119,8 +119,8 @@
                                         </div>
 
                                         <div class="input-field my-3">
-                                            <label for="end_date"> @lang('End Date') </label>
-                                            <input type="text" class="datepicker" name="end_date" id="end_date" value="{{$quotation->deadline}}">
+                                            <label for="end_date"> @lang('Project Delivery Date') </label>
+                                            <input type="text" class="datepicker" name="project_delivery_date" id="project_delivery_date" value="{{$quotation->deadline}}">
                                         </div>
 
                                         <div class="input-field my-3">

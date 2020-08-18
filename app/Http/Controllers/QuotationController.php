@@ -72,23 +72,23 @@ class QuotationController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'researcher'        => 'required',
-            'researchers'       => 'array',
-            'name'              => 'required',
-            'company'           => 'required',
-            'company_contact'   => 'required',
-            'sequential'        => 'numeric|nullable|required_if:manual_sequential,on|unique:quotation,sequential_number',
-            'code'              => 'required',
-            'description'       => 'required',
-            'insertion_date'    => 'required|date',
-            'end_date'          => 'required|date|after:insertion_date',
-            'amount'            => 'numeric|nullable',
-            'status'            => 'required',
-            'amount_acquired'   => 'numeric|nullable',
-            'probability'       => 'required|numeric',
-            'feedback'          => 'string|nullable',
-            'invoice_amount'    => 'numeric|nullable|required_if:project_closed,on',
-            'test_typology'     => 'required',
+            'researcher'            => 'required',
+            'researchers'           => 'array',
+            'name'                  => 'required',
+            'company'               => 'required',
+            'company_contact'       => 'required',
+            'sequential'            => 'numeric|nullable|required_if:manual_sequential,on|unique:quotation,sequential_number',
+            'code'                  => 'required',
+            'description'           => 'required',
+            'insertion_date'        => 'required|date',
+            'project_delivery_date' => 'required|date|after_or_equal:insertion_date',
+            'amount'                => 'numeric|nullable',
+            'status'                => 'required',
+            'amount_acquired'       => 'numeric|nullable',
+            'probability'           => 'required|numeric',
+            'feedback'              => 'string|nullable',
+            'invoice_amount'        => 'numeric|nullable|required_if:project_closed,on',
+            'test_typology'         => 'required',
         ];
 
         $customMessages = [
@@ -130,7 +130,7 @@ class QuotationController extends Controller
         $quotation->code = $request->get('code');
         $quotation->description = $request->get('description');
         $quotation->insertion_date = date('Y-m-d', strtotime($request->get('insertion_date')));
-        $quotation->deadline = date('Y-m-d', strtotime($request->get('end_date')));
+        $quotation->deadline = date('Y-m-d', strtotime($request->get('project_delivery_date')));
         $quotation->amount = $request->get('amount');
         $quotation->status_id = $request->get('status');
         $quotation->amount_acquired = $request->get('amount_acquired');
@@ -171,8 +171,8 @@ class QuotationController extends Controller
     {
         $quotation = Quotation::find($quotation_id);
         $history = $quotation->history;
-        $statuses = Status::all();
-        $typologies = Typology::all();
+        $statuses = Status::orderBy('name')->get();
+        $typologies = Typology::orderBy('name')->get();
 
         $researcher = '';
         if(Auth::user()->roles->first()->id == 3)
@@ -201,23 +201,23 @@ class QuotationController extends Controller
     public function update(Request $request, $quotation_id)
     {
         $rules = [
-            'researcher'        => 'required',
-            'researchers'       => 'array',
-            'name'              => 'required',
-            'company'           => 'required',
-            'company_contact'   => 'required',
-            'sequential'        => 'numeric|nullable|required_if:manual_sequential,on|unique:quotation,sequential_number,' . $quotation_id,
-            'code'              => 'required',
-            'description'       => 'required',
-            'insertion_date'    => 'required|date',
-            'end_date'          => 'required|date|after:insertion_date',
-            'amount'            => 'numeric|nullable',
-            'status'            => 'required',
-            'amount_acquired'   => 'numeric|nullable',
-            'probability'       => 'required|numeric',
-            'feedback'          => 'string|nullable',
-            'invoice_amount'    => 'numeric|nullable|required_if:project_closed,on',
-            'test_typology'     => 'required',
+            'researcher'            => 'required',
+            'researchers'           => 'array',
+            'name'                  => 'required',
+            'company'               => 'required',
+            'company_contact'       => 'required',
+            'sequential'            => 'numeric|nullable|required_if:manual_sequential,on|unique:quotation,sequential_number,' . $quotation_id,
+            'code'                  => 'required',
+            'description'           => 'required',
+            'insertion_date'        => 'required|date',
+            'project_delivery_date' => 'required|date|after_or_equal:insertion_date',
+            'amount'                => 'numeric|nullable',
+            'status'                => 'required',
+            'amount_acquired'       => 'numeric|nullable',
+            'probability'           => 'required|numeric',
+            'feedback'              => 'string|nullable',
+            'invoice_amount'        => 'numeric|nullable|required_if:project_closed,on',
+            'test_typology'         => 'required',
         ];
 
         $customMessages = [
@@ -250,7 +250,7 @@ class QuotationController extends Controller
         $quotation->code = $request->get('code');
         $quotation->description = $request->get('description');
         $quotation->insertion_date = date('Y-m-d', strtotime($request->get('insertion_date')));
-        $quotation->deadline = date('Y-m-d', strtotime($request->get('end_date')));
+        $quotation->deadline = date('Y-m-d', strtotime($request->get('project_delivery_date')));
         $quotation->amount = $request->get('amount');
         $quotation->status_id = $request->get('status');
         $quotation->amount_acquired = $request->get('amount_acquired');
