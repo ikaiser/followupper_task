@@ -2,6 +2,8 @@
 
 @section('content')
 
+    @include('companies/modal-remove')
+
     <div class="row">
         <div class="col s12 m6 mt-4">
             <h6>
@@ -58,7 +60,7 @@
                                 <td>{{$company->code}}</td>
                                 <td>
                                     <a href="{{ route('companies.edit', $company->id) }}"> @lang('Edit') </a>
-                                    <a href="{{ route('companies.remove', $company->id) }}"> @lang('Delete') </a>
+                                    <a name="company_remove" class="mx-1 modal-trigger" href="#company_remove_modal" data-id="{{$company->id}}"> @lang('Delete') </a>
                                 </td>
                             </tr>
                         @endforeach
@@ -74,5 +76,6 @@
 
 @section('js')
     @parent
+    <script src="{{ asset('js/companies.js') }}"></script>
     <script src="{{ asset('js/quotations.js') }}"></script>
 @endsection
