@@ -48,9 +48,9 @@
                     <table class="table-responsive highlight stripe" id="quotations_table">
                         <thead>
                         <tr>
+                            <th> Id </th>
                             <th> @lang('Name') </th>
                             <th> @lang('Sequential Number') </th>
-                            <th> @lang('Code') </th>
                             <th> @lang('User') </th>
                             <th> @lang('Company') </th>
                             <th> @lang('Actions') </th>
@@ -60,9 +60,9 @@
 
                         @foreach($quotations as $quotation)
                             <tr>
+                                <td>{{get_code($quotation)}}</td>
                                 <td>{{$quotation->name}}</td>
                                 <td>{{$quotation->sequential_number}}</td>
-                                <td>{{$quotation->code}}</td>
                                 <td>{{$quotation->user->name}}</td>
                                 <td>{{$quotation->company->name}}</td>
                                 <td>
