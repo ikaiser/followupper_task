@@ -193,6 +193,16 @@
                                             <label for="status"> @lang('Test Typology') </label>
                                         </div>
 
+                                        <div class="input-field my-3">
+                                            <select name="methodology" id="methodology">
+                                                <option value="" disabled hidden selected> @lang('Select a Methodology') </option>
+                                                @foreach($methodologies as $methodology)
+                                                    <option value="{{$methodology->id}}" {{(old('methodology') == $methodology->id) ? 'selected' : ''}}>{{$methodology->name}} / {{$methodology->type}}</option>
+                                                @endforeach
+                                            </select>
+                                            <label for="status"> @lang('Methodology') </label>
+                                        </div>
+
                                     </div>
                                 </div>
 

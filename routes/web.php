@@ -82,6 +82,18 @@ Route::middleware('auth')->group(function ()
             Route::post('/save', 'TypologyController@store')->name('quotations_typology.store');
         });
 
+        //Methodology
+        Route::prefix('/methodology/')->group(function ()
+        {
+            Route::get('/', 'MethodologyController@index')->name('quotations_methodology.index');
+            Route::get('/create', 'MethodologyController@create')->name('quotations_methodology.create');
+            Route::get('/{methodology_id}/edit', 'MethodologyController@edit')->name('quotations_methodology.edit');
+            Route::get('{methodology_id}/remove', 'MethodologyController@destroy')->name('quotations_methodology.remove');
+
+            Route::post('{methodology_id}/update', 'MethodologyController@update')->name('quotations_methodology.update');
+            Route::post('/save', 'MethodologyController@store')->name('quotations_methodology.store');
+        });
+
     });
 
     //Company

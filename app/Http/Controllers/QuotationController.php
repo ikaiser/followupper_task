@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Company;
+use App\Methodology;
 use App\Quotation;
 use App\QuotationHistory;
 use App\Status;
@@ -45,6 +46,7 @@ class QuotationController extends Controller
     {
         $statuses = Status::orderBy('name')->get();
         $typologies = Typology::orderBy('name')->get();
+        $methodologies = Methodology::orderBy('name')->get();
 
         $researcher = '';
         if(Auth::user()->roles->first()->id == 3)
@@ -60,7 +62,7 @@ class QuotationController extends Controller
             $researcher = User::whereHas('roles', function($q) {$q->where('id', 3);})->get();
         }
 
-        return view('quotations.create', ['statuses' => $statuses, 'typologies' => $typologies, 'researcher' => $researcher]);
+        return view('quotations.create', ['statuses' => $statuses, 'typologies' => $typologies, 'researcher' => $researcher, 'methodologies' => $methodologies]);
     }
 
     /**
@@ -89,6 +91,7 @@ class QuotationController extends Controller
             'feedback'              => 'string|nullable',
             'invoice_amount'        => 'numeric|nullable|required_if:project_closed,on',
             'test_typology'         => 'required',
+            'methodology'           => 'required'
         ];
 
         $customMessages = [
@@ -139,6 +142,7 @@ class QuotationController extends Controller
         $quotation->feedback = $request->get('feedback');
         $quotation->closed = $request->get('project_closed') == 'on' ? 1 : 0;
         $quotation->invoice_amount = $request->get('invoice_amount');
+        $quotation->methodology_id = $request->get('methodology');
 
         $quotation->save();
 
@@ -178,6 +182,7 @@ class QuotationController extends Controller
         $history = $quotation->history;
         $statuses = Status::orderBy('name')->get();
         $typologies = Typology::orderBy('name')->get();
+        $methodologies = Methodology::orderBy('name')->get();
 
         $researcher = '';
         if(Auth::user()->roles->first()->id == 3)
@@ -193,7 +198,7 @@ class QuotationController extends Controller
             $researcher = User::whereHas('roles', function($q) {$q->where('id', 3);})->get();
         }
 
-        return view('quotations.edit', ['quotation' => $quotation, 'history' => $history, 'statuses' => $statuses, 'typologies' => $typologies, 'researcher' => $researcher]);
+        return view('quotations.edit', ['quotation' => $quotation, 'history' => $history, 'statuses' => $statuses, 'typologies' => $typologies, 'methodologies' => $methodologies, 'researcher' => $researcher]);
     }
 
     /**
@@ -223,6 +228,7 @@ class QuotationController extends Controller
             'feedback'              => 'string|nullable',
             'invoice_amount'        => 'numeric|nullable|required_if:project_closed,on',
             'test_typology'         => 'required',
+            'methodology'           => 'required',
         ];
 
         $customMessages = [
@@ -265,6 +271,8 @@ class QuotationController extends Controller
         $quotation->feedback = $request->get('feedback');
         $quotation->closed = $request->get('project_closed') == 'on' ? 1 : 0;
         $quotation->invoice_amount = $request->get('invoice_amount');
+        $quotation->methodology_id = $request->get('methodology');
+
         $quotation->save();
 
         $quotation->typologies()->detach();
@@ -284,7 +292,7 @@ class QuotationController extends Controller
 
             $quotation->collaborators()->attach($other_researcher->id);
         }
-        
+
         foreach($typologies as $typology)
         {
             $quotation->typologies()->attach($typology);
@@ -345,7 +353,7 @@ class QuotationController extends Controller
             'feedback'              => $request->get('feedback'),
             'closed'                => $request->get('project_closed') == 'on' ? 1 : 0,
             'invoice_amount'        => $request->get('invoice_amount'),
-            'typology_id'           => $request->get('test_typology'),
+            'methodology_id'        => $request->get('methodology'),
 
         );
 
@@ -366,7 +374,7 @@ class QuotationController extends Controller
                     case 'status_id'            : $field = 'status';                break;
                     case 'chance'               : $field = 'probability';           break;
                     case 'closed'               : $field = 'project closed';        break;
-                    case 'typology_id'          : $field = 'test typology';         break;
+                    case 'methodology_id'       : $field = 'methodology';           break;
                     default                     : $field = $key;                    break;
                 }
 

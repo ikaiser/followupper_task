@@ -76,6 +76,11 @@ class Quotation extends Model
         return $this->belongsToMany(Typology::class, 'quotation_typology', 'quotation_id', 'typology_id');
     }
 
+    public function methodology()
+    {
+        return $this->belongsTo(Methodology::class, 'methodology_id', 'id');
+    }
+
     public function history()
     {
         return $this->hasMany(QuotationHistory::class, 'quotation_id', 'id');
