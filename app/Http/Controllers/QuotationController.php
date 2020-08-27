@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Company;
+use App\CompanyContact;
 use App\Methodology;
 use App\Quotation;
 use App\QuotationHistory;
@@ -71,7 +72,7 @@ class QuotationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request)
+    public function  store(Request $request)
     {
         $rules = [
             'researcher'            => 'required',
@@ -327,6 +328,162 @@ class QuotationController extends Controller
         $quotation->delete();
 
         return redirect()->route('quotations.index')->with('message', __('Quotation Deleted Successfully!'));
+    }
+
+    public function import()
+    {
+        $file_handle = fopen(public_path() . '/import.csv', 'r');
+        while (!feof($file_handle)) {
+            $line = fgetcsv($file_handle, 0, ',');
+
+            if(is_bool($line))
+            {
+                break;
+            }
+
+            $line_quotation = array(
+                'sequential'        => $line[2],
+                'insertion_date'    => $line[3],
+                'deadline'          => $line[4],
+                'company'           => $line[5],
+                'company_contact'   => $line[8],
+                'description'       => $line[9],
+                'user'              => $line[10],
+                'amount'            => $line[11],
+                'status'            => $line[12],
+            );
+
+            $quotation = new Quotation();
+            $quotation->name = $line_quotation['description'];
+            $quotation->sequential_number = $line_quotation['sequential'];
+            $quotation->code = 'IMPORT';
+            $quotation->description = $line_quotation['description'];
+            $quotation->insertion_date = date('Y-m-d', strtotime($line_quotation['insertion_date']));
+            $quotation->deadline = date('Y-m-d', strtotime($line_quotation['deadline']));
+            $quotation->amount = intval(str_replace(',', '', $line_quotation['amount']));
+            $quotation->amount_acquired = intval(str_replace(',', '', $line_quotation['amount']));
+            $quotation->chance = '100';
+            $quotation->closed = 0;
+
+            $quotation->setCreatedAt(date('Y-m-d H:i:s'));
+            $quotation->setUpdatedAt(date('Y-m-d H:i:s'));
+
+            $user = User::where('name', $line_quotation['user'])->get();
+            if($user->count() > 0)
+            {
+                $quotation->user_id = $user[0]->id;
+            }
+            else
+            {
+                $quotation->user_id = 1;
+            }
+
+            $company = Company::where('name', $line_quotation['company'])->get();
+            if($company->count() > 0)
+            {
+                $quotation->company_id = $company[0]->id;
+            }
+            else
+            {
+                $quotation->company_id = 2;
+            }
+
+            $company_contact = CompanyContact::where('name', $line_quotation['company_contact'])->get();
+            if($company_contact->count() > 0)
+            {
+                $quotation->company_contact_id = $company_contact[0]->id;
+            }
+            else
+            {
+                $quotation->company_contact_id = 2;
+            }
+
+            $status = Status::where('name', $line_quotation['status'])->get();
+            if($status->count() > 0)
+            {
+                $quotation->status_id = $status[0]->id;
+            }
+            else
+            {
+                $quotation->status_id = 1;
+            }
+            $quotation->save();
+        }
+        fclose($file_handle);
+        die(var_dump(public_path()));
+    }
+
+    public function export()
+    {
+        header('Content-Type: application/csv');
+        header('Content-Disposition: attachment; filename="quotations_export.csv";');
+
+        $f = fopen( 'php://memory', 'w' );
+
+        $quotations = Quotation::all();
+
+        echo "Id;Nome,Utente;Collaboratori;Azienda;Contatto Azienda;Numero Sequenziale;Codice;Descrizione;Data Inserimento;Data Consegna;Importo;Stato;Metodologia;Tipologie Test;Importo Acquisito;Probabilità;Feedback;Preventivo Chiuso;Importo Fatturato;\n";
+
+        foreach($quotations as $quotation)
+        {
+            $line = "{$quotation->id};{$quotation->user->name};";
+            $insertion_date = date('d/m/Y', strtotime($quotation->insertion_date));
+            $deadline = date('d/m/Y', strtotime($quotation->deadline));
+
+            $collaborators = $quotation->collaborators;
+
+            if($collaborators->count() > 0)
+            {
+                foreach($collaborators as $collaborator)
+                {
+                    $line .= "{$collaborator->name} - ";
+                }
+                $line = substr($line, 0, -3) . ';';
+
+            }
+            else
+            {
+                $line .= ";";
+            }
+
+            $line .= "{$quotation->company->name};{$quotation->company_contact->name};{$quotation->sequential_number};{$quotation->code};{$quotation->description};{$insertion_date};{$deadline};{$quotation->amount};{$quotation->status->name};";
+
+            if(is_null($quotation->methodology))
+            {
+                $line .= ';';
+            }
+            else
+            {
+                $line .="{$quotation->methodology->name};";
+            }
+
+            $typologies = $quotation->typologies;
+            if($typologies->count() > 0)
+            {
+                foreach($typologies as $typology)
+                {
+                    $line .= "{$typology->name} - ";
+                }
+
+                $line = substr($line, 0, -3) . ';';
+            }
+            else
+            {
+                $line .= ";";
+            }
+            $line .= "{$quotation->amount_acquired};{$quotation->chance};{$quotation->feedback};";
+
+            $line .= $quotation->closed == 1 ? "chiuso;" : "non chiuso;";
+            $line .= !is_null($quotation->invoice_amount) ? "{$quotation->invoice_amount};" : ";";
+
+            $line .= ";\n";
+
+            echo $line;
+        }
+
+        fclose($f);
+
+        exit();
     }
 
     /**

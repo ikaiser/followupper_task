@@ -202,4 +202,32 @@ class CompanyController extends Controller
 
         return $company->contacts;
     }
+
+    public function export()
+    {
+        header('Content-Type: application/csv');
+        header('Content-Disposition: attachment; filename="companies_export.csv";');
+
+        $f = fopen( 'php://memory', 'w' );
+
+        $companies = Company::all();
+        echo "Id;Nome,Codice;Tipo;Contatti;\n";
+        foreach($companies as $company)
+        {
+            $line = "{$company->id};{$company->name};{$company->code};{$company->type};";
+
+            foreach($company->contacts as $contact)
+            {
+                $line.= "{$contact->name} - ";
+            }
+            $line = substr($line, 0, -3);
+            $line .= ";\n";
+
+            echo $line;
+        }
+
+        fclose($f);
+
+        exit();
+    }
 }

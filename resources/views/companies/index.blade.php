@@ -12,6 +12,9 @@
             </h6>
         </div>
         <div class="col s12 m6 mt-4 right-align">
+            @if(\Illuminate\Support\Facades\Auth::user()->roles->first()->id <= 2)
+                <button class="btn btn-floating waves-effect waves-light" onclick="document.location.href='{{ route('companies.export') }}'" role="button" title="Download"><i class="material-icons">file_download</i></button>
+            @endif
             <button class="btn btn-floating waves-effect waves-light" onclick="document.location.href='{{ route('companies.create') }}'" role="button" title="Aggiungi"><i class="material-icons">add</i></button>
             <button class="btn btn-floating waves-effect waves-light" onclick="window.history.back()"><i class="material-icons">arrow_back</i></button>
         </div>
