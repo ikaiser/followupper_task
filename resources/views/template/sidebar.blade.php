@@ -37,6 +37,11 @@
                 <a class="waves-effect waves-cyan " href="{{ route('quotations_methodology.index') }}"><i class="material-icons" style="font-size: 0.7rem">radio_button_unchecked</i><span class="menu-title"> @lang('Quotation Methodology') </span></a>
             </li>
         @endif
+        @if(\Illuminate\Support\Facades\Auth::user()->roles->first()->id <= 2)
+            <li class="bold">
+                <a class="waves-effect waves-cyan " href="{{ route('reports') }}"><i class="material-icons">mail</i><span class="menu-title"> Report </span></a>
+            </li>
+        @endif
     </ul>
 
     <div class="navigation-background"></div><a class="sidenav-trigger btn-sidenav-toggle btn-floating btn-medium waves-effect waves-light hide-on-large-only" href="#" data-target="slide-out"><i class="material-icons">menu</i></a>

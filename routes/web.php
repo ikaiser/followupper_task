@@ -31,6 +31,8 @@ Route::middleware('auth')->group(function ()
 {
     Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 
+    Route::view('/reports', 'reports')->name('reports');
+
     //Users
     Route::prefix('/users/')->group(function ()
     {
@@ -59,6 +61,7 @@ Route::middleware('auth')->group(function ()
         Route::get('/export', 'QuotationController@export')->name('quotations.export');
         //
 
+        Route::post('/report', 'QuotationController@report');
         Route::post('{quotation_id}/update', 'QuotationController@update')->name('quotations.update');
         Route::post('/save', 'QuotationController@store')->name('quotations.store');
 
