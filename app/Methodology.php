@@ -4,14 +4,14 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Company extends Model
+class Methodology extends Model
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'company';
+    protected $table = 'methodology';
 
     /**
      * The attributes that are mass assignable.
@@ -19,9 +19,8 @@ class Company extends Model
      * @var array
      */
     protected $fillable = [
-        'code',
         'name',
-        'type',
+        'type'
     ];
 
     /**
@@ -32,9 +31,4 @@ class Company extends Model
     protected $hidden = [
 
     ];
-
-    public function contacts()
-    {
-        return $this->hasMany(CompanyContact::class, 'company_id', 'id');
-    }
 }

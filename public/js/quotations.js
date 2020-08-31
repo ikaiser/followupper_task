@@ -1,7 +1,7 @@
 $(document).ready(function() {
 
     $('#quotations_table').DataTable( {
-        "lengthChange": false,
+        "lengthChange": true,
     });
 
     $('a[name="quotation_remove"]').click(function () {

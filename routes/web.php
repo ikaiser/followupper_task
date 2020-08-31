@@ -31,6 +31,8 @@ Route::middleware('auth')->group(function ()
 {
     Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 
+    Route::view('/reports', 'reports')->name('reports');
+
     //Users
     Route::prefix('/users/')->group(function ()
     {
@@ -54,7 +56,12 @@ Route::middleware('auth')->group(function ()
         Route::get('/create', 'QuotationController@create')->name('quotations.create');
         Route::get('/{quotation_id}/edit', 'QuotationController@edit')->name('quotations.edit');
         Route::get('{quotation_id}/remove', 'QuotationController@destroy')->name('quotations.remove');
+        //IMPORT
+        Route::get('/import', 'QuotationController@import');
+        Route::get('/export', 'QuotationController@export')->name('quotations.export');
+        //
 
+        Route::post('/report', 'QuotationController@report');
         Route::post('{quotation_id}/update', 'QuotationController@update')->name('quotations.update');
         Route::post('/save', 'QuotationController@store')->name('quotations.store');
 
@@ -82,6 +89,18 @@ Route::middleware('auth')->group(function ()
             Route::post('/save', 'TypologyController@store')->name('quotations_typology.store');
         });
 
+        //Methodology
+        Route::prefix('/methodology/')->group(function ()
+        {
+            Route::get('/', 'MethodologyController@index')->name('quotations_methodology.index');
+            Route::get('/create', 'MethodologyController@create')->name('quotations_methodology.create');
+            Route::get('/{methodology_id}/edit', 'MethodologyController@edit')->name('quotations_methodology.edit');
+            Route::get('{methodology_id}/remove', 'MethodologyController@destroy')->name('quotations_methodology.remove');
+
+            Route::post('{methodology_id}/update', 'MethodologyController@update')->name('quotations_methodology.update');
+            Route::post('/save', 'MethodologyController@store')->name('quotations_methodology.store');
+        });
+
     });
 
     //Company
@@ -92,6 +111,7 @@ Route::middleware('auth')->group(function ()
         Route::get('/{company_id}/remove', 'CompanyController@destroy')->name('companies.remove');
         Route::get('/create', 'CompanyController@create')->name('companies.create');
         Route::get('/fetch', 'CompanyController@fetch')->name('companies.fetch');
+        Route::get('/export', 'CompanyController@export')->name('companies.export');
         Route::get('/get_contacts', 'CompanyController@get_contacts')->name('companies.get_contacts');
 
         Route::post('{company_id}/update', 'CompanyController@update')->name('companies.update');

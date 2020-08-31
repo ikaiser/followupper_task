@@ -1,5 +1,6 @@
 <?php
 
+use App\Quotation;
 use App\User;
 use Illuminate\Support\Facades\Auth;use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -89,6 +90,22 @@ if(!function_exists('generate_sequential'))
         {
             return $quotations+1;
         }
+    }
+}
+
+if(!function_exists('get_code'))
+{
+    function get_code($quotation)
+    {
+        $check_date = date('Y-m-d H:i:s', strtotime('first day of December this year'));
+        $date = date('y', strtotime('last year'));
+        if(date('Y-m-d H:i:s') < $check_date)
+        {
+            $date = date('y');
+        }
+        $company_code = $quotation->company->code;
+
+        return $date . $company_code . $quotation->sequential_number;
     }
 }
 

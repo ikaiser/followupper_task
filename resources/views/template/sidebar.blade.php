@@ -33,6 +33,14 @@
             <li class="bold">
                 <a class="waves-effect waves-cyan " href="{{ route('quotations_typology.index') }}"><i class="material-icons" style="font-size: 0.7rem">radio_button_unchecked</i><span class="menu-title"> @lang('Quotation Typology') </span></a>
             </li>
+            <li class="bold">
+                <a class="waves-effect waves-cyan " href="{{ route('quotations_methodology.index') }}"><i class="material-icons" style="font-size: 0.7rem">radio_button_unchecked</i><span class="menu-title"> @lang('Quotation Methodology') </span></a>
+            </li>
+        @endif
+        @if(\Illuminate\Support\Facades\Auth::user()->roles->first()->id <= 2)
+            <li class="bold">
+                <a class="waves-effect waves-cyan " href="{{ route('reports') }}"><i class="material-icons">mail</i><span class="menu-title"> Report </span></a>
+            </li>
         @endif
     </ul>
 

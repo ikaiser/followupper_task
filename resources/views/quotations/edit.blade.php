@@ -94,13 +94,13 @@
 
                                     <div class="col l12">
                                         <div class="input-field my-3">
-                                            <label for="name"> @lang('Name') </label>
+                                            <label for="name"> @lang('Project Fantasy Name') </label>
                                             <input type="text" id="name" name="name" value="{{$quotation->name}}"/>
                                         </div>
 
                                         <div class="input-field my-3">
                                             <label for="sequential"> @lang('Sequential Number') </label>
-                                            <input type="text" id="sequential" name="sequential" readonly value="{{$quotation->sequential_number}}" >
+                                            <input type="text" id="sequential" name="sequential" {{\Illuminate\Support\Facades\Auth::user()->roles->first()->id > 2 ? 'readonly' : ''}} value="{{$quotation->sequential_number}}" >
                                         </div>
 
                                         <div class="input-field my-3">
@@ -119,8 +119,8 @@
                                         </div>
 
                                         <div class="input-field my-3">
-                                            <label for="end_date"> @lang('End Date') </label>
-                                            <input type="text" class="datepicker" name="end_date" id="end_date" value="{{$quotation->deadline}}">
+                                            <label for="end_date"> @lang('Project Delivery Date') </label>
+                                            <input type="text" class="datepicker" name="project_delivery_date" id="project_delivery_date" value="{{$quotation->deadline}}">
                                         </div>
 
                                         <div class="input-field my-3">
@@ -165,13 +165,23 @@
                                         </div>
 
                                         <div class="input-field my-3">
-                                            <select name="test_typology" id="test_typology">
-                                                <option value="" disabled hidden selected> @lang('Select a Test Typology') </option>
+                                            <select name="test_typology[]" id="test_typology" multiple>
+                                                <option value="" disabled> @lang('Select a Test Typology') </option>
                                                 @foreach($typologies as $typology)
-                                                    <option value="{{$typology->id}}" {{($quotation->typology_id == $typology->id) ? 'selected' : ''}}>{{$typology->name}}</option>
+                                                    <option value="{{$typology->id}}" {{$quotation->typologies->where('id', $typology->id)->count() == 1 ? 'selected' : ''}}>{{$typology->name}}</option>
                                                 @endforeach
                                             </select>
                                             <label for="status"> @lang('Test Typology') </label>
+                                        </div>
+
+                                        <div class="input-field my-3">
+                                            <select name="methodology" id="methodology">
+                                                <option value="" disabled hidden selected> @lang('Select a Methodology') </option>
+                                                @foreach($methodologies as $methodology)
+                                                    <option value="{{$methodology->id}}" {{($quotation->methodology_id == $methodology->id) ? 'selected' : ''}}>{{$methodology->name}} / {{$methodology->type}}</option>
+                                                @endforeach
+                                            </select>
+                                            <label for="status"> @lang('Methodology') </label>
                                         </div>
 
                                     </div>

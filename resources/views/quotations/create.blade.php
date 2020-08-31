@@ -57,6 +57,18 @@
                                             @endif
                                         </div>
 
+                                        @if(!is_null(old('researchers')))
+                                            @foreach(old('researchers') as $researcher)
+                                                @if(!is_null($researcher))
+                                                    <div class="input-field my-3">
+                                                        <label for="researchers"> @lang('Other Researchers') </label>
+                                                        <input type="text" name="researchers[]" autocomplete="off" class="my-2" style="width: 90%" value="{{$researcher}}">
+                                                        <button class="btn btn-small waves-effect waves-light red" type="button" name="deassign_researcher" style="padding: 0 1rem;"><i class="material-icons">delete</i></button>
+                                                    </div>
+                                                    <div style="display: none;"></div>
+                                                @endif
+                                            @endforeach
+                                        @endif
                                         <div class="input-field my-3">
                                             <label for="researchers" id="researcher_label"> @lang('Other Researchers') </label>
                                             <input type="text" name="researchers[]" autocomplete="off" class="my-2" style="width: 90%">
@@ -73,16 +85,29 @@
                                         </div>
 
                                         <div class="input-field my-3">
-                                            <select name="company_contact" id="company_contact">
-                                                <option value="" disabled hidden selected> @lang('Select a Contact') </option>
-                                            </select>
+                                            @if(!is_null(old('company_contact')))
+                                                @php
+                                                    $company = \App\Company::where('name', old('company'))->first();
+                                                    $contacts = $company->contacts;
+                                                @endphp
+                                                <select name="company_contact" id="company_contact">
+                                                    <option value="" disabled hidden> @lang('Select a Contact') </option>
+                                                    @foreach($contacts as $company_contact)
+                                                        <option value="{{$company_contact->id}}" {{$company_contact->id == old('$company_contact') ? 'selected' : ''}}> {{$company_contact->name}} </option>
+                                                    @endforeach
+                                                </select>
+                                            @else
+                                                <select name="company_contact" id="company_contact">
+                                                    <option value="" disabled hidden selected> @lang('Select a Contact') </option>
+                                                </select>
+                                            @endif
                                             <label for="company_contact"> @lang('Company Contact') </label>
                                         </div>
                                     </div>
 
                                     <div class="col l12">
                                         <div class="input-field my-3">
-                                            <label for="name"> @lang('Name') </label>
+                                            <label for="name"> @lang('Project Fantasy Name') </label>
                                             <input type="text" id="name" name="name" value="{{old('name')}}"/>
                                         </div>
 
@@ -113,8 +138,8 @@
                                         </div>
 
                                         <div class="input-field my-3">
-                                            <label for="end_date"> @lang('End Date') </label>
-                                            <input type="text" class="datepicker" name="end_date" id="end_date" value="{{old('end_date')}}">
+                                            <label for="end_date"> @lang('Project Delivery Date') </label>
+                                            <input type="text" class="datepicker" name="project_delivery_date" id="project_delivery_date" value="{{old('project_delivery_date')}}">
                                         </div>
 
                                         <div class="input-field my-3">
@@ -159,13 +184,23 @@
                                         </div>
 
                                         <div class="input-field my-3">
-                                            <select name="test_typology" id="test_typology">
-                                                <option value="" disabled hidden selected> @lang('Select a Test Typology') </option>
+                                            <select name="test_typology[]" id="test_typology" multiple>
+                                                <option value="" disabled> @lang('Select a Test Typology') </option>
                                                 @foreach($typologies as $typology)
-                                                    <option value="{{$typology->id}}" {{(old('test_typology') == $typology->id) ? 'selected' : ''}}>{{$typology->name}}</option>
+                                                    <option value="{{$typology->id}}" {{!is_null(old('test_typology')) && in_array($typology->id, old('test_typology')) ? 'selected' : ''}}>{{$typology->name}}</option>
                                                 @endforeach
                                             </select>
                                             <label for="status"> @lang('Test Typology') </label>
+                                        </div>
+
+                                        <div class="input-field my-3">
+                                            <select name="methodology" id="methodology">
+                                                <option value="" disabled hidden selected> @lang('Select a Methodology') </option>
+                                                @foreach($methodologies as $methodology)
+                                                    <option value="{{$methodology->id}}" {{(old('methodology') == $methodology->id) ? 'selected' : ''}}>{{$methodology->name}} / {{$methodology->type}}</option>
+                                                @endforeach
+                                            </select>
+                                            <label for="status"> @lang('Methodology') </label>
                                         </div>
 
                                     </div>

@@ -50,6 +50,7 @@ class CompanyController extends Controller
         $rules = [
             'name'      => 'required|unique:company,name',
             'code'      => 'required|size:3|unique:company,code',
+            'type'      => 'required',
             'contact'   => 'required|array',
             'contact.*' => 'required'
         ];
@@ -64,6 +65,7 @@ class CompanyController extends Controller
 
         $company->name = $request->get('name');
         $company->code = $request->get('code');
+        $company->type = $request->get('type');
         $company->save();
 
         foreach($request->get('contact') as $contact)
@@ -114,6 +116,7 @@ class CompanyController extends Controller
         $rules = [
             'name'      => 'required|unique:company,name,' . $company_id,
             'code'      => 'required|size:3|unique:company,code,' . $company_id,
+            'type'      => 'required',
             'contact'   => 'required|array',
             'contact.*' => 'required'
         ];
@@ -128,6 +131,7 @@ class CompanyController extends Controller
 
         $company->name = $request->get('name');
         $company->code = $request->get('code');
+        $company->type = $request->get('type');
         $company->save();
 
         foreach($company->contacts as $contact)
@@ -179,7 +183,7 @@ class CompanyController extends Controller
     {
         $query = $request->get('query');
 
-        $companies = Company::where('name', 'LIKE', "%{$query}%")->get();
+        $companies = Company::where('name', 'LIKE', "%{$query}%")->orderBy('name')->get();
 
         $output = '<ul class="collection" style="display:block; position:relative">';
         foreach($companies as $company)
@@ -197,5 +201,33 @@ class CompanyController extends Controller
         $company = Company::find($company_id);
 
         return $company->contacts;
+    }
+
+    public function export()
+    {
+        header('Content-Type: application/csv');
+        header('Content-Disposition: attachment; filename="companies_export.csv";');
+
+        $f = fopen( 'php://memory', 'w' );
+
+        $companies = Company::all();
+        echo "Id;Nome,Codice;Tipo;Contatti;\n";
+        foreach($companies as $company)
+        {
+            $line = "{$company->id};{$company->name};{$company->code};{$company->type};";
+
+            foreach($company->contacts as $contact)
+            {
+                $line.= "{$contact->name} - ";
+            }
+            $line = substr($line, 0, -3);
+            $line .= ";\n";
+
+            echo $line;
+        }
+
+        fclose($f);
+
+        exit();
     }
 }
