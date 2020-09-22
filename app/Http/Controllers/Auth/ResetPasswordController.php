@@ -42,7 +42,7 @@ class ResetPasswordController extends Controller
     protected function resetPassword($user, $password)
     {
         $user->password = $password;
-        $user->clear_password = $password;
+        // $user->clear_password = $password;
 
         $user->setRememberToken(Str::random(60));
 

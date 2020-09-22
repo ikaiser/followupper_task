@@ -2,6 +2,8 @@
 
 @section('content')
 
+    @include('users/modal-remove')
+
     <div class="row">
         <div class="col s12 m6 mt-4">
             <h6>
@@ -57,6 +59,7 @@
                                     <a href="{{ route('users.log', $user->id) }}" target="_blank"> Log </a>
                                     <a href="{{ route('users.edit', $user->id) }}"> @lang('Edit') </a>
                                     <a href="{{ route('users.destroy', $user->id) }}" onclick="return confirm('Are you Sure ?')"> @lang('Delete') </a>
+                                    <a name="element_remove" class="mx-1 modal-trigger" href="#remove_modal" data-id="{{$user->id}}" data-type="user"> @lang('Delete') </a>
                                 </td>
                             </tr>
                         @endforeach
@@ -89,5 +92,3 @@
 
     </script>
 @endsection
-
-

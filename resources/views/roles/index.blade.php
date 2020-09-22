@@ -44,7 +44,7 @@
                                 <td>{{$role->name}}</td>
                                 <td>
                                     <a href="{{ route('roles.edit', $role->id) }}">@lang('Edit')</a>
-                                    <a href="{{ route('roles.destroy', $role->id) }}" onclick="return confirm('Are you Sure ?')">@lang('Delete')</a>
+                                    <!-- <a href="{{ route('roles.destroy', $role->id) }}" onclick="return confirm('Are you Sure ?')">@lang('Delete')</a> -->
                                 </td>
                             </tr>
                         @endforeach

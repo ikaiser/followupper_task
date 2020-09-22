@@ -53,15 +53,31 @@
                         <tbody>
                             <tr>
                                 <th>Report Admin </th>
-                                <th class="center-align"> <button class="btn btn-primary" id="generate_report" data-report="admin"> Genera Report </button> </th>
+                                <th class="center-align"> <button class="btn btn-primary generate_report" data-report="admin"> Genera Report </button> </th>
                             </tr>
                             <tr>
                                 <th>Report Scadenze </th>
-                                <th class="center-align"> <button class="btn btn-primary" id="generate_report" data-report="deadlines"> Genera Report </button> </th>
+                                <th class="center-align"> <button class="btn btn-primary generate_report" data-report="deadlines"> Genera Report </button> </th>
                             </tr>
                             <tr>
                                 <th>Report Importi Mancanti </th>
-                                <th class="center-align"> <button class="btn btn-primary" id="generate_report" data-report="amounts"> Genera Report </button> </th>
+                                <th class="center-align"> <button class="btn btn-primary generate_report" data-report="amounts"> Genera Report </button> </th>
+                            </tr>
+                            <tr>
+                                <th>Report giornaliero status A1 ( Ricercatori, utenti, operatori )</th>
+                                <th class="center-align"> <button class="btn btn-primary generate_report" data-report="status_a1"> Genera Report </button> </th>
+                            </tr>
+                            <tr>
+                                <th>Report settimanale status B1 ( Ricercatori, utenti, operatori )</th>
+                                <th class="center-align"> <button class="btn btn-primary generate_report" data-report="status_b1"> Genera Report </button> </th>
+                            </tr>
+                            <tr>
+                                <th>Report importi mancanti per status diverso da A1 ( Ricercatori, utenti, operatori )</th>
+                                <th class="center-align"> <button class="btn btn-primary generate_report" data-report="operators_amount"> Genera Report </button> </th>
+                            </tr>
+                            <tr>
+                                <th>Report preventivi non chiusi ( Ricercatori, utenti, operatori )</th>
+                                <th class="center-align"> <button class="btn btn-primary generate_report" data-report="operators_not_delivered"> Genera Report </button> </th>
                             </tr>
                         </tbody>
                     </table>
@@ -77,7 +93,7 @@
     @parent
 
     <script>
-        $('#generate_report').click(function() {
+        $('.generate_report').click(function() {
            var report = $(this).attr('data-report');
 
             $.ajax({
@@ -88,7 +104,8 @@
                     report:report
                 },
                 success:function(){
-                    $('#breadcrumb_row').after('<div class="card-alert card green lighten-5"> <div class="card-content green-text"> <p> Report Inviato </p> </div> <button type="button" class="close green-text" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">×</span> </button> </div>');
+                    $('.report-alert-success').remove();
+                    $('#breadcrumb_row').after('<div class="report-alert-success card-alert card green lighten-5"> <div class="card-content green-text"> <p> Report Inviato </p> </div> <button type="button" class="close green-text" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">×</span> </button> </div>');
                 }
             });
         });

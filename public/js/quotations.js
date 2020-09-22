@@ -1,17 +1,33 @@
 $(document).ready(function() {
 
+    /* Quotations */
     $('#quotations_table').DataTable( {
         "lengthChange": true,
+        "order": [ [ 2, "desc" ] ],
+        "lengthMenu": [[10, 25, 50, 100, 500, 1000], [10, 25, 50, 100, 500, 1000]],
+        "pageLength": 500
     });
 
-    $('a[name="quotation_remove"]').click(function () {
-        var id = $(this).attr('data-id');
-        $('input[name="quotation_id"]').val(id);
+    $('#quotation_status_table').DataTable( {
+        "lengthChange": true,
+        "order": [ [ 1, "asc" ] ],
+        "lengthMenu": [[10, 25, 50, 100, 500, 1000], [10, 25, 50, 100, 500, 1000]],
+        "pageLength": 500
     });
 
-    $('#confirm_quotation_remove').click(function () {
-        window.location.href = 'quotations/' + $('input[name="quotation_id"]').val() + '/remove';
+    /* element remove */
+    $('a[name="element_remove"]').click(function () {
+        var id   = $(this).attr('data-id');
+        var type = $(this).attr('data-type');
+        $('input[name="'+type+'_id"]').val(id);
     });
+
+    $('#confirm_remove').click(function () {
+        var type  = $(this).attr('data-type');
+        var model = $(this).attr('data-model');
+        window.location.href = model + '/' + $('input[name="'+ type +'_id"]').val() + '/remove';
+    });
+    /* element remove end */
 
     $('#manual_sequential').change(function () {
         var manual = $('#manual_sequential');
@@ -64,6 +80,8 @@ $(document).ready(function() {
             $('#list_company').fadeOut();
 
             var company_id = $(this).data('value');
+
+            /* Get contacts */
             $.ajax({
                 url:"/company/get_contacts",
                 method:"GET",
@@ -72,6 +90,7 @@ $(document).ready(function() {
                     company :company_id
                 },
                 success:function(data){
+
                     var contact_select = $('#company_contact');
                     var option = '';
                     var select_text = $('#company_contact option[value=""]').text();
@@ -85,6 +104,19 @@ $(document).ready(function() {
                         contact_select.append(option);
                     });
                     contact_select.formSelect({});
+                }
+            });
+
+            /* Get and set code */
+            $.ajax({
+                url:"/company/get_code",
+                method:"GET",
+                data:{
+                    _token : $('input[name="_token"]').val(),
+                    company :company_id
+                },
+                success:function(code){
+                  $("#code").val(code);
                 }
             });
         }
@@ -143,3 +175,13 @@ $(document).ready(function() {
         list_div.remove();
     });
 });
+
+function open_filters(){
+  $("#filters").fadeIn(400);
+  $(".filters-btn").attr("onclick", "close_filters()");
+}
+
+function close_filters(){
+  $("#filters").fadeOut(200);
+  $(".filters-btn").attr("onclick", "open_filters()");
+}

@@ -197,10 +197,17 @@ class CompanyController extends Controller
     public function get_contacts(Request $request)
     {
         $company_id = $request->get('company');
-
         $company = Company::find($company_id);
 
         return $company->contacts;
+    }
+
+    public function get_code(Request $request)
+    {
+        $company_id = $request->get('company');
+        $company = Company::find($company_id);
+
+        return $company->code;
     }
 
     public function export()

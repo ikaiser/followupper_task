@@ -46,7 +46,7 @@
                                         <div class="input-field my-3">
                                             @if(is_string($researcher))
                                                 <label for="researcher"> @lang('Researcher') </label>
-                                                <input type="text" id="researcher" name="researcher" value="{{$researcher}}" readonly/>
+                                                <input type="text" id="researcher" name="researcher" value="{{$quotation->user->name}}" readonly/>
                                             @else
                                                 <select name="researcher" id="researcher">
                                                     <option value="" disabled hidden selected> @lang('Select a Researcher') </option>
@@ -82,10 +82,16 @@
                                         </div>
 
                                         <div class="input-field my-3">
-                                            <select name="company_contact" id="company_contact">
-                                                <option value="" disabled hidden> @lang('Select a Contact') </option>
+                                            <select name="company_contact[]" id="company_contact" multiple>
+                                                <option value="" disabled> @lang('Select a Contact') </option>
                                                 @foreach($quotation->company->contacts as $contact)
-                                                    <option value="{{$contact->id}}" {{$quotation->company_contact_id == $contact->id ? 'selected' : ''}}> {{$contact->name}} </option>
+                                                    <option value="{{$contact->id}}"
+                                                      @if( !is_null( $quotation->company_contact_id ) )
+                                                        {{($quotation->company_contact_id == $contact->id) ? 'selected' : ''}}
+                                                      @else
+                                                        {{$quotation->company_contacts->where('id', $contact->id)->count() == 1 ? 'selected' : ''}}
+                                                      @endif
+                                                    >{{$contact->name}} </option>
                                                 @endforeach
                                             </select>
                                             <label for="company_contact"> @lang('Company Contact') </label>
@@ -103,10 +109,10 @@
                                             <input type="text" id="sequential" name="sequential" {{\Illuminate\Support\Facades\Auth::user()->roles->first()->id > 2 ? 'readonly' : ''}} value="{{$quotation->sequential_number}}" >
                                         </div>
 
-                                        <div class="input-field my-3">
-                                            <label for="code"> @lang('Code') </label>
-                                            <input type="text" id="code" name="code" value="{{$quotation->code}}">
-                                        </div>
+                                        <!-- <div class="input-field my-3">
+                                            <label for="code"> @lang('Code') </label> -->
+                                            <input type="hidden" id="code" name="code" value="{{$quotation->code}}">
+                                        <!-- </div> -->
 
                                         <div class="input-field my-3">
                                             <label for="description"> @lang('Description') </label>
@@ -119,7 +125,7 @@
                                         </div>
 
                                         <div class="input-field my-3">
-                                            <label for="end_date"> @lang('Project Delivery Date') </label>
+                                            <label for="end_date"> @lang('Quotation Delivery Date') </label>
                                             <input type="text" class="datepicker" name="project_delivery_date" id="project_delivery_date" value="{{$quotation->deadline}}">
                                         </div>
 
@@ -175,10 +181,16 @@
                                         </div>
 
                                         <div class="input-field my-3">
-                                            <select name="methodology" id="methodology">
-                                                <option value="" disabled hidden selected> @lang('Select a Methodology') </option>
+                                            <select name="methodology[]" id="methodology" multiple>
+                                                <option value="" disabled> @lang('Select a Methodology') </option>
                                                 @foreach($methodologies as $methodology)
-                                                    <option value="{{$methodology->id}}" {{($quotation->methodology_id == $methodology->id) ? 'selected' : ''}}>{{$methodology->name}} / {{$methodology->type}}</option>
+                                                    <option value="{{$methodology->id}}"
+                                                      @if( !is_null($quotation->methodology_id) )
+                                                        {{($quotation->methodology_id == $methodology->id) ? 'selected' : ''}}
+                                                      @else
+                                                        {{$quotation->methodologies->where('id', $methodology->id)->count() == 1 ? 'selected' : ''}}
+                                                      @endif
+                                                    >{{$methodology->name}}</option>
                                                 @endforeach
                                             </select>
                                             <label for="status"> @lang('Methodology') </label>

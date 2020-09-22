@@ -5,6 +5,10 @@ namespace App\Console;
 use App\Datacuration;
 use App\DatacurationElement;
 use App\Mail\admin_report;
+use App\Mail\CollaboratorsA1Report;
+use App\Mail\CollaboratorsB1Report;
+use App\Mail\CollaboratorsAmountReport;
+use App\Mail\CollaboratorsDeliveredReport;
 use App\Mail\AdminReport;
 use App\Mail\DailyRecap;
 use App\Mail\EndingQuotations;
@@ -112,10 +116,137 @@ class Kernel extends ConsoleKernel
                 Mail::to($user)->send(New AdminReport($user, $quotation_stats));
             }
         //})->cron('0 18 * * 4');
-        })->cron('* * * * *');
+      })->cron('* * * * *'); /* Every minutes */
 
-            // $schedule->command('inspire')
-        //          ->hourly();
+        /* Collaborators daily STATUS A1 */
+        $schedule->call( function () {
+
+          $quotations = Quotation::whereHas('status', function ($query) {
+              $query->where('name', 'like', '%A1%');
+          })->get();
+
+          $user_list = [];
+
+          foreach( $quotations as $key => $quotation ) {
+
+            /* User */
+            if ( !is_null( $quotation->user ) && !is_null( $quotation->user->email ) ) {
+              $user_list[$quotation->user->email][] = $quotation;
+            }
+
+            /* Collaborators */
+            if ( !empty($quotation->collaborators) ) {
+              foreach( $quotation->collaborators as $k => $collaborators ) {
+                  $user_list[$collaborators->email][] = $quotation;
+              }
+            }
+
+          }
+
+          foreach ( $user_list as $userEmail => $quotationList ) {
+            $user = User::where("email", $userEmail)->get()->first();
+            Mail::to($user)->send(New CollaboratorsA1Report( $user, $quotationList ));
+          }
+
+      } )->cron('0 12 * * *'); /* Daily at 12 */
+
+      /* Collaborators weekly STATUS B1 */
+      $schedule->call( function () {
+
+        $quotations = Quotation::whereHas('status', function ($query) {
+            $query->where('name', 'like', '%B1%');
+        })->get();
+
+        $user_list = [];
+
+        foreach( $quotations as $key => $quotation ) {
+
+          /* User */
+          if ( !is_null( $quotation->user ) && !is_null( $quotation->user->email ) ) {
+            $user_list[$quotation->user->email][] = $quotation;
+          }
+
+          /* Collaborators */
+          if ( !empty($quotation->collaborators) ) {
+            foreach( $quotation->collaborators as $k => $collaborators ) {
+                $user_list[$collaborators->email][] = $quotation;
+            }
+          }
+
+        }
+
+        foreach ( $user_list as $userEmail => $quotationList ) {
+          $user = User::where("email", $userEmail)->get()->first();
+          Mail::to($user)->send(New CollaboratorsB1Report( $user, $quotationList ));
+        }
+
+      } )->cron('30 9 * * 4'); /* Weekly at 9:30 of thursday */
+
+      /* Collaborators weekly amount not like A1 and 0 or NULL */
+      $schedule->call( function () {
+
+        $quotations = Quotation::whereHas('status', function ($query) {
+                          $query->where('name', 'not like', '%A1%');
+                      })->where(function ($amountQuery) {
+                          $amountQuery->where('amount', '=', 0)
+                                      ->orWhereNull('amount');
+                      })->get();
+
+        $user_list = [];
+
+        foreach( $quotations as $key => $quotation ) {
+
+          /* User */
+          if ( !is_null( $quotation->user ) && !is_null( $quotation->user->email ) ) {
+            $user_list[$quotation->user->email][] = $quotation;
+          }
+
+          /* Collaborators */
+          if ( !empty($quotation->collaborators) ) {
+            foreach( $quotation->collaborators as $k => $collaborators ) {
+                $user_list[$collaborators->email][] = $quotation;
+            }
+          }
+
+        }
+
+        foreach ( $user_list as $userEmail => $quotationList ) {
+          $user = User::where("email", $userEmail)->get()->first();
+          Mail::to($user)->send(New CollaboratorsAmountReport( $user, $quotationList ));
+        }
+
+      } )->cron('30 9 * * 2'); /* Weekly at 9:30 of tuesday */
+
+      /* Collaborators daily not delivered */
+      $schedule->call( function () {
+
+        $quotations = Quotation::where( "closed", "=", 0 )->get();
+
+        $user_list = [];
+
+        foreach( $quotations as $key => $quotation ) {
+
+          /* User */
+          if ( !is_null( $quotation->user ) && !is_null( $quotation->user->email ) ) {
+            $user_list[$quotation->user->email][] = $quotation;
+          }
+
+          /* Collaborators */
+          if ( !empty($quotation->collaborators) ) {
+            foreach( $quotation->collaborators as $k => $collaborators ) {
+                $user_list[$collaborators->email][] = $quotation;
+            }
+          }
+
+        }
+
+        foreach ( $user_list as $userEmail => $quotationList ) {
+          $user = User::where("email", $userEmail)->get()->first();
+          Mail::to($user)->send(New CollaboratorsDeliveredReport( $user, $quotationList ));
+        }
+
+      } )->cron('0 12 * * *'); /* Daily at 12 */
+
     }
 
     /**

@@ -2,6 +2,8 @@
 
 @section('content')
 
+    @include('quotations/methodology/modal-remove')
+
     <div class="row">
         <div class="col s12 m6 mt-4">
             <h6>
@@ -61,7 +63,7 @@
                                 <td>{{$methodology->type}}</td>
                                 <td>
                                     <a href="{{ route('quotations_methodology.edit', $methodology->id) }}"> @lang('Edit') </a>
-                                    <a href="{{ route('quotations_methodology.remove', $methodology->id) }}"> @lang('Delete') </a>
+                                    <a name="element_remove" class="mx-1 modal-trigger" href="#remove_modal" data-id="{{$methodology->id}}" data-type="quotation_methodology"> @lang('Delete') </a>
                                 </td>
                             </tr>
                         @endforeach

@@ -2,6 +2,8 @@
 
 @section('content')
 
+    @include('quotations/status/modal-remove')
+
     <div class="row">
         <div class="col s12 m6 mt-4">
             <h6>
@@ -44,7 +46,7 @@
                 <div class="card-content">
                     <span class="card-title"> @lang('Status') </span>
 
-                    <table class="table-responsive highlight stripe" id="quotations_table">
+                    <table class="table-responsive highlight stripe" id="quotation_status_table">
                         <thead>
                         <tr>
                             <th> Id </th>
@@ -60,6 +62,7 @@
                                 <td>
                                     <a href="{{ route('quotations_status.edit', $single_status->id) }}"> @lang('Edit') </a>
                                     <a href="{{ route('quotations_status.remove', $single_status->id) }}"> @lang('Delete') </a>
+                                    <a name="element_remove" class="mx-1 modal-trigger" href="#remove_modal" data-id="{{$single_status->id}}" data-type="quotation_status"> @lang('Delete') </a>
                                 </td>
                             </tr>
                         @endforeach
