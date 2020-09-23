@@ -58,7 +58,6 @@
                                 <td>
                                     <a href="{{ route('users.log', $user->id) }}" target="_blank"> Log </a>
                                     <a href="{{ route('users.edit', $user->id) }}"> @lang('Edit') </a>
-                                    <a href="{{ route('users.destroy', $user->id) }}" onclick="return confirm('Are you Sure ?')"> @lang('Delete') </a>
                                     <a name="element_remove" class="mx-1 modal-trigger" href="#remove_modal" data-id="{{$user->id}}" data-type="user"> @lang('Delete') </a>
                                 </td>
                             </tr>
@@ -86,9 +85,11 @@
                 'responsive'  : true,
                 fixedColumns:   {
                     heightMatch: 'none'
-                }
+                },
+                "lengthMenu": [[10, 25, 50, 100, 500, 1000], [10, 25, 50, 100, 500, 1000]],
+                "pageLength": 500
             });
-        } );
+        });
 
     </script>
 @endsection

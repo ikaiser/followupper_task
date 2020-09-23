@@ -61,7 +61,6 @@
                                 <td>{{$single_typology->name}}</td>
                                 <td>
                                     <a href="{{ route('quotations_typology.edit', $single_typology->id) }}"> @lang('Edit') </a>
-                                    <a href="{{ route('quotations_typology.remove', $single_typology->id) }}"> @lang('Delete') </a>
                                     <a name="element_remove" class="mx-1 modal-trigger" href="#remove_modal" data-id="{{$single_typology->id}}" data-type="quotation_typology"> @lang('Delete') </a>
                                 </td>
                             </tr>

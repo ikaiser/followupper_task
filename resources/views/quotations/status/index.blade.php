@@ -61,7 +61,6 @@
                                 <td>{{$single_status->name}}</td>
                                 <td>
                                     <a href="{{ route('quotations_status.edit', $single_status->id) }}"> @lang('Edit') </a>
-                                    <a href="{{ route('quotations_status.remove', $single_status->id) }}"> @lang('Delete') </a>
                                     <a name="element_remove" class="mx-1 modal-trigger" href="#remove_modal" data-id="{{$single_status->id}}" data-type="quotation_status"> @lang('Delete') </a>
                                 </td>
                             </tr>
