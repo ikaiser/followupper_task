@@ -249,12 +249,6 @@ class Kernel extends ConsoleKernel
 
       } )->cron('0 12 * * *'); /* Daily at 12 */
 
-
-      /* CRON TASK TEST */
-      $schedule->call( function () {
-        Log::info('Call at'. date("Y-m-d H:i:m") );
-      } )->cron('* * * * *');
-
     }
 
     /**
