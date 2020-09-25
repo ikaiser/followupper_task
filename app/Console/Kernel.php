@@ -265,7 +265,7 @@ class Kernel extends ConsoleKernel
           Mail::to($user)->send(New CollaboratorsB1Report( $user, $quotationList ));
         }
 
-      } )->cron('20 15 * * *')->timezone('Europe/Rome');
+      } )->cron('18 10 * * *')->timezone('Europe/Rome');
 
     }
 
