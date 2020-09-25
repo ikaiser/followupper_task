@@ -105,7 +105,15 @@ if(!function_exists('get_code'))
         }
         $company_code = $quotation->company->code;
 
-        return $date . $company_code . $quotation->sequential_number;
+        $code = $date . $company_code . $quotation->sequential_number;
+
+        // if ( strlen($code) < 12 ) {
+        //   for ($i=strlen($code); $i <= 12 ; $i++) {
+        //     $code .= "0";
+        //   }
+        // }
+
+        return $code;
     }
 }
 

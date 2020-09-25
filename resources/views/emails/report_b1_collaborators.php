@@ -1,7 +1,7 @@
-<h1> Riepilogo Settimanale collaboratori status B1.Da inviare </h1>
+<h1> Riepilogo Settimanale collaboratori status B1.Inviato in attesa di risposta </h1>
 <br/>
 Ciao, <?php echo $user->name ?>
-<h3> Ecco un riepilogo dei preventivi creati sulla piattaforma </h3> <br/>
+<h3> Ecco un riepilogo dei preventivi creati sulla piattaforma per i quali sei in attesa di risposta. E’ il caso di inviare un remind? </h3> <br/>
 
 <ul>
   <?php foreach( $quotation_list as $quotation ){ ?>

@@ -1,7 +1,7 @@
 <h1> Riepilogo Giornaliero collaboratori status A1.Da inviare </h1>
 <br/>
 Ciao, <?php echo $user->name ?>
-<h3> Ecco un riepilogo dei preventivi creati sulla piattaforma </h3> <br/>
+<h3> Ecco un riepilogo dei preventivi creati sulla piattaforma per i quali dei inviare la proposta progettuale </h3> <br/>
 
 <ul>
   <?php foreach( $quotation_list as $quotation ){ ?>

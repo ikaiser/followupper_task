@@ -3,14 +3,14 @@ $(document).ready(function() {
     /* Quotations */
     $('#quotations_table').DataTable( {
         "lengthChange": true,
-        "order": [ [ 2, "desc" ] ],
+        "order": [ [ 0, "desc" ], [ 2, "desc" ] ],
         "lengthMenu": [[10, 25, 50, 100, 500, 1000], [10, 25, 50, 100, 500, 1000]],
         "pageLength": 500
     });
 
     $('#quotation_status_table').DataTable( {
         "lengthChange": true,
-        "order": [ [ 1, "asc" ] ],
+        "order": [ [ 1, "asc" ], ],
         "lengthMenu": [[10, 25, 50, 100, 500, 1000], [10, 25, 50, 100, 500, 1000]],
         "pageLength": 500
     });
@@ -96,7 +96,7 @@ $(document).ready(function() {
                     var select_text = $('#company_contact option[value=""]').text();
 
                     contact_select.empty();
-                    contact_select.append('<option value="" disabled hidden selected>' + select_text + '</option>');
+                    contact_select.append('<option value="" disabled>' + select_text + '</option>');
 
                     $.each(data, function (index, value) {
                         option = new Option(value.name, value.id);

@@ -120,7 +120,7 @@ class QuotationController extends Controller
             'name'                  => 'required',
             'company'               => 'required',
             'company_contact'       => 'required',
-            'sequential'            => 'numeric|nullable|required_if:manual_sequential,on|unique:quotation,sequential_number',
+            'sequential'            => 'numeric|nullable|required_if:manual_sequential,on',
             'code'                  => 'required',
             'description'           => 'required',
             'insertion_date'        => 'required|date',
@@ -271,7 +271,7 @@ class QuotationController extends Controller
             'name'                  => 'required',
             'company'               => 'required',
             'company_contact'       => 'required',
-            'sequential'            => 'numeric|nullable|required_if:manual_sequential,on|unique:quotation,sequential_number,' . $quotation_id,
+            'sequential'            => 'numeric|nullable|required_if:manual_sequential,on',
             'code'                  => 'required',
             'description'           => 'required',
             'insertion_date'        => 'required|date',
@@ -777,7 +777,10 @@ class QuotationController extends Controller
         elseif( $type == 'operators_not_delivered' )
         {
 
-          $quotations = Quotation::where( "closed", "=", 0 )->get();
+          $quotations = Quotation::where( "closed", "=", 0 )
+                                 ->whereHas('status', function ($query) {
+                                      $query->where('name', 'like', '%C1%');
+                                 })->get();
 
           $user_list = [];
 

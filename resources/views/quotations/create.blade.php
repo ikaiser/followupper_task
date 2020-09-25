@@ -197,7 +197,7 @@
                                             <select name="methodology[]" id="methodology" multiple>
                                                 <option value="" disabled> @lang('Select a Methodology') </option>
                                                 @foreach($methodologies as $methodology)
-                                                    <option value="{{$methodology->id}}" {{!is_null(old('methodology')) && in_array($typology->id, old('methodology')) ? 'selected' : ''}}>{{$methodology->name}}</option>
+                                                    <option value="{{$methodology->id}}" {{!is_null(old('methodology')) && in_array($methodology->id, old('methodology')) ? 'selected' : ''}}>{{$methodology->name}}</option>
                                                 @endforeach
                                             </select>
                                             <label for="status"> @lang('Methodology') </label>

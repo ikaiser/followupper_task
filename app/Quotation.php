@@ -115,6 +115,13 @@ class Quotation extends Model
                       });
       }
 
+      /* Statuses */
+      if( isset( $filters["statuses"] ) && $filters["statuses"] !== "" ) {
+        $quotations = $quotations->whereHas( 'status', function ($statuses) use ($filters){
+                        $statuses->whereIn('id', $filters["statuses"]);
+                      });
+      }
+
       /* Researchers */
       if( isset( $filters["researchers"] ) && $filters["researchers"] !== "" ) {
         $quotations = $quotations->where( function ($researchers) use ($filters) {
@@ -186,6 +193,13 @@ class Quotation extends Model
       if( isset( $filters["typologies"] ) && $filters["typologies"] !== "" ) {
         $quotations = $quotations->whereHas( 'typologies', function ($typologies) use ($filters){
                         $typologies->whereIn('id', $filters["typologies"]);
+                      });
+      }
+
+      /* Statuses */
+      if( isset( $filters["statuses"] ) && $filters["statuses"] !== "" ) {
+        $quotations = $quotations->whereHas( 'status', function ($statuses) use ($filters){
+                        $statuses->whereIn('id', $filters["statuses"]);
                       });
       }
 

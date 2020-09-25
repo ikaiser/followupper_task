@@ -115,8 +115,7 @@ class Kernel extends ConsoleKernel
             {
                 Mail::to($user)->send(New AdminReport($user, $quotation_stats));
             }
-        //})->cron('0 18 * * 4');
-      })->cron('* * * * *'); /* Every minutes */
+        })->cron('0 10 * * 4'); /* Every minutes */
 
         /* Collaborators daily STATUS A1 */
         $schedule->call( function () {
@@ -220,7 +219,10 @@ class Kernel extends ConsoleKernel
       /* Collaborators daily not delivered */
       $schedule->call( function () {
 
-        $quotations = Quotation::where( "closed", "=", 0 )->get();
+        $quotations = Quotation::where( "closed", "=", 0 )
+                               ->whereHas('status', function ($query) {
+                                    $query->where('name', 'like', '%C1%');
+                               })->get();
 
         $user_list = [];
 

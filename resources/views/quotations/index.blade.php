@@ -104,6 +104,18 @@
                       </div>
 
                       <div class="input-field my-3">
+                        <select name="statuses[]" id="statuses" multiple>
+                            <option value="" disabled> @lang('Select a Status') </option>
+                            @foreach($statuses as $status)
+                              <option value="{{$status->id}}"
+                                @if( isset( $_GET['statuses'] ) )
+                                  {{ in_array( $status->id, $_GET['statuses'] ) == 1 ? 'selected' : ''}}
+                                @endif>{{$status->name}}</option>
+                            @endforeach
+                        </select>
+                      </div>
+
+                      <div class="input-field my-3">
                         <input type="text" name="probability" id="probability" placeholder="@lang('Probability')"
                         @if( isset( $_GET['probability'] ) )
                           value="{{$_GET['probability']}}"
