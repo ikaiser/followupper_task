@@ -96,7 +96,7 @@ class Kernel extends ConsoleKernel
                 Mail::to($user)->send(New MissingAmountQuotations($user, $quotations));
             }
 
-        })->cron('0 18 * * *')->timezone('Europe/Rome');
+        })->cron('0 18 * * *');
 
 
         $schedule->call(function () {
@@ -115,7 +115,7 @@ class Kernel extends ConsoleKernel
             {
                 Mail::to($user)->send(New AdminReport($user, $quotation_stats));
             }
-        })->cron('0 10 * * 4')->timezone('Europe/Rome'); /* Tuesday at 10 */
+        })->cron('0 10 * * 4'); /* Tuesday at 10 */
 
         /* Collaborators daily STATUS A1 */
         $schedule->call( function () {
@@ -147,7 +147,7 @@ class Kernel extends ConsoleKernel
             Mail::to($user)->send(New CollaboratorsA1Report( $user, $quotationList ));
           }
 
-      } )->cron('0 12 * * *')->timezone('Europe/Rome'); /* Daily at 12 */
+      } )->cron('0 12 * * *'); /* Daily at 12 */
 
       /* Collaborators weekly STATUS B1 */
       $schedule->call( function () {
@@ -179,7 +179,7 @@ class Kernel extends ConsoleKernel
           Mail::to($user)->send(New CollaboratorsB1Report( $user, $quotationList ));
         }
 
-      } )->cron('30 9 * * 4')->timezone('Europe/Rome'); /* Weekly at 9:30 of thursday */
+      } )->cron('30 9 * * 4'); /* Weekly at 9:30 of thursday */
 
       /* Collaborators weekly amount not like A1 and 0 or NULL */
       $schedule->call( function () {
@@ -214,7 +214,7 @@ class Kernel extends ConsoleKernel
           Mail::to($user)->send(New CollaboratorsAmountReport( $user, $quotationList ));
         }
 
-      } )->cron('30 9 * * 2')->timezone('Europe/Rome'); /* Weekly at 9:30 of tuesday */
+      } )->cron('30 9 * * 2'); /* Weekly at 9:30 of tuesday */
 
       /* Collaborators daily not delivered */
       $schedule->call( function () {
@@ -247,7 +247,7 @@ class Kernel extends ConsoleKernel
           Mail::to($user)->send(New CollaboratorsDeliveredReport( $user, $quotationList ));
         }
 
-      } )->cron('0 12 * * *')->timezone('Europe/Rome'); /* Daily at 12 */
+      } )->cron('0 12 * * *'); /* Daily at 12 */
 
 
       /* CRON TASK TEST */
@@ -265,7 +265,7 @@ class Kernel extends ConsoleKernel
           Mail::to($user)->send(New CollaboratorsB1Report( $user, $quotationList ));
         }
 
-      } )->cron('18 10 * * *')->timezone('Europe/Rome');
+      } )->cron('* * * * *');
 
     }
 
