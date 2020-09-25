@@ -252,19 +252,7 @@ class Kernel extends ConsoleKernel
 
       /* CRON TASK TEST */
       $schedule->call( function () {
-
-        $quotations = Quotation::whereHas('status', function ($query) {
-            $query->where('name', 'like', '%B1%');
-        })->get();
-
-        $user_list = [];
-        $user_list["caparonejacopo99@gmail.com"][] = $quotations;
-
-        foreach ( $user_list as $userEmail => $quotationList ) {
-          $user = User::where("email", $userEmail)->get()->first();
-          Mail::to($user)->send(New CollaboratorsB1Report( $user, $quotationList ));
-        }
-
+        Log::info('Call at'. date("Y-m-d H:i:m") );
       } )->cron('* * * * *');
 
     }
