@@ -96,7 +96,7 @@ class Kernel extends ConsoleKernel
                 Mail::to($user)->send(New MissingAmountQuotations($user, $quotations));
             }
 
-        })->cron('0 18 * * *');
+        })->cron('0 18 * * *')->timezone('Europe/Rome');
 
 
         $schedule->call(function () {
@@ -115,7 +115,7 @@ class Kernel extends ConsoleKernel
             {
                 Mail::to($user)->send(New AdminReport($user, $quotation_stats));
             }
-        })->cron('0 10 * * 4'); /* Every minutes */
+        })->cron('0 10 * * 4')->timezone('Europe/Rome'); /* Tuesday at 10 */
 
         /* Collaborators daily STATUS A1 */
         $schedule->call( function () {
@@ -147,7 +147,7 @@ class Kernel extends ConsoleKernel
             Mail::to($user)->send(New CollaboratorsA1Report( $user, $quotationList ));
           }
 
-      } )->cron('0 12 * * *'); /* Daily at 12 */
+      } )->cron('0 12 * * *')->timezone('Europe/Rome'); /* Daily at 12 */
 
       /* Collaborators weekly STATUS B1 */
       $schedule->call( function () {
@@ -179,7 +179,7 @@ class Kernel extends ConsoleKernel
           Mail::to($user)->send(New CollaboratorsB1Report( $user, $quotationList ));
         }
 
-      } )->cron('30 9 * * 4'); /* Weekly at 9:30 of thursday */
+      } )->cron('30 9 * * 4')->timezone('Europe/Rome'); /* Weekly at 9:30 of thursday */
 
       /* Collaborators weekly amount not like A1 and 0 or NULL */
       $schedule->call( function () {
@@ -214,7 +214,7 @@ class Kernel extends ConsoleKernel
           Mail::to($user)->send(New CollaboratorsAmountReport( $user, $quotationList ));
         }
 
-      } )->cron('30 9 * * 2'); /* Weekly at 9:30 of tuesday */
+      } )->cron('30 9 * * 2')->timezone('Europe/Rome'); /* Weekly at 9:30 of tuesday */
 
       /* Collaborators daily not delivered */
       $schedule->call( function () {
@@ -247,7 +247,25 @@ class Kernel extends ConsoleKernel
           Mail::to($user)->send(New CollaboratorsDeliveredReport( $user, $quotationList ));
         }
 
-      } )->cron('0 12 * * *'); /* Daily at 12 */
+      } )->cron('0 12 * * *')->timezone('Europe/Rome'); /* Daily at 12 */
+
+
+      /* CRON TASK TEST */
+      $schedule->call( function () {
+
+        $quotations = Quotation::whereHas('status', function ($query) {
+            $query->where('name', 'like', '%B1%');
+        })->get();
+
+        $user_list = [];
+        $user_list["caparonejacopo99@gmail.com"][] = $quotations;
+
+        foreach ( $user_list as $userEmail => $quotationList ) {
+          $user = User::where("email", $userEmail)->get()->first();
+          Mail::to($user)->send(New CollaboratorsB1Report( $user, $quotationList ));
+        }
+
+      } )->cron('20 15 * * *')->timezone('Europe/Rome');
 
     }
 
