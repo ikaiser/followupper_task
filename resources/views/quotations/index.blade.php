@@ -122,16 +122,33 @@
                         @endif>
                       </div>
 
-                      <div class="input-field my-3">
-                        <span>
-                          <label>
-                            <input name="open_projects" id="open_projects" type="checkbox"
-                            @if( isset( $_GET['open_projects'] ) && $_GET['open_projects'] == 'on' )
-                              checked
-                            @endif>
-                            <span>@lang('Only open projects')</span>
-                          </label>
-                        </span>
+                      <div class="row">
+                        <div class="col l6">
+                          <div class="input-field my-3">
+                            <span>
+                              <label>
+                                <input name="open_projects" id="open_projects" type="checkbox"
+                                @if( isset( $_GET['open_projects'] ) && $_GET['open_projects'] == 'on' )
+                                  checked
+                                @endif>
+                                <span>@lang('Only open projects')</span>
+                              </label>
+                            </span>
+                          </div>
+                        </div>
+                        <div class="col l6">
+                          <div class="input-field my-3">
+                            <select name="ales_year" id="ales_year">
+                                <option value="" selected> @lang('Select project year') </option>
+                                @for($year=(intval( date("y") )-5);$year<=(intval(date("y"))+1);$year++)
+                                  <option value="{{$year}}"
+                                    @if( isset( $_GET['ales_year'] ) && $year == $_GET['ales_year'] )
+                                      selected
+                                    @endif>{{$year}}</option>
+                                @endfor
+                            </select>
+                          </div>
+                        </div>
                       </div>
 
                       <!-- Delivery date -->

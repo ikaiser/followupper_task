@@ -1,7 +1,7 @@
-<h1> Riepilogo giornaliero collaboratori preventivi non chiusi </h1>
+<h1> Riepilogo giornaliero collaboratori progetti entrati e non chiusi </h1>
 <br/>
 Ciao, <?php echo $user->name ?>
-<h3> Ecco un riepilogo dei preventivi non ancora consegnati presenti sulla piattaforma </h3> <br/>
+<h3> Ecco un riepilogo dei progetti entrati e non ancora chiusi presenti sulla piattaforma </h3> <br/>
 
 <ul>
   <?php foreach( $quotation_list as $quotation ){ ?>

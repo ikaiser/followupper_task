@@ -43,7 +43,7 @@
                 <div class="card-content">
                     <span class="card-title"> Report </span>
 
-                    <table class="table-responsive highlight stripe" id="quotations_table">
+                    <table class="table-responsive highlight stripe">
                         <thead>
                         <tr>
                             <th> @lang('Name') </th>

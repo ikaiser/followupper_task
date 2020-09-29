@@ -1,14 +1,68 @@
 $(document).ready(function() {
 
+  /* Order by first 2 number of code */
+  function getValue(titleValue) {
+      return titleValue.substring(0, 2);
+  }
+
+  jQuery.fn.dataTableExt.oSort['id-asc'] = function (first, second) {
+      var x = getValue(first);
+      var y = getValue(second);
+
+      return ( (x < y) ? -1 : ((x > y) ? 1 : 0));
+  };
+
+  jQuery.fn.dataTableExt.oSort['id-desc'] = function (first, second) {
+      var x = getValue(first);
+      var y = getValue(second);
+
+      return ((x < y) ? 1 : ((x > y) ? -1 : 0));
+  };
+  /* end Order by first 2 number of code */
+
     /* Quotations */
     $('#quotations_table').DataTable( {
         "lengthChange": true,
         "order": [ [ 0, "desc" ], [ 2, "desc" ] ],
         "lengthMenu": [[10, 25, 50, 100, 500, 1000], [10, 25, 50, 100, 500, 1000]],
+        "pageLength": 500,
+        "aoColumns": [
+           { "sType": "id" },
+           { "sType": "name" },
+           { "sType": "sequential" },
+           { "sType": "user" },
+           { "sType": "company" },
+           { "sType": "description" },
+           { "sType": "actions" }
+        ]
+    });
+
+    /* Status */
+    $('#quotation_status_table').DataTable( {
+        "lengthChange": true,
+        "order": [ [ 1, "asc" ], ],
+        "lengthMenu": [[10, 25, 50, 100, 500, 1000], [10, 25, 50, 100, 500, 1000]],
         "pageLength": 500
     });
 
-    $('#quotation_status_table').DataTable( {
+    /* Companies */
+    $('#quotation_companies_table').DataTable( {
+        "lengthChange": true,
+        "order": [ [ 1, "asc" ], ],
+        "lengthMenu": [[10, 25, 50, 100, 500, 1000], [10, 25, 50, 100, 500, 1000]],
+        "pageLength": 500
+    });
+
+    /* Typologies */
+    $('#quotation_typologies_table').DataTable( {
+        "lengthChange": true,
+        "order": [ [ 1, "asc" ], ],
+        "lengthMenu": [[10, 25, 50, 100, 500, 1000], [10, 25, 50, 100, 500, 1000]],
+        "pageLength": 500
+    });
+
+    /* Methodologies */
+    $('#quotation_methodologies_table').DataTable( {
         "lengthChange": true,
         "order": [ [ 1, "asc" ], ],
         "lengthMenu": [[10, 25, 50, 100, 500, 1000], [10, 25, 50, 100, 500, 1000]],

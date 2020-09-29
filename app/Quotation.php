@@ -165,6 +165,17 @@ class Quotation extends Model
         $quotations = $quotations->where('closed', '=', 0 );
       }
 
+      /* Open projects */
+      if( isset( $filters["ales_year"] ) && $filters["ales_year"] !== "" ) {
+
+        $from = date('Y-m-d', strtotime((intval($filters["ales_year"])-1)."-11-30" ) );
+        $to   = date('Y-m-d', strtotime($filters["ales_year"]."-11-30"));
+
+        $quotations = $quotations->whereDate( 'created_at', '>=', $from );
+        $quotations = $quotations->whereDate( 'created_at', '<=', $to   );
+
+      }
+
       return $quotations->get();
 
     }

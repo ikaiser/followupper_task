@@ -46,7 +46,7 @@
                 <div class="card-content">
                     <span class="card-title"> @lang('Methodology') </span>
 
-                    <table class="table-responsive highlight stripe" id="quotations_table">
+                    <table class="table-responsive highlight stripe" id="quotation_methodologies_table">
                         <thead>
                         <tr>
                             <th> Id </th>

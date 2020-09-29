@@ -28,9 +28,7 @@ class Kernel extends ConsoleKernel
      *
      * @var array
      */
-    protected $commands = [
-        //
-    ];
+    protected $commands = [];
 
     /**
      * Define the application's command schedule.
@@ -68,7 +66,9 @@ class Kernel extends ConsoleKernel
 
                 if($quotations->count() > 0)
                 {
-                    Mail::to($user)->send(New EndingQuotations($user, $quotations));
+                    Mail::to($user)
+                    ->cc("tommaso.pronunzio@alesresearch.com")
+                    ->send(New EndingQuotations($user, $quotations));
                 }
             }
 
@@ -93,7 +93,9 @@ class Kernel extends ConsoleKernel
             {
                 $user = User::find($key);
 
-                Mail::to($user)->send(New MissingAmountQuotations($user, $quotations));
+                Mail::to($user)
+                ->cc("tommaso.pronunzio@alesresearch.com")
+                ->send(New MissingAmountQuotations($user, $quotations));
             }
 
         })->cron('0 18 * * *');
@@ -113,7 +115,9 @@ class Kernel extends ConsoleKernel
 
             foreach($users as $user)
             {
-                Mail::to($user)->send(New AdminReport($user, $quotation_stats));
+                Mail::to($user)
+                ->cc("tommaso.pronunzio@alesresearch.com")
+                ->send(New AdminReport($user, $quotation_stats));
             }
         })->cron('0 10 * * 4'); /* Tuesday at 10 */
 
@@ -142,9 +146,11 @@ class Kernel extends ConsoleKernel
 
           }
 
-          foreach ( $user_list as $userEmail => $quotationList ) {
+          foreach ( $user_list as $userEmail => $quotationList ){
             $user = User::where("email", $userEmail)->get()->first();
-            Mail::to($user)->send(New CollaboratorsA1Report( $user, $quotationList ));
+            Mail::to($user)
+            ->cc("tommaso.pronunzio@alesresearch.com")
+            ->send(New CollaboratorsA1Report( $user, $quotationList ));
           }
 
       } )->cron('0 12 * * *'); /* Daily at 12 */
@@ -176,7 +182,9 @@ class Kernel extends ConsoleKernel
 
         foreach ( $user_list as $userEmail => $quotationList ) {
           $user = User::where("email", $userEmail)->get()->first();
-          Mail::to($user)->send(New CollaboratorsB1Report( $user, $quotationList ));
+          Mail::to($user)
+          ->cc("tommaso.pronunzio@alesresearch.com")
+          ->send(New CollaboratorsB1Report( $user, $quotationList ));
         }
 
       } )->cron('30 9 * * 4'); /* Weekly at 9:30 of thursday */
@@ -211,7 +219,9 @@ class Kernel extends ConsoleKernel
 
         foreach ( $user_list as $userEmail => $quotationList ) {
           $user = User::where("email", $userEmail)->get()->first();
-          Mail::to($user)->send(New CollaboratorsAmountReport( $user, $quotationList ));
+          Mail::to($user)
+          ->cc("tommaso.pronunzio@alesresearch.com")
+          ->send(New CollaboratorsAmountReport( $user, $quotationList ));
         }
 
       } )->cron('30 9 * * 2'); /* Weekly at 9:30 of tuesday */
@@ -244,7 +254,9 @@ class Kernel extends ConsoleKernel
 
         foreach ( $user_list as $userEmail => $quotationList ) {
           $user = User::where("email", $userEmail)->get()->first();
-          Mail::to($user)->send(New CollaboratorsDeliveredReport( $user, $quotationList ));
+          Mail::to($user)
+          ->cc("tommaso.pronunzio@alesresearch.com")
+          ->send(New CollaboratorsDeliveredReport( $user, $quotationList ));
         }
 
       } )->cron('0 12 * * *'); /* Daily at 12 */
