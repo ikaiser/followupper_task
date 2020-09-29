@@ -547,7 +547,12 @@ class QuotationController extends Controller
                 $line .= ";";
             }
 
-            $line .= "{$quotation->sequential_number};{$quotation->code};{$quotation->description};{$insertion_date};{$deadline};{$quotation->amount};{$quotation->status->name};";
+            $statusName = "";
+            if ( !is_null($quotation->status) && $quotation->status !== "" && $quotation->status->name !== "" ) {
+              $statusName = $quotation->status->name;
+            }
+
+            $line .= "{$quotation->sequential_number};{$quotation->code};{$quotation->description};{$insertion_date};{$deadline};{$quotation->amount};{$statusName};";
 
             $methodologies = $quotation->methodologies;
             if($methodologies->count() > 0)
