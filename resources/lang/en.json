@@ -197,5 +197,15 @@
     "Insertion Date to"   : "Insertion Date to",
     "Filters" : "Filters",
     "Only open projects"   : "Only open projects",
-    "Apply filters"   : "Apply filters"
+    "Apply filters"   : "Apply filters",
+    "Select project year": "Select project year",
+    "Reset filters": "Reset filters",
+    "Probability Min"   : "Probability Min",
+    "Probability Max"   : "Probability Max",
+    "Amount Min"   : "Amount Min",
+    "Amount Max"   : "Amount Max",
+    "Amount Acquired Min"   : "Amount Acquired Min",
+    "Amount Acquired Max"   : "Amount Acquired Max",
+    "Invoice Amount Min"   : "Invoice Amount Min",
+    "Invoice Amount Max"   : "Invoice Amount Max"
 }

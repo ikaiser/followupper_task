@@ -52,18 +52,6 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <th>Report Admin </th>
-                                <th class="center-align"> <button class="btn btn-primary generate_report" data-report="admin"> Genera Report </button> </th>
-                            </tr>
-                            <tr>
-                                <th>Report Scadenze </th>
-                                <th class="center-align"> <button class="btn btn-primary generate_report" data-report="deadlines"> Genera Report </button> </th>
-                            </tr>
-                            <tr>
-                                <th>Report Importi Mancanti </th>
-                                <th class="center-align"> <button class="btn btn-primary generate_report" data-report="amounts"> Genera Report </button> </th>
-                            </tr>
-                            <tr>
                                 <th>Report giornaliero status A1 ( Ricercatori, utenti, operatori )</th>
                                 <th class="center-align"> <button class="btn btn-primary generate_report" data-report="status_a1"> Genera Report </button> </th>
                             </tr>

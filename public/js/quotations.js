@@ -28,12 +28,12 @@ $(document).ready(function() {
         "pageLength": 500,
         "aoColumns": [
            { "sType": "id" },
-           { "sType": "name" },
-           { "sType": "sequential" },
-           { "sType": "user" },
-           { "sType": "company" },
-           { "sType": "description" },
-           { "sType": "actions" }
+           { "type": "html" },
+           { "type": "num" },
+           { "type": "html" },
+           { "type": "html" },
+           { "type": "html" },
+           { "type": "html" }
         ]
     });
 

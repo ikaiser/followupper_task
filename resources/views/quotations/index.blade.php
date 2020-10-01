@@ -115,11 +115,116 @@
                         </select>
                       </div>
 
-                      <div class="input-field my-3">
-                        <input type="text" name="probability" id="probability" placeholder="@lang('Probability')"
-                        @if( isset( $_GET['probability'] ) )
-                          value="{{$_GET['probability']}}"
-                        @endif>
+                      <div class="row mt-4">
+
+                        <div class="col l6">
+                          <label class="black-text"> @lang('Probability Min') </label>
+                          <div class="input-field my-3">
+                            <input min="0" max="100" type="range" name="probability_min" id="probability_min"
+                            @if( isset( $_GET['probability_min'] ) )
+                              value="{{$_GET['probability_min']}}"
+                            @else
+                              value="0"
+                            @endif>
+                          </div>
+                        </div>
+
+                        <div class="col l6">
+                          <label class="black-text"> @lang('Probability Max') </label>
+                          <div class="input-field my-3">
+                            <input min="0" max="100" type="range" name="probability_max" id="probability_max"
+                            @if( isset( $_GET['probability_max'] ) )
+                              value="{{$_GET['probability_max']}}"
+                            @else
+                              value="100"
+                            @endif>
+                          </div>
+                        </div>
+
+                      </div>
+
+                      <div class="row mt-2">
+
+                        <div class="col l6">
+                          <label class="black-text"> @lang('Amount Min') </label>
+                          <div class="input-field my-3">
+                            <input min="0" max="99999" step="100" type="range" name="amount_min" id="amount_min"
+                            @if( isset( $_GET['amount_min'] ) )
+                              value="{{$_GET['amount_min']}}"
+                            @else
+                              value="0"
+                            @endif>
+                          </div>
+                        </div>
+
+                        <div class="col l6">
+                          <label class="black-text"> @lang('Amount Max') </label>
+                          <div class="input-field my-3">
+                            <input min="0" max="99999" step="100" type="range" name="amount_max" id="amount_max"
+                            @if( isset( $_GET['amount_max'] ) )
+                              value="{{$_GET['amount_max']}}"
+                            @else
+                              value="99999"
+                            @endif>
+                          </div>
+                        </div>
+
+                      </div>
+
+                      <div class="row mt-2">
+
+                        <div class="col l6">
+                          <label class="black-text"> @lang('Amount Acquired Min') </label>
+                          <div class="input-field my-3">
+                            <input min="0" max="99999" step="100" type="range" name="amount_acquired_min" id="amount_acquired_min"
+                            @if( isset( $_GET['amount_acquired_min'] ) )
+                              value="{{$_GET['amount_acquired_min']}}"
+                            @else
+                              value="0"
+                            @endif>
+                          </div>
+                        </div>
+
+                        <div class="col l6">
+                          <label class="black-text"> @lang('Amount Acquired Max') </label>
+                          <div class="input-field my-3">
+                            <input min="0" max="99999" step="100" type="range" name="amount_acquired_max" id="amount_acquired_max"
+                            @if( isset( $_GET['amount_acquired_max'] ) )
+                              value="{{$_GET['amount_acquired_max']}}"
+                            @else
+                              value="99999"
+                            @endif>
+                          </div>
+                        </div>
+
+                      </div>
+
+                      <div class="row mt-2">
+
+                        <div class="col l6">
+                          <label class="black-text"> @lang('Invoice Amount Min') </label>
+                          <div class="input-field my-3">
+                            <input min="0" max="99999" step="100" type="range" name="invoice_amount_min" id="invoice_amount_min"
+                            @if( isset( $_GET['invoice_amount_min'] ) )
+                              value="{{$_GET['invoice_amount_min']}}"
+                            @else
+                              value="0"
+                            @endif>
+                          </div>
+                        </div>
+
+                        <div class="col l6">
+                          <label class="black-text"> @lang('Invoice Amount Max') </label>
+                          <div class="input-field my-3">
+                            <input min="0" max="99999" step="100" type="range" name="invoice_amount_max" id="invoice_amount_max"
+                            @if( isset( $_GET['invoice_amount_max'] ) )
+                              value="{{$_GET['invoice_amount_max']}}"
+                            @else
+                              value="99999"
+                            @endif>
+                          </div>
+                        </div>
+
                       </div>
 
                       <div class="row">

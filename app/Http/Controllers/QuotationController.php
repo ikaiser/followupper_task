@@ -506,11 +506,12 @@ class QuotationController extends Controller
           }
         }
 
-        echo "Id;Nome,Utente;Collaboratori;Azienda;Contatto Azienda;Numero Sequenziale;Codice;Descrizione;Data Inserimento;Data Consegna;Importo;Stato;Metodologia;Tipologie Test;Importo Acquisito;Probabilità;Feedback;Preventivo Chiuso;Importo Fatturato;\n";
+        echo "Id;Nome,Utente;Collaboratori;Azienda;Contatto Azienda;Numero Sequenziale;Descrizione;Data Inserimento;Data Consegna;Importo;Stato;Metodologia;Tipologie Test;Importo Acquisito;Probabilità;Feedback;Preventivo Chiuso;Importo Fatturato;\n";
 
         foreach($quotations as $quotation)
         {
-            $line = "{$quotation->id};{$quotation->user->name};";
+            $quotationCode = get_code($quotation);
+            $line = "{$quotationCode};{$quotation->user->name};";
             $insertion_date = date('d/m/Y', strtotime($quotation->insertion_date));
             $deadline = date('d/m/Y', strtotime($quotation->deadline));
 
@@ -552,7 +553,7 @@ class QuotationController extends Controller
               $statusName = $quotation->status->name;
             }
 
-            $line .= "{$quotation->sequential_number};{$quotation->code};{$quotation->description};{$insertion_date};{$deadline};{$quotation->amount};{$statusName};";
+            $line .= "{$quotation->sequential_number};{$quotation->description};{$insertion_date};{$deadline};{$quotation->amount};{$statusName};";
 
             $methodologies = $quotation->methodologies;
             if($methodologies->count() > 0)

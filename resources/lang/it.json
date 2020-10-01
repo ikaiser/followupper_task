@@ -197,5 +197,15 @@
     "Insertion Date to"   : "Data di Inserimento preventivo - A",
     "Filters"   : "Filtri",
     "Only open projects"   : "Solo progetti aperti",
-    "Apply filters"   : "Applica filtri"
+    "Apply filters"   : "Applica filtri",
+    "Select project year": "Seleziona anno progetto",
+    "Reset filters": "Resetta filtri",
+    "Probability Min"   : "Probabilità Min",
+    "Probability Max"   : "Probabilità Max",
+    "Amount Min"   : "Totale Min",
+    "Amount Max"   : "Totale Max",
+    "Amount Acquired Min"   : "Totale Acquisito Min",
+    "Amount Acquired Max"   : "Totale Acquisito Max",
+    "Invoice Amount Min"   : "Totale Fattura Min",
+    "Invoice Amount Max"   : "Totale Fattura Max"
 }
