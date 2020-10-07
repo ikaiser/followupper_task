@@ -140,34 +140,34 @@ class Quotation extends Model
       }
 
       /* Probability MIN - MAX */
-      if( isset( $filters["probability_min"] ) && $filters["probability_min"] !== "" ) {
+      if( isset( $filters["probability_min"] ) && $filters["probability_min"] !== "" && $filters["probability_min"] != 0 ) {
         $quotations = $quotations->where('chance', '>=', $filters["probability_min"] );
       }
-      if( isset( $filters["probability_max"] ) && $filters["probability_max"] !== "" ) {
+      if( isset( $filters["probability_max"] ) && $filters["probability_max"] !== "" && $filters["probability_max"] != 100 ) {
         $quotations = $quotations->where('chance', '<=', $filters["probability_max"] );
       }
 
       /* Amount MIN - MAX */
-      if( isset( $filters["amount_min"] ) && $filters["amount_min"] !== "" ) {
+      if( isset( $filters["amount_min"] ) && $filters["amount_min"] !== "" && $filters["amount_min"] != 0 ) {
         $quotations = $quotations->where('amount', '>=', $filters["amount_min"] );
       }
-      if( isset( $filters["amount_max"] ) && $filters["amount_max"] !== "" ) {
+      if( isset( $filters["amount_max"] ) && $filters["amount_max"] !== "" && $filters["amount_max"] != 99900 ) {
         $quotations = $quotations->where('amount', '<=', $filters["amount_max"] );
       }
 
       /* Amount acquired MIN - MAX */
-      if( isset( $filters["amount_acquired_min"] ) && $filters["amount_acquired_min"] !== "" ) {
+      if( isset( $filters["amount_acquired_min"] ) && $filters["amount_acquired_min"] !== "" && $filters["amount_acquired_min"] != 0 ) {
         $quotations = $quotations->where('amount_acquired', '>=', $filters["amount_acquired_min"] );
       }
-      if( isset( $filters["amount_acquired_max"] ) && $filters["amount_acquired_max"] !== "" ) {
+      if( isset( $filters["amount_acquired_max"] ) && $filters["amount_acquired_max"] !== "" && $filters["amount_max"] != 99900 ) {
         $quotations = $quotations->where('amount_acquired', '<=', $filters["amount_acquired_max"] );
       }
 
       /* Invoice Amount MIN - MAX */
-      if( isset( $filters["invoice_amount_min"] ) && $filters["invoice_amount_min"] !== "" ) {
+      if( isset( $filters["invoice_amount_min"] ) && $filters["invoice_amount_min"] !== "" && $filters["invoice_amount_min"] != 0 ) {
         $quotations = $quotations->where('invoice_amount', '>=', $filters["invoice_amount_min"] );
       }
-      if( isset( $filters["invoice_amount_max"] ) && $filters["invoice_amount_max"] !== "" ) {
+      if( isset( $filters["invoice_amount_max"] ) && $filters["invoice_amount_max"] !== "" && $filters["amount_max"] != 99900 ) {
         $quotations = $quotations->where('invoice_amount', '<=', $filters["invoice_amount_max"] );
       }
 
@@ -181,15 +181,15 @@ class Quotation extends Model
 
       /* Project insertion date */
       if( isset( $filters["insertion_date_from"] ) && $filters["insertion_date_from"] !== "" ) {
-        $quotations = $quotations->whereDate('insertion_date', '<=', date('Y-m-d', strtotime($filters["insertion_date_from"]) ));
+        $quotations = $quotations->whereDate('insertion_date', '>=', date('Y-m-d', strtotime($filters["insertion_date_from"]) ));
       }
       if( isset( $filters["insertion_date_to"] ) && $filters["insertion_date_to"] !== "" ) {
         $quotations = $quotations->whereDate('insertion_date', '<=', date('Y-m-d', strtotime($filters["insertion_date_to"]) ));
       }
 
       /* Open projects */
-      if( isset( $filters["open_projects"] ) && $filters["open_projects"] == "on" ) {
-        $quotations = $quotations->where('closed', '=', 0 );
+      if( isset( $filters["open_projects"] ) && $filters["open_projects"] !== "" ) {
+        $quotations = $quotations->where('closed', '=', $filters["open_projects"] );
       }
 
       /* Anno ales */
@@ -259,34 +259,34 @@ class Quotation extends Model
       }
 
       /* Probability MIN - MAX */
-      if( isset( $filters["probability_min"] ) && $filters["probability_min"] !== "" ) {
+      if( isset( $filters["probability_min"] ) && $filters["probability_min"] !== "" && $filters["probability_min"] != 0 ) {
         $quotations = $quotations->where('chance', '>=', $filters["probability_min"] );
       }
-      if( isset( $filters["probability_max"] ) && $filters["probability_max"] !== "" ) {
+      if( isset( $filters["probability_max"] ) && $filters["probability_max"] !== "" && $filters["probability_max"] != 100 ) {
         $quotations = $quotations->where('chance', '<=', $filters["probability_max"] );
       }
 
       /* Amount MIN - MAX */
-      if( isset( $filters["amount_min"] ) && $filters["amount_min"] !== "" ) {
+      if( isset( $filters["amount_min"] ) && $filters["amount_min"] !== "" && $filters["amount_min"] != 0 ) {
         $quotations = $quotations->where('amount', '>=', $filters["amount_min"] );
       }
-      if( isset( $filters["amount_max"] ) && $filters["amount_max"] !== "" ) {
+      if( isset( $filters["amount_max"] ) && $filters["amount_max"] !== "" && $filters["amount_max"] != 99900 ) {
         $quotations = $quotations->where('amount', '<=', $filters["amount_max"] );
       }
 
       /* Amount acquired MIN - MAX */
-      if( isset( $filters["amount_acquired_min"] ) && $filters["amount_acquired_min"] !== "" ) {
+      if( isset( $filters["amount_acquired_min"] ) && $filters["amount_acquired_min"] !== "" && $filters["amount_acquired_min"] != 0 ) {
         $quotations = $quotations->where('amount_acquired', '>=', $filters["amount_acquired_min"] );
       }
-      if( isset( $filters["amount_acquired_max"] ) && $filters["amount_acquired_max"] !== "" ) {
+      if( isset( $filters["amount_acquired_max"] ) && $filters["amount_acquired_max"] !== "" && $filters["amount_max"] != 99900 ) {
         $quotations = $quotations->where('amount_acquired', '<=', $filters["amount_acquired_max"] );
       }
 
       /* Invoice Amount MIN - MAX */
-      if( isset( $filters["invoice_amount_min"] ) && $filters["invoice_amount_min"] !== "" ) {
+      if( isset( $filters["invoice_amount_min"] ) && $filters["invoice_amount_min"] !== "" && $filters["invoice_amount_min"] != 0 ) {
         $quotations = $quotations->where('invoice_amount', '>=', $filters["invoice_amount_min"] );
       }
-      if( isset( $filters["invoice_amount_max"] ) && $filters["invoice_amount_max"] !== "" ) {
+      if( isset( $filters["invoice_amount_max"] ) && $filters["invoice_amount_max"] !== "" && $filters["amount_max"] != 99900 ) {
         $quotations = $quotations->where('invoice_amount', '<=', $filters["invoice_amount_max"] );
       }
 
@@ -300,15 +300,15 @@ class Quotation extends Model
 
       /* Project insertion date */
       if( isset( $filters["insertion_date_from"] ) && $filters["insertion_date_from"] !== "" ) {
-        $quotations = $quotations->whereDate('insertion_date', '<=', date('Y-m-d', strtotime($filters["insertion_date_from"]) ));
+        $quotations = $quotations->whereDate('insertion_date', '>=', date('Y-m-d', strtotime($filters["insertion_date_from"]) ));
       }
       if( isset( $filters["insertion_date_to"] ) && $filters["insertion_date_to"] !== "" ) {
         $quotations = $quotations->whereDate('insertion_date', '<=', date('Y-m-d', strtotime($filters["insertion_date_to"]) ));
       }
 
       /* Open projects */
-      if( isset( $filters["open_projects"] ) && $filters["open_projects"] == "on" ) {
-        $quotations = $quotations->where('closed', '=', 0 );
+      if( isset( $filters["open_projects"] ) && $filters["open_projects"] !== "" ) {
+        $quotations = $quotations->where('closed', '=', $filters["open_projects"] );
       }
 
       /* Anno ales */

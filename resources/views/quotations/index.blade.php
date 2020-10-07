@@ -230,15 +230,17 @@
                       <div class="row">
                         <div class="col l6">
                           <div class="input-field my-3">
-                            <span>
-                              <label>
-                                <input name="open_projects" id="open_projects" type="checkbox"
-                                @if( isset( $_GET['open_projects'] ) && $_GET['open_projects'] == 'on' )
-                                  checked
-                                @endif>
-                                <span>@lang('Only open projects')</span>
-                              </label>
-                            </span>
+                            <select name="open_projects" id="open_projects">
+                                <option value="" selected> @lang('Select project state') </option>
+                                  <option value="0"
+                                    @if( isset( $_GET['open_projects'] ) && $_GET['open_projects'] === "0"  )
+                                      selected
+                                    @endif> @lang('Open projects') </option>
+                                  <option value="1"
+                                    @if( isset( $_GET['open_projects'] ) && $_GET['open_projects'] === "1"  )
+                                      selected
+                                    @endif> @lang('Closed projects') </option>
+                            </select>
                           </div>
                         </div>
                         <div class="col l6">
