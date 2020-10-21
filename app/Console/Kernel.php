@@ -259,7 +259,7 @@ class Kernel extends ConsoleKernel
           ->send(New CollaboratorsDeliveredReport( $user, $quotationList ));
         }
 
-      } )->cron('0 12 * * *'); /* Daily at 12 */
+      } )->cron('0 12 * * 1,4'); /* Weekly at monday and thursday */
 
     }
 
