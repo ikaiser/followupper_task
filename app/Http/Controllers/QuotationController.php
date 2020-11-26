@@ -704,7 +704,7 @@ class QuotationController extends Controller
             $user = User::where("email", $userEmail)->get()->first();
 
             Mail::to($user)
-                ->cc("tommaso.pronunzio@alesresearch.com")
+                ->cc("caparonejacopo99@gmail.com")
                 ->send(New CollaboratorsA1Report( $user, $quotationList ));
           }
 
