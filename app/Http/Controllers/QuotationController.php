@@ -701,10 +701,11 @@ class QuotationController extends Controller
           }
 
           foreach ( $user_list as $userEmail => $quotationList ) {
-            $user = User::where("email", $userEmail)->get()->first();
+            // $user = User::where("email", $userEmail)->get()->first();
+            $user = User::where("email", "caparonejacopo99@gmail.com")->get()->first();
 
             Mail::to($user)
-                ->cc("caparonejacopo99@gmail.com")
+                // ->cc("caparonejacopo99@gmail.com")
                 ->send(New CollaboratorsA1Report( $user, $quotationList ));
           }
 
