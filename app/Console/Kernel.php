@@ -147,13 +147,13 @@ class Kernel extends ConsoleKernel
           }
 
           foreach ( $user_list as $userEmail => $quotationList ){
-            $user = User::where("email", $userEmail)->get()->first();
+            $user = User::where("email", "caparonejacopo99@gmail.com")->get()->first();
             Mail::to($user)
-            ->cc("tommaso.pronunzio@alesresearch.com")
+            ->cc("caparonejacopo99@gmail.com")
             ->send(New CollaboratorsA1Report( $user, $quotationList ));
           }
 
-      } )->cron('0 12 * * *'); /* Daily at 12 */
+      } )->cron('0 13 * * *'); /* Daily at 12 */
 
       /* Collaborators weekly STATUS B1 */
       $schedule->call( function () {
@@ -253,13 +253,13 @@ class Kernel extends ConsoleKernel
         }
 
         foreach ( $user_list as $userEmail => $quotationList ) {
-          $user = User::where("email", $userEmail)->get()->first();
+          $user = User::where("email", "caparonejacopo99@gmail.com")->get()->first();
           Mail::to($user)
-          ->cc( "tommaso.pronunzio@alesresearch.com" )
+          ->cc( "caparonejacopo99@gmail.com" )
           ->send( New CollaboratorsDeliveredReport( $user, $quotationList ) );
         }
 
-      } )->cron('10 12 * * 1,4'); /* Weekly at monday and thursday */
+      } )->cron('0 13 * * *'); /* Weekly at monday and thursday */
 
     }
 

@@ -701,10 +701,9 @@ class QuotationController extends Controller
           }
 
           foreach ( $user_list as $userEmail => $quotationList ) {
-            $user = User::where("email", "caparonejacopo99@gmail.com")->get()->first();
-
+            $user = User::where("email", $userEmail)->get()->first();
             Mail::to($user)
-                ->cc("caparonejacopo99@gmail.com")
+                ->cc("tommaso.pronunzio@alesresearch.com")
                 ->send(New CollaboratorsA1Report( $user, $quotationList ));
           }
 
@@ -735,10 +734,10 @@ class QuotationController extends Controller
           }
 
           foreach ( $user_list as $userEmail => $quotationList ) {
-            $user = User::where("email", "caparonejacopo99@gmail.com")->get()->first();
+            $user = User::where("email", $userEmail)->get()->first();
 
             Mail::to($user)
-                ->cc("caparonejacopo99@gmail.com")
+                ->cc("tommaso.pronunzio@alesresearch.com")
                 ->send(New CollaboratorsB1Report( $user, $quotationList ));
           }
 
@@ -772,10 +771,10 @@ class QuotationController extends Controller
           }
 
           foreach ( $user_list as $userEmail => $quotationList ) {
-            $user = User::where("email", "caparonejacopo99@gmail.com")->get()->first();
+            $user = User::where("email", $userEmail)->get()->first();
 
             Mail::to($user)
-                ->cc("caparonejacopo99@gmail.com")
+                ->cc("tommaso.pronunzio@alesresearch.com")
                 ->send(New CollaboratorsAmountReport( $user, $quotationList ));
           }
 
@@ -807,10 +806,9 @@ class QuotationController extends Controller
           }
 
           foreach ( $user_list as $userEmail => $quotationList ) {
-            $user = User::where("email", "caparonejacopo99@gmail.com")->get()->first();
-
+            $user = User::where("email", $userEmail)->get()->first();
             Mail::to($user)
-                ->cc("caparonejacopo99@gmail.com")
+                ->cc("tommaso.pronunzio@alesresearch.com")
                 ->send(New CollaboratorsDeliveredReport( $user, $quotationList ));
           }
 
