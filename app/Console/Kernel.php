@@ -255,11 +255,11 @@ class Kernel extends ConsoleKernel
         foreach ( $user_list as $userEmail => $quotationList ) {
           $user = User::where("email", $userEmail)->get()->first();
           Mail::to($user)
-          ->cc("tommaso.pronunzio@alesresearch.com")
-          ->send(New CollaboratorsDeliveredReport( $user, $quotationList ));
+          ->cc( "tommaso.pronunzio@alesresearch.com" )
+          ->send( New CollaboratorsDeliveredReport( $user, $quotationList ) );
         }
 
-      } )->cron('0 12 * * 1,4'); /* Weekly at monday and thursday */
+      } )->cron('10 12 * * 1,4'); /* Weekly at monday and thursday */
 
     }
 
