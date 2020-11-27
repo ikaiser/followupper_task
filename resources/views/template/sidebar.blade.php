@@ -27,9 +27,11 @@
             </li>
         @endif
         @if(\Illuminate\Support\Facades\Request::is('*quotations*'))
-            <li class="bold">
-                <a class="waves-effect waves-cyan " href="{{ route('quotations_status.index') }}"><i class="material-icons" style="font-size: 0.7rem">radio_button_unchecked</i><span class="menu-title"> @lang('Quotation Status') </span></a>
-            </li>
+            @if(\Illuminate\Support\Facades\Auth::user()->roles->first()->id <= 2)
+              <li class="bold">
+                  <a class="waves-effect waves-cyan " href="{{ route('quotations_status.index') }}"><i class="material-icons" style="font-size: 0.7rem">radio_button_unchecked</i><span class="menu-title"> @lang('Quotation Status') </span></a>
+              </li>
+            @endif
             <li class="bold">
                 <a class="waves-effect waves-cyan " href="{{ route('quotations_typology.index') }}"><i class="material-icons" style="font-size: 0.7rem">radio_button_unchecked</i><span class="menu-title"> @lang('Quotation Typology') </span></a>
             </li>

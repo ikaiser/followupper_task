@@ -54,7 +54,7 @@
                     <label for="password"> @lang('Password') </label>
                     <input type="password" class="form-control" style="width: 80%" id="exampleInputPassword1" name="password" autocomplete="new-password">
                     <button type="button" id="show_password" class="btn btn-floating waves-effect waves-light ml-2"> <i class="material-icons">remove_red_eye</i> </button>
-                    <input type="text" name="clear_password" class="mb-3" value="{{$user->clear_password}}" readonly>
+                    <!-- <input type="text" name="clear_password" class="mb-3" value="{{$user->clear_password}}" readonly> -->
                 </div>
                 <div class="input-field my-4">
                     <select name="role" id="role">

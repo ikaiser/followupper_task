@@ -46,7 +46,6 @@ Route::middleware('auth')->group(function ()
 
     Route::resource('roles', 'RoleController');
 
-
     Route::get('/home', 'HomeController@index')->name('home');
 
     //Quotation
@@ -113,6 +112,7 @@ Route::middleware('auth')->group(function ()
         Route::get('/fetch', 'CompanyController@fetch')->name('companies.fetch');
         Route::get('/export', 'CompanyController@export')->name('companies.export');
         Route::get('/get_contacts', 'CompanyController@get_contacts')->name('companies.get_contacts');
+        Route::get('/get_code', 'CompanyController@get_code')->name('companies.get_code');
 
         Route::post('{company_id}/update', 'CompanyController@update')->name('companies.update');
         Route::post('/save', 'CompanyController@store')->name('companies.store');

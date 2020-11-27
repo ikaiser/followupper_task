@@ -97,15 +97,18 @@ if(!function_exists('get_code'))
 {
     function get_code($quotation)
     {
-        $check_date = date('Y-m-d H:i:s', strtotime('first day of December this year'));
-        $date = date('y', strtotime('last year'));
-        if(date('Y-m-d H:i:s') < $check_date)
-        {
-            $date = date('y');
-        }
-        $company_code = $quotation->company->code;
+        $check_date = date('Y-m-d H:i:s', strtotime( date( "Y", strtotime($quotation->created_at->toDateTimeString() ) )."-11-30 23:59:59" ) ); /* Last day of november of quotation year */
+        $yearDate = intval( date('y', strtotime($quotation->created_at->toDateTimeString() ) ) ) + 1; /* Year plus one ( Only if after check date ) */
 
-        return $date . $company_code . $quotation->sequential_number;
+        if( $quotation->created_at->toDateTimeString() < $check_date )
+        {
+            $yearDate = date('y', strtotime($quotation->created_at) );
+        }
+
+        $company_code = $quotation->company->code;
+        $code = $yearDate . $company_code . $quotation->sequential_number;
+
+        return $code;
     }
 }
 

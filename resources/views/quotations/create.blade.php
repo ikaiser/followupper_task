@@ -90,15 +90,15 @@
                                                     $company = \App\Company::where('name', old('company'))->first();
                                                     $contacts = $company->contacts;
                                                 @endphp
-                                                <select name="company_contact" id="company_contact">
-                                                    <option value="" disabled hidden> @lang('Select a Contact') </option>
+                                                <select name="company_contact[]" id="company_contact" multiple>
+                                                    <option value="" disabled> @lang('Select a Contact') </option>
                                                     @foreach($contacts as $company_contact)
-                                                        <option value="{{$company_contact->id}}" {{$company_contact->id == old('$company_contact') ? 'selected' : ''}}> {{$company_contact->name}} </option>
+                                                        <option value="{{$company_contact->id}}" {{!is_null(old('company_contact')) && in_array($company_contact->id, old('company_contact')) ? 'selected' : ''}}> {{$company_contact->name}} </option>
                                                     @endforeach
                                                 </select>
                                             @else
-                                                <select name="company_contact" id="company_contact">
-                                                    <option value="" disabled hidden selected> @lang('Select a Contact') </option>
+                                                <select name="company_contact[]" id="company_contact" multiple>
+                                                    <option value="" disabled> @lang('Select a Contact') </option>
                                                 </select>
                                             @endif
                                             <label for="company_contact"> @lang('Company Contact') </label>
@@ -122,10 +122,10 @@
                                             <input type="text" id="sequential" name="sequential" {{old('manual_sequential') == 'on' ? '' : 'disabled'}} value="{{old('manual_sequential') == 'on' ? old('sequential') : ''}}" >
                                         </div>
 
-                                        <div class="input-field my-3">
-                                            <label for="code"> @lang('Code') </label>
-                                            <input type="text" id="code" name="code" value="{{old('code')}}">
-                                        </div>
+                                        <!-- <div class="input-field my-3"> -->
+                                            <!-- <label for="code"> @lang('Code') </label> -->
+                                            <input type="hidden" id="code" name="code" value="{{old('code')}}">
+                                        <!-- </div> -->
 
                                         <div class="input-field my-3">
                                             <label for="description"> @lang('Description') </label>
@@ -138,7 +138,7 @@
                                         </div>
 
                                         <div class="input-field my-3">
-                                            <label for="end_date"> @lang('Project Delivery Date') </label>
+                                            <label for="end_date"> @lang('Quotation Delivery Date') </label>
                                             <input type="text" class="datepicker" name="project_delivery_date" id="project_delivery_date" value="{{old('project_delivery_date')}}">
                                         </div>
 
@@ -194,10 +194,10 @@
                                         </div>
 
                                         <div class="input-field my-3">
-                                            <select name="methodology" id="methodology">
-                                                <option value="" disabled hidden selected> @lang('Select a Methodology') </option>
+                                            <select name="methodology[]" id="methodology" multiple>
+                                                <option value="" disabled> @lang('Select a Methodology') </option>
                                                 @foreach($methodologies as $methodology)
-                                                    <option value="{{$methodology->id}}" {{(old('methodology') == $methodology->id) ? 'selected' : ''}}>{{$methodology->name}} / {{$methodology->type}}</option>
+                                                    <option value="{{$methodology->id}}" {{!is_null(old('methodology')) && in_array($methodology->id, old('methodology')) ? 'selected' : ''}}>{{$methodology->name}}</option>
                                                 @endforeach
                                             </select>
                                             <label for="status"> @lang('Methodology') </label>

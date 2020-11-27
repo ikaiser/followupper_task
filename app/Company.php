@@ -35,6 +35,6 @@ class Company extends Model
 
     public function contacts()
     {
-        return $this->hasMany(CompanyContact::class, 'company_id', 'id');
+        return $this->hasMany(CompanyContact::class, 'company_id', 'id')->orderBy('name');;
     }
 }

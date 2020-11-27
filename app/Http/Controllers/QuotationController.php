@@ -7,6 +7,10 @@ use App\CompanyContact;
 use App\Mail\AdminReport;
 use App\Mail\EndingQuotations;
 use App\Mail\MissingAmountQuotations;
+use App\Mail\CollaboratorsA1Report;
+use App\Mail\CollaboratorsB1Report;
+use App\Mail\CollaboratorsAmountReport;
+use App\Mail\CollaboratorsDeliveredReport;
 use App\Methodology;
 use App\Quotation;
 use App\QuotationHistory;
@@ -30,6 +34,25 @@ class QuotationController extends Controller
         $user = Auth::user();
         $role = Auth::user()->roles->first();
 
+        $statuses      = Status::orderBy('name')->get();
+        $typologies    = Typology::orderBy('name')->get();
+        $methodologies = Methodology::orderBy('name')->get();
+        $companies     = Company::orderBy('name')->get();
+
+        $researchers = '';
+        if(Auth::user()->roles->first()->id == 3)
+        {
+            $researchers = Auth::user()->name;
+        }
+        elseif(Auth::user()->roles->first()->id == 2)
+        {
+            $researchers = Auth::user()->users()->whereHas('roles', function($q) {$q->where('id', 3);})->get();
+        }
+        else
+        {
+            $researchers = User::whereHas('roles', function($q) {$q->where('id', 3);})->get();
+        }
+
         if($role->id == 1)
         {
             $quotations = Quotation::all();
@@ -40,7 +63,19 @@ class QuotationController extends Controller
             $quotations = $quotations->merge($user->quotations_assigned);
         }
 
-        return view('quotations.index', ['quotations' => $quotations]);
+
+        /* Manage filters */
+        if ( isset( $_GET['filters_active'] ) && $_GET['filters_active'] == 1 ) {
+          if($role->id == 1)
+          {
+              $quotations = Quotation::filter_quotation($_GET);
+          }
+          else
+          {
+              $quotations = Quotation::filter_quotation_for_user($_GET);
+          }
+        }
+        return view('quotations.index', ['quotations' => $quotations, 'statuses' => $statuses, 'typologies' => $typologies, 'researchers' => $researchers, 'methodologies' => $methodologies, 'companies' => $companies]);
     }
 
     /**
@@ -85,7 +120,7 @@ class QuotationController extends Controller
             'name'                  => 'required',
             'company'               => 'required',
             'company_contact'       => 'required',
-            'sequential'            => 'numeric|nullable|required_if:manual_sequential,on|unique:quotation,sequential_number',
+            'sequential'            => 'numeric|nullable|required_if:manual_sequential,on',
             'code'                  => 'required',
             'description'           => 'required',
             'insertion_date'        => 'required|date',
@@ -127,15 +162,16 @@ class QuotationController extends Controller
             $sequential = $request->get('sequential');
         }
 
-        $researchers = array_unique($request->get('researchers'));
-        $typologies = $request->get('test_typology');
+        $researchers   = array_unique($request->get('researchers'));
+        $typologies    = $request->get('test_typology');
+        $methodologies = $request->get('methodology');
+        $company_contacts = $request->get('company_contact');
 
         $quotation = new Quotation();
 
         $quotation->name = $request->get('name');
         $quotation->user_id = $researcher->id;
         $quotation->company_id = $company->id;
-        $quotation->company_contact_id = $request->get('company_contact');
         $quotation->sequential_number = $sequential;
         $quotation->code = $request->get('code');
         $quotation->description = $request->get('description');
@@ -148,13 +184,26 @@ class QuotationController extends Controller
         $quotation->feedback = $request->get('feedback');
         $quotation->closed = $request->get('project_closed') == 'on' ? 1 : 0;
         $quotation->invoice_amount = $request->get('invoice_amount');
-        $quotation->methodology_id = $request->get('methodology');
+
+        /* Integration with old */
+        $quotation->methodology_id = null;
+        $quotation->company_contact_id = null;
 
         $quotation->save();
 
         foreach($typologies as $typology)
         {
             $quotation->typologies()->attach($typology);
+        }
+
+        foreach($methodologies as $methodology)
+        {
+            $quotation->methodologies()->attach($methodology);
+        }
+
+        foreach($company_contacts as $company_contact)
+        {
+            $quotation->company_contacts()->attach($company_contact);
         }
 
         foreach($researchers as $other_researcher)
@@ -222,7 +271,7 @@ class QuotationController extends Controller
             'name'                  => 'required',
             'company'               => 'required',
             'company_contact'       => 'required',
-            'sequential'            => 'numeric|nullable|required_if:manual_sequential,on|unique:quotation,sequential_number,' . $quotation_id,
+            'sequential'            => 'numeric|nullable|required_if:manual_sequential,on',
             'code'                  => 'required',
             'description'           => 'required',
             'insertion_date'        => 'required|date',
@@ -256,6 +305,8 @@ class QuotationController extends Controller
 
         $researchers = array_unique($request->get('researchers'));
         $typologies = $request->get('test_typology');
+        $methodologies = $request->get('methodology');
+        $company_contacts = $request->get('company_contact');
 
         $quotation = Quotation::find($quotation_id);
 
@@ -265,7 +316,6 @@ class QuotationController extends Controller
         $quotation->user_id = $researcher->id;
         $quotation->company_id = $company->id;
         $quotation->sequential_number = $request->get('sequential');
-        $quotation->company_contact_id = $request->get('company_contact');
         $quotation->code = $request->get('code');
         $quotation->description = $request->get('description');
         $quotation->insertion_date = date('Y-m-d', strtotime($request->get('insertion_date')));
@@ -277,12 +327,17 @@ class QuotationController extends Controller
         $quotation->feedback = $request->get('feedback');
         $quotation->closed = $request->get('project_closed') == 'on' ? 1 : 0;
         $quotation->invoice_amount = $request->get('invoice_amount');
-        $quotation->methodology_id = $request->get('methodology');
+
+        $quotation->methodology_id = null;
+        $quotation->company_contact_id = null;
 
         $quotation->save();
 
         $quotation->typologies()->detach();
+        $quotation->methodologies()->detach();
         $quotation->collaborators()->detach();
+        $quotation->company_contacts()->detach();
+
         foreach($researchers as $other_researcher)
         {
             if(is_null($other_researcher))
@@ -302,6 +357,16 @@ class QuotationController extends Controller
         foreach($typologies as $typology)
         {
             $quotation->typologies()->attach($typology);
+        }
+
+        foreach($methodologies as $methodology)
+        {
+            $quotation->methodologies()->attach($methodology);
+        }
+
+        foreach($company_contacts as $company_contact)
+        {
+            $quotation->company_contacts()->attach($company_contact);
         }
 
         return redirect()->route('quotations.index')->with('message', __('Quotation Updated Successfully!'));
@@ -423,15 +488,30 @@ class QuotationController extends Controller
         header('Content-Type: application/csv');
         header('Content-Disposition: attachment; filename="quotations_export.csv";');
 
+        $role = Auth::user()->roles->first();
+
         $f = fopen( 'php://memory', 'w' );
 
         $quotations = Quotation::all();
 
-        echo "Id;Nome,Utente;Collaboratori;Azienda;Contatto Azienda;Numero Sequenziale;Codice;Descrizione;Data Inserimento;Data Consegna;Importo;Stato;Metodologia;Tipologie Test;Importo Acquisito;Probabilità;Feedback;Preventivo Chiuso;Importo Fatturato;\n";
+        /* Manage filters */
+        if ( isset( $_GET['filters_active'] ) && $_GET['filters_active'] == 1 ) {
+          if($role->id == 1)
+          {
+              $quotations = Quotation::filter_quotation($_GET);
+          }
+          else
+          {
+              $quotations = Quotation::filter_quotation_for_user($_GET);
+          }
+        }
+
+        echo "Id;Nome,Utente;Collaboratori;Azienda;Contatto Azienda;Numero Sequenziale;Descrizione;Data Inserimento;Data Consegna;Importo;Stato;Metodologia;Tipologie Test;Importo Acquisito;Probabilità;Feedback;Preventivo Chiuso;Importo Fatturato;\n";
 
         foreach($quotations as $quotation)
         {
-            $line = "{$quotation->id};{$quotation->user->name};";
+            $quotationCode = get_code($quotation);
+            $line = "{$quotationCode};{$quotation->user->name};";
             $insertion_date = date('d/m/Y', strtotime($quotation->insertion_date));
             $deadline = date('d/m/Y', strtotime($quotation->deadline));
 
@@ -451,15 +531,43 @@ class QuotationController extends Controller
                 $line .= ";";
             }
 
-            $line .= "{$quotation->company->name};{$quotation->company_contact->name};{$quotation->sequential_number};{$quotation->code};{$quotation->description};{$insertion_date};{$deadline};{$quotation->amount};{$quotation->status->name};";
+            $line .= "{$quotation->company->name};";
 
-            if(is_null($quotation->methodology))
+            $company_contacts = $quotation->company_contacts;
+            if($company_contacts->count() > 0)
             {
-                $line .= ';';
+                foreach($company_contacts as $company_contact)
+                {
+                    $line .= "{$company_contact->name} - ";
+                }
+
+                $line = substr($line, 0, -3) . ';';
             }
             else
             {
-                $line .="{$quotation->methodology->name};";
+                $line .= ";";
+            }
+
+            $statusName = "";
+            if ( !is_null($quotation->status) && $quotation->status !== "" && $quotation->status->name !== "" ) {
+              $statusName = $quotation->status->name;
+            }
+
+            $line .= "{$quotation->sequential_number};{$quotation->description};{$insertion_date};{$deadline};{$quotation->amount};{$statusName};";
+
+            $methodologies = $quotation->methodologies;
+            if($methodologies->count() > 0)
+            {
+                foreach($methodologies as $methodology)
+                {
+                    $line .= "{$methodology->name} | {$methodology->type} - ";
+                }
+
+                $line = substr($line, 0, -3) . ';';
+            }
+            else
+            {
+                $line .= ";";
             }
 
             $typologies = $quotation->typologies;
@@ -543,7 +651,7 @@ class QuotationController extends Controller
                 }
             }
         }
-        else
+        elseif( $type == 'amounts' )
         {
             $today = date('Y-m-d');
             $users = DB::table('users')
@@ -564,9 +672,146 @@ class QuotationController extends Controller
             foreach($quotation_users as $key => $quotations)
             {
                 $user = User::find($key);
-
                 Mail::to($user)->send(New MissingAmountQuotations($user, $quotations));
             }
+        }
+        elseif( $type == 'status_a1' )
+        {
+
+          $quotations = Quotation::whereHas('status', function ($query) {
+              $query->where('name', 'like', '%A1%');
+          })->get();
+
+          $user_list = [];
+
+          foreach( $quotations as $key => $quotation ) {
+
+            /* User */
+            if ( !is_null( $quotation->user ) && !is_null( $quotation->user->email ) ) {
+              $user_list[$quotation->user->email][] = $quotation;
+            }
+
+            /* Collaborators */
+            if ( !empty($quotation->collaborators) ) {
+              foreach( $quotation->collaborators as $k => $collaborators ) {
+                  $user_list[$collaborators->email][] = $quotation;
+              }
+            }
+
+          }
+
+          foreach ( $user_list as $userEmail => $quotationList ) {
+            $user = User::where("email", $userEmail)->get()->first();
+            Mail::to($user)
+                ->cc("tommaso.pronunzio@alesresearch.com")
+                ->send(New CollaboratorsA1Report( $user, $quotationList ));
+          }
+
+        }
+        elseif( $type == 'status_b1' )
+        {
+
+          $quotations = Quotation::whereHas('status', function ($query) {
+              $query->where('name', 'like', '%B1%');
+          })->get();
+
+          $user_list = [];
+
+          foreach( $quotations as $key => $quotation ) {
+
+            /* User */
+            if ( !is_null( $quotation->user ) && !is_null( $quotation->user->email ) ) {
+              $user_list[$quotation->user->email][] = $quotation;
+            }
+
+            /* Collaborators */
+            if ( !empty($quotation->collaborators) ) {
+              foreach( $quotation->collaborators as $k => $collaborators ) {
+                  $user_list[$collaborators->email][] = $quotation;
+              }
+            }
+
+          }
+
+          foreach ( $user_list as $userEmail => $quotationList ) {
+            $user = User::where("email", $userEmail)->get()->first();
+
+            Mail::to($user)
+                ->cc("tommaso.pronunzio@alesresearch.com")
+                ->send(New CollaboratorsB1Report( $user, $quotationList ));
+          }
+
+        }
+        elseif( $type == 'operators_amount' )
+        {
+
+          $quotations = Quotation::whereHas('status', function ($query) {
+                            $query->where('name', 'not like', '%A1%');
+                        })->where(function ($amountQuery) {
+                            $amountQuery->where('amount', '=', 0)
+                                        ->orWhereNull('amount');
+                        })->get();
+
+          $user_list = [];
+
+          foreach( $quotations as $key => $quotation ) {
+
+            /* User */
+            if ( !is_null( $quotation->user ) && !is_null( $quotation->user->email ) ) {
+              $user_list[$quotation->user->email][] = $quotation;
+            }
+
+            /* Collaborators */
+            if ( !empty($quotation->collaborators) ){
+              foreach( $quotation->collaborators as $k => $collaborators ){
+                  $user_list[$collaborators->email][] = $quotation;
+              }
+            }
+
+          }
+
+          foreach ( $user_list as $userEmail => $quotationList ) {
+            $user = User::where("email", $userEmail)->get()->first();
+
+            Mail::to($user)
+                ->cc("tommaso.pronunzio@alesresearch.com")
+                ->send(New CollaboratorsAmountReport( $user, $quotationList ));
+          }
+
+        }
+        elseif( $type == 'operators_not_delivered' )
+        {
+
+          $quotations = Quotation::where( "closed", "=", 0 )
+                                 ->whereHas('status', function ($query) {
+                                      $query->where('name', 'like', '%C1%');
+                                 })->get();
+
+          $user_list = [];
+
+          foreach( $quotations as $key => $quotation ) {
+
+            /* User */
+            if ( !is_null( $quotation->user ) && !is_null( $quotation->user->email ) ) {
+              $user_list[$quotation->user->email][] = $quotation;
+            }
+
+            /* Collaborators */
+            if ( !empty($quotation->collaborators) ){
+              foreach( $quotation->collaborators as $k => $collaborators ){
+                  $user_list[$collaborators->email][] = $quotation;
+              }
+            }
+
+          }
+
+          foreach ( $user_list as $userEmail => $quotationList ) {
+            $user = User::where("email", $userEmail)->get()->first();
+            Mail::to($user)
+                ->cc("tommaso.pronunzio@alesresearch.com")
+                ->send(New CollaboratorsDeliveredReport( $user, $quotationList ));
+          }
+
         }
     }
 
@@ -582,7 +827,7 @@ class QuotationController extends Controller
             'name'                  => $request->get('name'),
             'user_id'               => $researcher->id,
             'company_id'            => $company->id,
-            'company_contact_id'    => $request->get('company_contact'),
+            // 'company_contact_id'    => $request->get('company_contact'),
             'code'                  => $request->get('code'),
             'description'           => $request->get('description'),
             'insertion_date'        => date('Y-m-d', strtotime($request->get('insertion_date'))),
@@ -594,8 +839,7 @@ class QuotationController extends Controller
             'feedback'              => $request->get('feedback'),
             'closed'                => $request->get('project_closed') == 'on' ? 1 : 0,
             'invoice_amount'        => $request->get('invoice_amount'),
-            'methodology_id'        => $request->get('methodology'),
-
+            // 'methodology_id'        => null,
         );
 
         foreach($quotation_h as $key => $task_value)
@@ -610,17 +854,17 @@ class QuotationController extends Controller
                 {
                     case 'user_id'              : $field = 'author';                break;
                     case 'company_id'           : $field = 'company';               break;
-                    case 'company_contact_id'   : $field = 'company contact';       break;
+                    // case 'company_contact_id'   : $field = 'company contact';       break;
                     case 'deadline'             : $field = 'project_delivery_date'; break;
                     case 'status_id'            : $field = 'status';                break;
                     case 'chance'               : $field = 'probability';           break;
                     case 'closed'               : $field = 'project closed';        break;
-                    case 'methodology_id'       : $field = 'methodology';           break;
+                    // case 'methodology_id'       : $field = 'methodology';           break;
                     default                     : $field = $key;                    break;
                 }
 
                 $quotation_history = new QuotationHistory();
-                $quotation_history->quotation_id      = $quotation->id;
+                $quotation_history->quotation_id = $quotation->id;
                 $quotation_history->user_id      = $user->id;
                 $quotation_history->field        = $field;
                 $quotation_history->old_value    = is_null($old_value) ? '' : $old_value;

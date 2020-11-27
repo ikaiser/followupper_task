@@ -15,8 +15,8 @@
         @endforeach
     </ul>
 
-    Puoi controllare i tuoi preventivi su <a href="http://preventivi.alesresearch.com/">Preventivi</a> o visitando l'url http://preventivi.alesresearch.com
+    Puoi controllare i tuoi preventivi su <a href="https://preventivi.alesresearch.com/">Preventivi</a> o visitando l'url https://preventivi.alesresearch.com/
     <br/><br/>
     Buona Giornata.
     <br/>
-    <b>Il team di Followupper</b>
+    <b>Il team di Preventivi</b>

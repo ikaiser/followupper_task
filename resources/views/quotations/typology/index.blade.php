@@ -2,6 +2,8 @@
 
 @section('content')
 
+  @include('quotations/typology/modal-remove')
+
     <div class="row">
         <div class="col s12 m6 mt-4">
             <h6>
@@ -44,7 +46,7 @@
                 <div class="card-content">
                     <span class="card-title"> @lang('Typology') </span>
 
-                    <table class="table-responsive highlight stripe" id="quotations_table">
+                    <table class="table-responsive highlight stripe" id="quotation_typologies_table">
                         <thead>
                         <tr>
                             <th> Id </th>
@@ -59,7 +61,7 @@
                                 <td>{{$single_typology->name}}</td>
                                 <td>
                                     <a href="{{ route('quotations_typology.edit', $single_typology->id) }}"> @lang('Edit') </a>
-                                    <a href="{{ route('quotations_typology.remove', $single_typology->id) }}"> @lang('Delete') </a>
+                                    <a name="element_remove" class="mx-1 modal-trigger" href="#remove_modal" data-id="{{$single_typology->id}}" data-type="quotation_typology"> @lang('Delete') </a>
                                 </td>
                             </tr>
                         @endforeach

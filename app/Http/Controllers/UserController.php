@@ -82,7 +82,7 @@ class UserController extends Controller
             'name'              => $request->get('name'),
             'email'             => $request->get('email'),
             'password'          => $request->get('password'),
-            'clear_password'    => $request->get('password'),
+            // 'clear_password'    => $request->get('password'),
         ]);
 
         if(!is_null($request->user_img))
@@ -160,7 +160,7 @@ class UserController extends Controller
         else
         {
             $ps = $request->get('password');
-            $request->merge(['clear_password' => $ps]);
+            // $request->merge(['clear_password' => $ps]);
 
             $user->update($request->all());
         }
@@ -272,14 +272,16 @@ class UserController extends Controller
         $query = $request->get('query');
 
         $users = User::whereHas('roles', function($q) {$q->where('id', 3);})->where('name', 'LIKE', "%{$query}%");
-        if($user_id == '2')
-        {
-            $users = $users->where('created_by', $user_id);
-        }
-        elseif($user_id == '3')
-        {
-            $users = $users->where('created_by', Auth::user()->created_by);
-        }
+
+        // if($user_id == '2')
+        // {
+        //     $users = $users->where('created_by', $user_id);
+        // }
+        // elseif($user_id == '3')
+        // {
+        //     $users = $users->where('created_by', Auth::user()->created_by);
+        // }
+        
         $users = $users->get();
 
         $output = '<ul class="collection" style="display:block; position:relative">';

@@ -23,6 +23,8 @@
                             </div>
                         @endif
 
+                        <input type="hidden" name="token" value="{{ $token }}">
+
                         <div class="input-field">
                             <label for="email"> @lang('E-Mail Address') </label>
                             <input id="email" type="email" name="email" value="{{ $email ?? old('email') }}" required autocomplete="email" autofocus>
