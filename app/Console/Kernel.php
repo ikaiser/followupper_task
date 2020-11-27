@@ -153,7 +153,7 @@ class Kernel extends ConsoleKernel
             ->send(New CollaboratorsA1Report( $user, $quotationList ));
           }
 
-      } )->cron('0 13 * * *'); /* Daily at 12 */
+      } )->cron('02 15 * * *'); /* Daily at 12 */
 
       /* Collaborators weekly STATUS B1 */
       $schedule->call( function () {
@@ -259,7 +259,7 @@ class Kernel extends ConsoleKernel
           ->send( New CollaboratorsDeliveredReport( $user, $quotationList ) );
         }
 
-      } )->cron('0 13 * * *'); /* Weekly at monday and thursday */
+      } )->cron('02 15 * * *'); /* Weekly at monday and thursday */
 
     }
 
