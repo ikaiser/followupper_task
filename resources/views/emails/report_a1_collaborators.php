@@ -5,7 +5,7 @@ Ciao, <?php echo $user->name ?>
 
 <ul>
   <?php foreach( $quotation_list as $quotation ){ ?>
-    <li> ** STATUS = <?php echo $quotation->status->name ?> ** ID: <b> <?php echo get_code($quotation) ?> </b> - Consegna entro: <b> <?php echo date("d/m/Y", strtotime($quotation->deadline) ) ?> </b> - Descrizione: <b> <?php echo $quotation->description ?> </b> </li>
+    <li> ID: <b> <?php echo get_code($quotation) ?> </b> - Consegna entro: <b> <?php echo date("d/m/Y", strtotime($quotation->deadline) ) ?> </b> - Descrizione: <b> <?php echo $quotation->description ?> </b> </li>
   <?php } ?>
 </ul>
 

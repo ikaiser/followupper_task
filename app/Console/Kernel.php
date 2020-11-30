@@ -38,6 +38,12 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+
+        $schedule->command('view:clear')->cron('0 4 * * *');
+        $schedule->command('cache:clear')->cron('10 4 * * *');
+        $schedule->command('route:cache')->cron('20 4 * * *');
+        $schedule->command('config:cache')->cron('30 4 * * *');
+
         // $schedule->call(function () {
 
         //     // Preventivi in Scadenza
@@ -148,13 +154,13 @@ class Kernel extends ConsoleKernel
           }
 
           foreach ( $user_list as $userEmail => $quotationList ){
-            $user = User::where("email", "caparonejacopo99@gmail.com")->get()->first();
+            $user = User::where("email", $userEmail)->get()->first();
             Mail::to($user)
-            ->cc("sacchetti.roberto@gmail.com")
+            ->cc("tommaso.pronunzio@alesresearch.com")
             ->send(New CollaboratorsA1Report( $user, $quotationList ));
           }
 
-      } )->cron('47 * * * *'); /* Daily at 12 */
+      } )->cron('0 12 * * *'); /* Daily at 12 */
 
       /* Collaborators weekly STATUS B1 */
       $schedule->call( function () {
