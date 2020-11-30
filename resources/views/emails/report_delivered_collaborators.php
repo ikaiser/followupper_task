@@ -3,7 +3,7 @@ Ciao, <?php echo $user->name ?>
 
 <ul>
   <?php foreach( $quotation_list as $quotation ){ ?>
-    <li> ** STATUS = <?php $quotation->status->name ?> ** ID: <b> <?php echo get_code($quotation) ?> </b> - Descrizione: <b> <?php echo $quotation->description ?> </b> </li>
+    <li> ** STATUS = <?php echo $quotation->status->name ?> ** ID: <b> <?php echo get_code($quotation) ?> </b> - Descrizione: <b> <?php echo $quotation->description ?> </b> </li>
   <?php } ?>
 </ul>
 
