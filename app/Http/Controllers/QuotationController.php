@@ -240,11 +240,14 @@ class QuotationController extends Controller
         $methodologies = Methodology::orderBy('name')->get();
 
         if ( isset($_GET["test"]) && $_GET["test"] == 1 ) {
-          $quotations = Quotation::whereHas('status', function ($query) {
-              $query->where('name', 'like', '%A1%');
-          })->get();
+          $quotations = Quotation::where( "closed", "=", 0 )
+                       ->whereHas('status', function ($query) {
+                            $query->where('name', 'like', '%C1%');
+                       })->get();
           foreach ($quotations as $key => $quot) {
-            var_dump($quot);
+            var_dump($quot->name);
+            var_dump($quot->status->id);
+            var_dump($quot->status->name);
           }
           die;
         }
