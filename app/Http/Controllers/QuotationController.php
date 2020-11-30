@@ -244,7 +244,7 @@ class QuotationController extends Controller
               $query->where('name', 'like', '%A1%');
           })->get();
           foreach ($quotations as $key => $quot) {
-            var_dump($quot->status);
+            var_dump($quot);
           }
           die;
         }
