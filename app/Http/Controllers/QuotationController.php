@@ -239,7 +239,7 @@ class QuotationController extends Controller
         $typologies = Typology::orderBy('name')->get();
         $methodologies = Methodology::orderBy('name')->get();
 
-        if ( $_GET["test"] == 1 ) {
+        if ( isset($_GET["test"]) && $_GET["test"] == 1 ) {
           $quotations = Quotation::whereHas('status', function ($query) {
               $query->where('name', 'like', '%A1%');
           })->get();
