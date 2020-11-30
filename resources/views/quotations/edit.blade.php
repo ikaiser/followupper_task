@@ -35,6 +35,12 @@
                 </div>
             @endif
 
+            <?php
+              if ( $quotation->id == "156" ) {
+                die(var_dump($quotation));
+              }
+            ?>
+
             <div class="row">
                 <div class="col s12">
                     <div class="card">
