@@ -37,7 +37,7 @@
 
             <?php
               if ( $quotation->id == "156" ) {
-                die(var_dump($quotation));
+                die(var_dump($quotation->status));
               }
             ?>
 
