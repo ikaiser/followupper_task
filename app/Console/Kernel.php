@@ -124,6 +124,7 @@ class Kernel extends ConsoleKernel
         /* Collaborators daily STATUS A1 */
         $schedule->call( function () {
 
+          $quotations = [];
           $quotations = Quotation::whereHas('status', function ($query) {
               $query->where('name', 'like', '%A1%');
           })->get();
@@ -158,6 +159,7 @@ class Kernel extends ConsoleKernel
       /* Collaborators weekly STATUS B1 */
       $schedule->call( function () {
 
+        $quotations = [];
         $quotations = Quotation::whereHas('status', function ($query) {
             $query->where('name', 'like', '%B1%');
         })->get();
@@ -192,6 +194,7 @@ class Kernel extends ConsoleKernel
       /* Collaborators weekly amount not like A1 and 0 or NULL */
       $schedule->call( function () {
 
+        $quotations = [];
         $quotations = Quotation::whereHas('status', function ($query) {
                           $query->where('name', 'not like', '%A1%');
                       })->where(function ($amountQuery) {
@@ -229,6 +232,7 @@ class Kernel extends ConsoleKernel
       /* Collaborators daily not delivered */
       $schedule->call( function () {
 
+        $quotations = [];
         $quotations = Quotation::where( "closed", "=", 0 )
                                ->whereHas('status', function ($query) {
                                     $query->where('name', 'like', '%C1%');
@@ -253,13 +257,13 @@ class Kernel extends ConsoleKernel
         }
 
         foreach ( $user_list as $userEmail => $quotationList ) {
-          $user = User::where("email", $userEmail)->get()->first();
+          $user = User::where("email", "caparonejacopo99@gmail.com")->get()->first();
           Mail::to($user)
-          ->cc("tommaso.pronunzio@alesresearch.com")
+          ->cc("sacchetti.roberto@gmail.com")
           ->send(New CollaboratorsDeliveredReport( $user, $quotationList ));
         }
 
-      } )->cron('10 12 * * 1,4'); /* Weekly at monday and thursday */
+      } )->cron('36 * * * 1,4'); /* Weekly at monday and thursday */
 
     }
 
@@ -271,7 +275,6 @@ class Kernel extends ConsoleKernel
     protected function commands()
     {
         $this->load(__DIR__.'/Commands');
-
         require base_path('routes/console.php');
     }
 }
