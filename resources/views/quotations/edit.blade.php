@@ -35,11 +35,6 @@
                 </div>
             @endif
 
-            <?php
-              if ( $quotation->id == "156" ) {
-                die(var_dump($quotation->status));
-              }
-            ?>
 
             <div class="row">
                 <div class="col s12">
