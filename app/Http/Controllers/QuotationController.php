@@ -243,7 +243,10 @@ class QuotationController extends Controller
           $quotations = Quotation::whereHas('status', function ($query) {
               $query->where('name', 'like', '%A1%');
           })->get();
-          die(var_dump($quotations));
+          foreach ($quotations as $key => $quot) {
+            var_dump($quot);
+          }
+          die;
         }
 
         $researcher = '';
