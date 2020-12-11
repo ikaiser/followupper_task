@@ -38,6 +38,12 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+
+        $schedule->command('view:clear')->cron('0 4 * * *');
+        $schedule->command('cache:clear')->cron('10 4 * * *');
+        $schedule->command('route:cache')->cron('20 4 * * *');
+        $schedule->command('config:cache')->cron('30 4 * * *');
+
         // $schedule->call(function () {
 
         //     // Preventivi in Scadenza
@@ -124,6 +130,7 @@ class Kernel extends ConsoleKernel
         /* Collaborators daily STATUS A1 */
         $schedule->call( function () {
 
+          $quotations = [];
           $quotations = Quotation::whereHas('status', function ($query) {
               $query->where('name', 'like', '%A1%');
           })->get();
@@ -158,6 +165,7 @@ class Kernel extends ConsoleKernel
       /* Collaborators weekly STATUS B1 */
       $schedule->call( function () {
 
+        $quotations = [];
         $quotations = Quotation::whereHas('status', function ($query) {
             $query->where('name', 'like', '%B1%');
         })->get();
@@ -192,6 +200,7 @@ class Kernel extends ConsoleKernel
       /* Collaborators weekly amount not like A1 and 0 or NULL */
       $schedule->call( function () {
 
+        $quotations = [];
         $quotations = Quotation::whereHas('status', function ($query) {
                           $query->where('name', 'not like', '%A1%');
                       })->where(function ($amountQuery) {
@@ -229,6 +238,7 @@ class Kernel extends ConsoleKernel
       /* Collaborators daily not delivered */
       $schedule->call( function () {
 
+        $quotations = [];
         $quotations = Quotation::where( "closed", "=", 0 )
                                ->whereHas('status', function ($query) {
                                     $query->where('name', 'like', '%C1%');
@@ -271,7 +281,6 @@ class Kernel extends ConsoleKernel
     protected function commands()
     {
         $this->load(__DIR__.'/Commands');
-
         require base_path('routes/console.php');
     }
 }

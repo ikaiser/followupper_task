@@ -32,7 +32,7 @@ class CollaboratorsDeliveredReport extends Mailable
      */
     public function build()
     {
-        return $this->subject("Riepilogo progetti entrati e non chiusi")            
+        return $this->subject("Riepilogo progetti entrati e non chiusi")
                     ->markdown('emails.report_delivered_collaborators');
     }
 }

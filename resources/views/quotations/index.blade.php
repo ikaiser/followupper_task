@@ -347,7 +347,9 @@
                                 <td>{{$quotation->description}}</td>
                                 <td>
                                     <a class="mx-1" href="{{ route('quotations.edit', $quotation->id) }}"> @lang('Edit') </a>
-                                    <a name="element_remove" class="mx-1 modal-trigger" href="#remove_modal" data-id="{{$quotation->id}}" data-type="quotation"> @lang('Delete') </a>
+                                    @if(\Illuminate\Support\Facades\Auth::user()->roles->first()->id <= 2)
+                                      <a name="element_remove" class="mx-1 modal-trigger" href="#remove_modal" data-id="{{$quotation->id}}" data-type="quotation"> @lang('Delete') </a>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
