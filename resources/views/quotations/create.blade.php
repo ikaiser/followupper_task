@@ -105,18 +105,24 @@
                                         </div>
                                     </div>
 
-                                    <div class="col l12">
+                                    <div class="col l12 m12">
                                         <div class="input-field my-3">
                                             <label for="name"> @lang('Project Fantasy Name') </label>
                                             <input type="text" id="name" name="name" value="{{old('name')}}"/>
                                         </div>
 
-                                        <p class="my-2">
-                                            <label>
-                                                <input type="checkbox" name="manual_sequential" id="manual_sequential" {{old('manual_sequential') == 'on' ? 'checked' : ''}}/>
-                                                <span> @lang('Enter the sequence number manually') </span>
-                                            </label>
-                                        </p>
+                                        @if(\Illuminate\Support\Facades\Auth::user()->roles->first()->id <= 2)
+                                          <p class="my-2">
+                                              <label>
+                                                  <input type="checkbox" name="manual_sequential" id="manual_sequential" {{old('manual_sequential') == 'on' ? 'checked' : ''}}/>
+                                                  <span> @lang('Enter the sequence number manually') </span>
+                                              </label>
+                                          </p>
+                                        @else
+                                          <p class="my-2">
+                                            <input type="hidden" name="manual_sequential" id="manual_sequential" value=""/>
+                                          </p>
+                                        @endif
                                         <div class="input-field my-3">
                                             <label for="sequential"> @lang('Sequential Number') </label>
                                             <input type="text" id="sequential" name="sequential" {{old('manual_sequential') == 'on' ? '' : 'disabled'}} value="{{old('manual_sequential') == 'on' ? old('sequential') : ''}}" >
