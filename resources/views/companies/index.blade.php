@@ -65,7 +65,9 @@
                                 <td>{{$company->type}}</td>
                                 <td>
                                     <a href="{{ route('companies.edit', $company->id) }}"> @lang('Edit') </a>
-                                    <a name="company_remove" class="mx-1 modal-trigger" href="#company_remove_modal" data-id="{{$company->id}}"> @lang('Delete') </a>
+                                    @if(\Illuminate\Support\Facades\Auth::user()->roles->first()->id <= 2)
+                                      <a name="company_remove" class="mx-1 modal-trigger" href="#company_remove_modal" data-id="{{$company->id}}"> @lang('Delete') </a>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
