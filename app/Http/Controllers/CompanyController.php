@@ -134,19 +134,44 @@ class CompanyController extends Controller
         $company->type = $request->get('type');
         $company->save();
 
-        foreach($company->contacts as $contact)
+        /* Check removed contact */
+        foreach($company->contacts as $contactOld)
         {
-            $contact->delete();
-        }
+            $removeContact = true;
+            foreach($request->get('contact') as $contactNew)
+            {
+              if ( $contactOld->name == $contactNew) {
+                $removeContact = false;
+              }
+            }
 
+            if ( $removeContact ) {
+              $contactOld->delete();
+              $company->save();
+            }
+        }
+        
+        /* Check new contact */
         foreach($request->get('contact') as $contact)
         {
-            $company_contact = new CompanyContact();
+            /* Check if already exist */
+            $checkNew = true;
+            foreach($company->contacts as $contactOld)
+            {
+                if ( $contact == $contactOld->name) {
+                  $checkNew = false;
+                }
+            }
 
-            $company_contact->name = $contact;
-            $company_contact->company_id = $company->id;
+            /* If is a new contact for this company */
+            if ( $checkNew ) {
+              $company_contact = new CompanyContact();
 
-            $company_contact->save();
+              $company_contact->name = $contact;
+              $company_contact->company_id = $company->id;
+
+              $company_contact->save();
+            }
         }
 
         return redirect()->route('companies.index')->with('message', __('Company Updated Successfully!'));
