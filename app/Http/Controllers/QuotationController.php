@@ -17,6 +17,8 @@ use App\QuotationHistory;
 use App\Status;
 use App\Typology;
 use App\User;
+use App\Role;
+use App\Todo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -873,5 +875,23 @@ class QuotationController extends Controller
                 $quotation_history->save();
             }
         }
+    }
+
+    public function toDoList( $quotationId )
+    {
+      $user = Auth::user();
+      $role = Auth::user()->roles->first();
+
+      $quotation = Quotation::find($quotationId);
+      $todos     = Todo::where("quotation_id", $quotationId);
+
+      /* If role isn't admin or superadmin */
+      if( $role->id > 2 ){
+        $todos = $todos->where("user_id", $user->id);
+      }
+
+      $todos = $todos->get();
+
+      return view( 'quotations.todos.index', compact( 'quotation', 'todos', 'user' ) );
     }
 }

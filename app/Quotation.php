@@ -97,6 +97,11 @@ class Quotation extends Model
         return $this->hasMany(QuotationHistory::class, 'quotation_id', 'id');
     }
 
+    public function todos()
+    {
+        return $this->hasMany(Todos::class, 'quotation_id', 'id');
+    }
+
     static function filter_quotation( $filters ){
 
       $quotations = Quotation::orderBy("name","asc");

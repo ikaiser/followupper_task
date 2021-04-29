@@ -44,6 +44,11 @@
                 <a class="waves-effect waves-cyan " href="{{ route('reports') }}"><i class="material-icons">mail</i><span class="menu-title"> Report </span></a>
             </li>
         @endif
+        @if(\Illuminate\Support\Facades\Auth::user()->roles->first()->id <= 1)
+            <li class="bold">
+                <a class="waves-effect waves-cyan " href="{{ route('todos.superadmin-all') }}"><i class="material-icons">assignment</i><span class="menu-title"> @lang("All Todo") </span></a>
+            </li>
+        @endif
     </ul>
 
     <div class="navigation-background"></div><a class="sidenav-trigger btn-sidenav-toggle btn-floating btn-medium waves-effect waves-light hide-on-large-only" href="#" data-target="slide-out"><i class="material-icons">menu</i></a>

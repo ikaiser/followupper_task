@@ -171,6 +171,10 @@ WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BET
     width: 100% !important;
 }
 
+.h-rem-35{
+  height: 35rem;
+}
+
 .t-0 {
   top: 0 !important;
 }

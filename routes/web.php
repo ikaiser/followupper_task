@@ -48,6 +48,14 @@ Route::middleware('auth')->group(function ()
 
     Route::get('/home', 'HomeController@index')->name('home');
 
+    //Todo
+    Route::prefix('/todos/')->group(function ()
+    {
+      Route::post('/create/', 'TodoController@create')->name('todos.create');
+      Route::post('/edit/{todo_id}/', 'TodoController@edit')->name('todos.edit');
+      Route::post('/delete/{todo_id}', 'TodoController@delete')->name('todos.delete');
+    });
+
     //Quotation
     Route::prefix('/quotations/')->group(function ()
     {
@@ -63,6 +71,8 @@ Route::middleware('auth')->group(function ()
         Route::post('/report', 'QuotationController@report');
         Route::post('{quotation_id}/update', 'QuotationController@update')->name('quotations.update');
         Route::post('/save', 'QuotationController@store')->name('quotations.store');
+
+        Route::get('/{quotation_id}/to_do_list', 'QuotationController@toDoList')->name('quotations.to_do_list');
 
         //Status
         Route::prefix('/status/')->group(function ()
@@ -117,4 +127,10 @@ Route::middleware('auth')->group(function ()
         Route::post('{company_id}/update', 'CompanyController@update')->name('companies.update');
         Route::post('/save', 'CompanyController@store')->name('companies.store');
     });
+
+    /* Only SuperAdmin */
+    Route::middleware('role:SuperAdmin')->group( function (){
+        Route::get('/todos/superadmin_all', 'TodoController@show_all')->name('todos.superadmin-all');
+    });
+
 });

@@ -43,7 +43,6 @@
     <!-- END: Custom CSS-->
 
     @section('css') @show
-
 </head>
 <!-- END: Head-->
 

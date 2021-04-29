@@ -67,6 +67,11 @@ class User extends Authenticatable
         return $this->hasMany(Quotation::class, 'user_id', 'id');
     }
 
+    public function todos()
+    {
+        return $this->hasMany(Todos::class, 'user_id', 'id');
+    }
+
     public function quotations_assigned()
     {
         return $this->belongsToMany(Quotation::class, 'quotation_user', 'user_id', 'quotation_id');
