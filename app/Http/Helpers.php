@@ -5,6 +5,12 @@ use App\User;
 use Illuminate\Support\Facades\Auth;use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
+function getIsoWeeksInYear($year) {
+  $date = new DateTime;
+  $date->setISODate($year, 53);
+  return ($date->format("W") === "53" ? 53 : 52);
+}
+
 if(!function_exists('child_assign_users'))
 {
     function child_assign_users($dc, $users)
