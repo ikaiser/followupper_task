@@ -4,6 +4,11 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
+
+use App\Mail\NewTodo;
+
 use App\Todo;
 
 class Todo extends Model
@@ -16,6 +21,23 @@ class Todo extends Model
     public function quotation()
     {
         return $this->belongsTo(Quotation::class, 'quotation_id', 'id');
+    }
+
+    public function activities()
+    {
+        return $this->belongsToMany(Activity::class, 'todo_activities', 'todo_id', 'activity_id');
+    }
+
+    public function researcherMail(){
+      $quotation     = $this->quotation;
+      $mainUser      = $quotation->user;
+      $collaborators = $quotation->collaborators->pluck("id")->toArray();
+      $researchers   = array_merge([$mainUser->id],$collaborators);
+      foreach($researchers as $userId )
+      {
+          $researcher = User::find($userId);
+          Mail::to($researcher)->send(New NewTodo($researcher, $this));
+      }
     }
 
     public static function searchFilter( $fields ){
@@ -32,7 +54,38 @@ class Todo extends Model
         $query = $query->whereIn("quotation_id", $fields["quotation_search"] );
       }
 
+      if ( $fields["activities_search"] !== "" ){
+        $query = $query->whereHas('activities', function ($q) use($fields) {
+             $q->whereIn('id', $fields["activities_search"]);
+        });
+      }
+
+      $query = $query->whereBetween('start_date', [reset($fields["todo_in_days"])["date"], end($fields["todo_in_days"])["date"]]);
+
       return $query;
+    }
+
+    public static function sevenDayArray( $date = "" ){
+
+      /* First week */
+      if( $date === "" ){
+        $date = date();
+      }
+
+      $days = [];
+
+      for($i=0;$i<7;$i++){
+        $stringTime   = strtotime($date.' + '.$i.' day');
+        $currDate     = date('Y-m-d', $stringTime);
+        $dayName      = date('l', $stringTime);
+        $dayNumber    = date('d', $stringTime);
+        $dayMonthName = date('M', $stringTime);
+
+        $days[$i]["label"] = __($dayName) . " " . $dayNumber . " " . __($dayMonthName);
+        $days[$i]["date"]  = $currDate;
+      }
+
+      return $days;
     }
 
     public static function fourWeekArray( $week = "", $year = "" ){
@@ -84,6 +137,38 @@ class Todo extends Model
       }
 
       return $weeks;
+    }
+
+    public static function getTodoByUsers( $user, $todos ){
+      $userTodoList = [];
+      $authUser     = Auth::user();
+      foreach ( $todos as $key => $todo ) {
+        $mainUser      = $todo->quotation->user;
+        $collaborators = $todo->quotation->collaborators->pluck("id")->toArray();
+        $researchers   = array_merge([$mainUser->id],$collaborators);
+
+        if ( ( $todo->user_id == $user->id && $authUser->hasRole("SuperAdmin")) || ( $todo->user_id == $user->id && in_array($authUser->id,$researchers) ) ){
+          $startDate=date("Y-m-d",strtotime($todo->start_date));
+          $userTodoList[$todo->quotation_id]["quotation"] = $todo->quotation;
+          $userTodoList[$todo->quotation_id]["todos"][$startDate][$todo->id] = $todo;
+        }
+      }
+
+      return $userTodoList;
+    }
+
+    public static function getTodoByQuotations( $quotation, $todos ){
+      $quotationTodoList = [];
+
+      foreach ( $todos as $key => $todo ) {
+        if ( $todo->quotation_id == $quotation->id ){
+          $startDate=date("Y-m-d",strtotime($todo->start_date));
+          $quotationTodoList[$todo->user_id]["user"] = $todo->user;
+          $quotationTodoList[$todo->user_id]["todos"][$startDate][$todo->id] = $todo;
+        }
+      }
+
+      return $quotationTodoList;
     }
 
     public static function getTodoOnFourWeek( $user, $todos, $week = "", $year = "" ){
@@ -171,4 +256,5 @@ class Todo extends Model
       return $userTodoList;
 
     }
+
 }

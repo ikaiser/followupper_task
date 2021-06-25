@@ -17,6 +17,18 @@
 
               <div class="row">
                 <div class="col l12 s12">
+                  <div class="input-field">
+                    <select name="order_by" id="order_by">
+                      <option value="user" @if( $search['order_by'] === "" || $search['order_by'] == "user") selected @endif>@lang("User")</option>
+                      <option value="quotation" @if($search['order_by'] == "quotation") selected @endif>@lang("Quotation")</option>
+                    </select>
+                    <label> @lang('Order by') </label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col l12 s12">
                   <label for="text" class="dateslabel"> @lang('Title') </label>
                   <input type="text" name="search_title" id="search_title" value="{{$search['search_title']}}">
                 </div>
@@ -35,6 +47,7 @@
                     <select name="user_search[]" id="user_search" multiple>
                       <option value="" disabled>@lang("Filter by user")</option>
                       @foreach( $userAll as $user )
+                        @if($user->hasRole("SuperAdmin")) continue @endif
                         <option value="{{$user->id}}" @if( !empty($search['user_search']) && in_array($user->id, $search['user_search'] ) ) selected @endif> {{$user->name}} ( {{$user->email}} ) </option>
                       @endforeach
                     </select>
@@ -57,10 +70,24 @@
                 </div>
               </div>
 
+              <div class="row">
+                <div class="col l12 s12">
+                  <div class="input-field">
+                    <select name="activities_search[]" id="activities_search" multiple>
+                      <option value="" disabled>@lang("Filter by activity")</option>
+                      @foreach( $activities as $activity )
+                        <option value="{{$activity->id}}" @if( !empty($search['activities_search']) && in_array($activity->id, $search['activities_search'] ) ) selected @endif>{{$activity->name}}</option>
+                      @endforeach
+                    </select>
+                    <label> @lang('Activity') </label>
+                  </div>
+                </div>
+              </div>
+
             </div>
             <div class="modal-footer">
-                <a href="#" class="modal-close btn waves-effect waves-light"> @lang('Cancel') </a>
-                <button type="submit" id="confirm_search_superadmin" class="btn waves-effect waves-light red"> @lang('Filter') </button>
+                <a href="#" class="modal-close btn waves-effect waves-light red"> @lang('Cancel') </a>
+                <button type="submit" id="confirm_search_superadmin" class="btn waves-effect waves-light"> @lang('Filter') </button>
             </div>
           </form>
 

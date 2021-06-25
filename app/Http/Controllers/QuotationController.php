@@ -482,7 +482,6 @@ class QuotationController extends Controller
             $quotation->save();
         }
         fclose($file_handle);
-        die(var_dump(public_path()));
     }
 
     public function export()

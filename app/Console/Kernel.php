@@ -13,6 +13,7 @@ use App\Mail\AdminReport;
 use App\Mail\DailyRecap;
 use App\Mail\EndingQuotations;
 use App\Mail\MissingAmountQuotations;
+use App\Mail\DailyTodo;
 use App\Quotation;
 use App\Task;
 use App\User;
@@ -39,126 +40,65 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
 
-        $schedule->command('view:clear')->cron('0 4 * * *');
-        $schedule->command('cache:clear')->cron('10 4 * * *');
-        $schedule->command('route:cache')->cron('20 4 * * *');
-        $schedule->command('config:cache')->cron('30 4 * * *');
+      $schedule->command('view:clear')->cron('0 4 * * *');
+      $schedule->command('cache:clear')->cron('10 4 * * *');
+      $schedule->command('route:cache')->cron('20 4 * * *');
+      $schedule->command('config:cache')->cron('30 4 * * *');
 
-        // $schedule->call(function () {
-
-        //     // Preventivi in Scadenza
-        //     $next_working_day = date('w');
-
-        //     if($next_working_day == 5)
-        //     {
-        //         $next_working_day = date('Y-m-d', strtotime('+3 day'));
-        //     }
-        //     else
-        //     {
-        //         $next_working_day = date('Y-m-d', strtotime('+1 day'));
-        //     }
-
-        //     $users = DB::table('users')
-        //         ->join('quotation', 'users.id', '=', 'quotation.user_id')
-        //         ->where('deadline', $next_working_day)
-        //         ->select('users.*')
-        //         ->get();
-
-        //     foreach($users as $user)
-        //     {
-        //         $user = User::find($user->id);
-
-        //         $quotations = $user->quotations()->where('deadline', $next_working_day)->get();
-
-        //         if($quotations->count() > 0)
-        //         {
-        //             Mail::to($user)
-        //             ->cc("tommaso.pronunzio@alesresearch.com")
-        //             ->send(New EndingQuotations($user, $quotations));
-        //         }
-        //     }
-
-        //     //Preventivi senza Importo
-        //     $today = date('Y-m-d');
-        //     $users = DB::table('users')
-        //         ->join('quotation', 'users.id', '=', 'quotation.user_id')
-        //         ->whereRaw("MOD(DATEDIFF({$today}, quotation.insertion_date), 3) = 0")
-        //         ->whereDate('quotation.insertion_date', '<', $today)
-        //         ->whereNull('quotation.amount')
-        //         ->orWhere('quotation.amount', '=', 0)
-        //         ->select('users.id', 'quotation.id as quotation_id')
-        //         ->get();
-
-        //     $quotation_users = array();
-        //     foreach($users as $user)
-        //     {
-        //         $quotation_users[$user->id][] = $user->quotation_id;
-        //     }
-
-        //     foreach($quotation_users as $key => $quotations)
-        //     {
-        //         $user = User::find($key);
-
-        //         Mail::to($user)
-        //         ->cc("tommaso.pronunzio@alesresearch.com")
-        //         ->send(New MissingAmountQuotations($user, $quotations));
-        //     }
-
-        // })->cron('0 18 * * *');
-
-
-        // $schedule->call(function () {
-
-        //     $users = User::whereHas('roles', function($q) {$q->whereIn('id', ['1', '2']);})->get();
-
-        //     $total_quotations = Quotation::all();
-        //     $total_quotations = $total_quotations->count();
-        //     $open_quotations = Quotation::where('closed', 0)->where('chance', '>', 0)->where('insertion_date', '<=', date('Y-m-d'))->get()->count();
-        //     $open_not_invoiced_quotations = Quotation::where('closed', 0)->where('chance', '>', 0)->where('insertion_date', '<=', date('Y-m-d'))->where(function ($q) { $q->whereNull('invoice_amount')->orWhere('invoice_amount', 0);})->get()->count();
-        //     $closed_not_invoiced_quotations = Quotation::where('closed', 1)->where('chance', '>', 0)->where('insertion_date', '<=', date('Y-m-d'))->where(function ($q) { $q->whereNull('invoice_amount')->orWhere('invoice_amount', 0);})->get()->count();
-
-        //     $quotation_stats = array($total_quotations, $open_quotations, $open_not_invoiced_quotations, $closed_not_invoiced_quotations);
-
-        //     foreach($users as $user)
-        //     {
-        //         Mail::to($user)
-        //         ->cc("tommaso.pronunzio@alesresearch.com")
-        //         ->send(New AdminReport($user, $quotation_stats));
-        //     }
-        // })->cron('0 10 * * 4'); /* Tuesday at 10 */
-
-        /* Collaborators daily STATUS A1 */
-        $schedule->call( function () {
-
-          $quotations = [];
-          $quotations = Quotation::whereHas('status', function ($query) {
-              $query->where('name', 'like', '%A1%');
-          })->get();
-
-          $user_list = [];
-
+      /* TODOS all day at 9 */
+      $schedule->call( function (){
+        $users = User::all();
+        foreach( $users as $user ) {
+          $quotations = Quotation::all();
+          $todos      = [];
           foreach( $quotations as $key => $quotation ) {
+            $mainUser      = $quotation->user;
+            $collaborators = $quotation->collaborators->pluck("id")->toArray();
+            $researchers   = array_merge([$mainUser->id],$collaborators);
 
-            /* User */
-            if ( !is_null( $quotation->user ) && !is_null( $quotation->user->email ) ) {
-              $user_list[$quotation->user->email][] = $quotation;
+            if( in_array( $user->id(), $researchers ) && $quotation->todosNotDone > 0 ){
+              $todos[$key]["quotation"] = $quotation;
+              $todos[$key]["todos"]     = $quotation->todosNotDone;
             }
+          }
+          if (count($todos) > 0){
+            Mail::to($user)->send(New DailyTodo($user, $todos));
+          }
+        }
+      } )->cron('0 9 * * mon-fri'); /* Daily at 9 not saturday and sunday */
 
-            /* Collaborators */
-            if ( !empty($quotation->collaborators) ) {
-              foreach( $quotation->collaborators as $k => $collaborators ) {
-                  $user_list[$collaborators->email][] = $quotation;
-              }
-            }
+      /* Collaborators daily STATUS A1 */
+      $schedule->call( function () {
 
+        $quotations = [];
+        $quotations = Quotation::whereHas('status', function ($query) {
+            $query->where('name', 'like', '%A1%');
+        })->get();
+
+        $user_list = [];
+
+        foreach( $quotations as $key => $quotation ) {
+
+          /* User */
+          if ( !is_null( $quotation->user ) && !is_null( $quotation->user->email ) ) {
+            $user_list[$quotation->user->email][] = $quotation;
           }
 
-          foreach ( $user_list as $userEmail => $quotationList ){
-            $user = User::where("email", $userEmail)->get()->first();
-            Mail::to($user)
-            ->cc("tommaso.pronunzio@alesresearch.com")
-            ->send(New CollaboratorsA1Report( $user, $quotationList ));
+          /* Collaborators */
+          if ( !empty($quotation->collaborators) ) {
+            foreach( $quotation->collaborators as $k => $collaborators ) {
+                $user_list[$collaborators->email][] = $quotation;
+            }
           }
+
+        }
+
+        foreach ( $user_list as $userEmail => $quotationList ){
+          $user = User::where("email", $userEmail)->get()->first();
+          Mail::to($user)
+          ->cc("tommaso.pronunzio@alesresearch.com")
+          ->send(New CollaboratorsA1Report( $user, $quotationList ));
+        }
 
       } )->cron('0 12 * * *'); /* Daily at 12 */
 

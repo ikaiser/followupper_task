@@ -171,6 +171,30 @@ WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BET
     width: 100% !important;
 }
 
+.br-0 {
+    border-radius: 0 !important;
+}
+.br-1 {
+    border-radius: 0.25rem !important;
+}
+.br-2 {
+    border-radius: 0.5rem !important;
+}
+.br-3 {
+    border-radius: 1rem !important;
+}
+.br-4 {
+    border-radius: 2rem !important;
+}
+
+.b-0{
+
+}
+
+.btrans-1{
+  border: 1px solid transparent !important;
+}
+
 .h-rem-35{
   height: 35rem;
 }
@@ -201,3 +225,18 @@ WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BET
 }
 
 .modal.modal-search{ width: 75% !important ; height: 75% !important ; }
+
+/* Customize select in modal add */
+#todo_add .dropdown-content.select-dropdown{
+  overflow: auto;
+  height: 200px;
+}
+
+.add-todo-element{
+  opacity: 0.7;
+  transition: 0.3s;
+}
+
+.add-todo-element:hover{
+  opacity: 1;
+}

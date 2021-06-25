@@ -5,9 +5,13 @@ namespace App\Http\Controllers;
 use App\Permission;
 use App\Role;
 use App\User;
+use App\Quotation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Mail;
+
+use App\Mail\DailyTodo;
 
 class UserController extends Controller
 {
@@ -24,6 +28,30 @@ class UserController extends Controller
      */
     public function index()
     {
+
+      $users = User::all();
+      foreach( $users as $user ) {
+        $quotations = Quotation::all();
+        $todos      = [];
+
+        foreach( $quotations as $key => $quotation ) {
+          $mainUser      = $quotation->user;
+          $collaborators = $quotation->collaborators->pluck("id")->toArray();
+          $researchers   = array_merge([$mainUser->id],$collaborators);
+
+          if( in_array( $user->id, $researchers ) && count($quotation->todosNotDone) > 0 ){
+            $todos[$key]["quotation"] = $quotation;
+            $todos[$key]["todos"]     = $quotation->todosNotDone;
+          }
+        }
+
+        if (count($todos) > 0){
+          Mail::to($user)->send(New DailyTodo($user, $todos));
+        }
+
+      }
+      // test
+
         $user = Auth::user();
         $role = $user->roles->first()->id;
 
@@ -281,7 +309,7 @@ class UserController extends Controller
         // {
         //     $users = $users->where('created_by', Auth::user()->created_by);
         // }
-        
+
         $users = $users->get();
 
         $output = '<ul class="collection" style="display:block; position:relative">';

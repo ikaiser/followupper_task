@@ -8,12 +8,13 @@
 
     @include('quotations/todos/modal_export_csv')
     @include('quotations/todos/modal_search_superadmin')
+    @include('quotations/todos/modal_add_todo')
 
     <div class="row">
         <div class="col s12 m6 mt-4">
             <h6>
                 <a href="#" class="pointer">Home</a>
-                <a onclick="document.location.href='{{ route('todos.superadmin-all') }}'" class="pointer">/&nbsp;@lang('Show todos')  - @lang("Starting year"): <b>{{ $search["search_start_year"] }}</b> - @lang("Starting week"): <b>{{ $search["search_start_week"] }}</b>  </a>
+                <a onclick="document.location.href='{{ route('todos.superadmin-all') }}'" class="pointer">/&nbsp;@lang('Show todos')  - @lang("Starting year"): <b>{{ date( "d/m/Y", strtotime($search["search_start_date"]) ) }}</b> </a>
             </h6>
         </div>
         <div class="col s12 m6 mt-4 right-align">
@@ -27,54 +28,178 @@
         <div class="col s12">
             <div class="card hoverable">
                 <div class="card-content">
-                    <table class="striped highlight">
-                      <thead class="grey white-text">
+
+                    @if ($message = Session::get('success'))
+                      <div class="card-alert card green lighten-5">
+                          <div class="card-content green-text">
+                              <p>{{ $message }}</p>
+                          </div>
+                          <button type="button" class="close green-text" data-dismiss="alert" aria-label="Close">
+                              <span aria-hidden="true">×</span>
+                          </button>
+                      </div>
+                    @endif
+
+                    <table class="striped highlight bordered" id="todos_table">
+                      <blockquote>
+                        @lang("Click the day for add a todo in your table")
+                      </blockquote>
+                      <thead class="blue white-text">
                         <tr>
-                          <th> &darr; @lang("Users") | @lang("Weeks") &rarr; </th>
-                          <!-- List 4 week from now -->
-                          @foreach( $weeksArray as $key => $week )
-                            <th> {{ $week["label"] }}</th>
+                          <th> @lang("Users") &darr; </th>
+                          <th> @lang("Quotation") &darr; | @lang("Days") &rarr; </th>
+
+                          <!-- List 7 days from last monday -->
+                          @foreach( $daysArray as $key => $day )
+                            <th class="pointer add-todo-element" data-date="{{ date( "d-m-Y", strtotime($day["date"]) ) }}"> {{ $day["label"] }} </th>
                           @endforeach
                         </tr>
                       </thead>
                       <tbody>
                           <!-- List all users with todo from now to weeks -->
-                          @foreach( $usersTodoArray as $key => $userTodoArray )
-                            <tr>
-                              <td> {{ $userTodoArray["user"]->name }} </td>
+                          @if($search["order_by"] == "user")
+                            @foreach( $usersTodoArray as $key => $userTodoArray )
+                              @foreach( $userTodoArray["quotation_todos"] as $pk => $userProjectTodos )
 
-                              @foreach( $userTodoArray["todos"] as $wk => $userTodoInWeek )
-                                <td>
-                                  <ul>
-                                    @foreach( $userTodoInWeek["todos"] as $todoId => $userTodo )
-                                      @if($userTodo !== "")
-                                        <li>
+                                <tr>
 
-                                          <div class="pointer tippy-tooltip" data-template="user_{{$wk}}_{{$userTodoArray['user']->id}}_{{$userTodo->id}}">
-                                            - {{$userTodo->title}}
-                                          </div>
+                                    <!-- Foreach quotation get user name and user todo -->
+                                    <td> {{ $userTodoArray["user"]->name }} </td>
+                                    <td> {{$userProjectTodos["quotation"]->name}} </td>
 
-                                          <!-- Tooltip -->
-                                          <div style="display: none;" id="user_{{$wk}}_{{$userTodoArray['user']->id}}_{{$userTodo->id}}">
-                                            <div>
-                                              @lang("TITLE"): {{$userTodo->title}}
-                                            </div>
-                                            <div>
-                                              @lang("DESCRIPTION"): {{$userTodo->description}}
-                                            </div>
-                                            <div>
-                                              @lang("Start"): {{ date( "d/m/Y H:i" , strtotime( $userTodo->start_date ) ) }} @lang("End"): {{ date( "d/m/Y H:i" ,strtotime( $userTodo->end_date ) ) }}
-                                            </div>
-                                          </div>
+                                    @foreach( $daysArray as $key => $day )
+                                      <td>
+                                        <ul>
 
-                                        </li>
-                                      @endif
+                                          <!-- Foreach todo in project for this user -->
+                                          @foreach( $userProjectTodos["todos"] as $wk => $todoArr )
+
+                                            @foreach( $todoArr as $todoId => $todo )
+
+                                              @if($wk == $day["date"])
+                                                <li>
+
+                                                  <div class="pointer tippy-tooltip @if($todo->completed) green-text @else red-text @endif" data-template="user_{{$wk}}_{{$userTodoArray["user"]->id}}_{{$todo->id}}">
+                                                    <a href="#" class="modal-trigger @if($todo->completed) green-text @else red-text @endif" data-target="user_{{$wk}}_{{$userTodoArray["user"]->id}}_{{$todo->id}}_edit_modal">
+                                                      @php
+                                                        $activityName = (!is_null($todo->activities->first())) ? $todo->activities->first()->name : __("No activity")
+                                                      @endphp
+                                                      - {{$todo->title}} ( {{$activityName}} )
+                                                    </a>
+                                                  </div>
+
+                                                  <!-- Tooltip -->
+                                                  <div style="display: none;" id="user_{{$wk}}_{{$userTodoArray["user"]->id}}_{{$todo->id}}">
+                                                    <div>
+                                                      @lang("ATTIVITA'"): {{$activityName}}
+                                                    </div>
+                                                    <div>
+                                                      @lang("TITLE"): {{$todo->title}}
+                                                    </div>
+                                                    <div>
+                                                      @lang("DESCRIPTION"): {{$todo->description}}
+                                                    </div>
+                                                    <div>
+                                                      @lang("Date"): {{ date( "d/m/Y" , strtotime( $todo->start_date ) ) }}
+                                                    </div>
+                                                    <div>
+                                                      @lang("Completed"): @if($todo->completed) @lang("Yes") @else @lang("No") @endif
+                                                    </div>
+                                                  </div>
+
+                                                  <!-- Modal for editing -->
+                                                  @include('quotations/todos/modal_edit_todo')
+                                                  <!-- Modal for editing -->
+
+                                                </li>
+                                              @else
+                                                <li>
+                                                </li>
+                                              @endif
+
+                                            @endforeach
+
+                                          @endforeach
+
+                                        </ul>
+                                      </td>
                                     @endforeach
-                                  </ul>
-                                </td>
+
+                                </tr>
                               @endforeach
-                            </tr>
-                          @endforeach
+                            @endforeach
+                          @else
+                            @foreach( $quotationsTodoArray as $qid => $quotationTodoArray )
+                              @foreach( $quotationTodoArray["user_todos"] as $uk => $projectUserTodos )
+
+                                <tr>
+
+                                    <!-- Foreach quotation get user name and user todo -->
+                                    <td> {{$projectUserTodos["user"]->name}} </td>
+                                    <td> {{$quotationTodoArray["quotation"]->name}} </td>
+
+                                    @foreach( $daysArray as $key => $day )
+                                      <td>
+                                        <ul>
+
+                                          <!-- Foreach todo in project for this user -->
+                                          @foreach( $projectUserTodos["todos"] as $wk => $todoArr )
+
+                                            @foreach( $todoArr as $todoId => $todo )
+
+                                              @if($wk == $day["date"])
+                                                <li>
+
+                                                  <div class="pointer tippy-tooltip @if($todo->completed) green-text @else red-text @endif" data-template="user_{{$wk}}_{{$projectUserTodos["user"]->id}}_{{$todo->id}}">
+                                                    <a href="#" class="modal-trigger @if($todo->completed) green-text @else red-text @endif" data-target="user_{{$wk}}_{{$projectUserTodos["user"]->id}}_{{$todo->id}}_edit_modal">
+                                                      @php
+                                                        $activityName = (!is_null($todo->activities->first())) ? $todo->activities->first()->name : __("No activity")
+                                                      @endphp
+                                                      - {{$todo->title}} ( {{$activityName}} )
+                                                    </a>
+                                                  </div>
+
+                                                  <!-- Tooltip -->
+                                                  <div style="display: none;" id="user_{{$wk}}_{{$projectUserTodos["user"]->id}}_{{$todo->id}}">
+                                                    <div>
+                                                      @lang("ATTIVITA'"): {{$activityName}}
+                                                    </div>
+                                                    <div>
+                                                      @lang("TITLE"): {{$todo->title}}
+                                                    </div>
+                                                    <div>
+                                                      @lang("DESCRIPTION"): {{$todo->description}}
+                                                    </div>
+                                                    <div>
+                                                      @lang("Date"): {{ date( "d/m/Y" , strtotime( $todo->start_date ) ) }}
+                                                    </div>
+                                                    <div>
+                                                      @lang("Completed"): @if($todo->completed) @lang("Yes") @else @lang("No") @endif
+                                                    </div>
+                                                  </div>
+
+                                                  <!-- Modal for editing -->
+                                                  @include('quotations/todos/modal_edit_todo')
+                                                  <!-- Modal for editing -->
+
+                                                </li>
+                                              @else
+                                                <li>
+                                                </li>
+                                              @endif
+
+                                            @endforeach
+
+                                          @endforeach
+
+                                        </ul>
+                                      </td>
+                                    @endforeach
+
+                                </tr>
+                              @endforeach
+                            @endforeach
+                          @endif
                       </tbody>
                     </table>
                 </div>
@@ -93,35 +218,6 @@
     <script src="https://unpkg.com/@popperjs/core@2"></script>
     <script src="https://unpkg.com/tippy.js@6"></script>
 
-    <script>
-
-    function initDateTimePicker(){
-      M.AutoInit();
-      /* Search */
-      if ( $(".start_date_datetimepicker_search").length > 0 ){
-        // var DateFieldStartExport = MaterialDateTimePicker.create($(".start_date_datetimepicker_search"));
-        $('.start_date_datetimepicker_search').datepicker({
-          format: 'dd-mm-yyyy',
-          defaultDate: new Date('{{ date( "Y-m-d" ,strtotime($search["search_start_date"])) }}'),
-          setDefaultDate: true
-        });
-      }
-    }
-
-    $(document).ready(function () {
-
-      tippy('.tippy-tooltip', {
-        content(reference){
-          var id       = reference.getAttribute('data-template');
-          var template = document.getElementById(id);
-          return template.innerHTML;
-        },
-        allowHTML: true,
-      });
-
-      initDateTimePicker();
-
-    });
-
-    </script>
+    <!-- Custom todo.js -->
+    <script src="{{ asset('js/todo.js') }}"></script>
 @endsection

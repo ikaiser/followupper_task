@@ -69,7 +69,12 @@ class User extends Authenticatable
 
     public function todos()
     {
-        return $this->hasMany(Todos::class, 'user_id', 'id');
+        return $this->hasMany(Todo::class, 'user_id', 'id');
+    }
+
+    public function todosNotDone()
+    {
+        return $this->hasMany(Todo::class, 'user_id', 'id')->where("completed", 0)->orderBy('quotation_id', 'asc')->orderBy('start_date', 'asc');
     }
 
     public function quotations_assigned()

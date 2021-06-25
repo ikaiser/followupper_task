@@ -99,7 +99,12 @@ class Quotation extends Model
 
     public function todos()
     {
-        return $this->hasMany(Todos::class, 'quotation_id', 'id');
+        return $this->hasMany(Todo::class, 'quotation_id', 'id');
+    }
+
+    public function todosNotDone()
+    {
+        return $this->hasMany(Todo::class, 'quotation_id', 'id')->where("completed", 0)->orderBy('quotation_id', 'asc')->orderBy('start_date', 'asc');
     }
 
     static function filter_quotation( $filters ){

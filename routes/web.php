@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 
-
 Route::get('/', function () {
     return redirect('login');
 });
@@ -53,7 +52,21 @@ Route::middleware('auth')->group(function ()
     {
       Route::post('/create/', 'TodoController@create')->name('todos.create');
       Route::post('/edit/{todo_id}/', 'TodoController@edit')->name('todos.edit');
-      Route::post('/delete/{todo_id}', 'TodoController@delete')->name('todos.delete');
+      Route::get('/delete/{todo_id}', 'TodoController@delete')->name('todos.delete');
+    });
+
+    //Activities
+    Route::prefix('/activities/')->group(function ()
+    {
+      Route::get('/index/', 'ActivityController@index')->name('activities.index');
+
+      Route::get('/create/', 'ActivityController@create')->name('activities.create');
+      Route::post('/store/', 'ActivityController@store')->name('activities.store');
+
+      Route::get('/edit/{activity_id}/', 'ActivityController@edit')->name('activities.edit');
+      Route::post('/update/{activity_id}/', 'ActivityController@update')->name('activities.update');
+
+      Route::get('/delete/{activity_id}/', 'ActivityController@delete')->name('activities.delete');
     });
 
     //Quotation
@@ -128,9 +141,6 @@ Route::middleware('auth')->group(function ()
         Route::post('/save', 'CompanyController@store')->name('companies.store');
     });
 
-    /* Only SuperAdmin */
-    Route::middleware('role:SuperAdmin')->group( function (){
-        Route::get('/todos/superadmin_all', 'TodoController@show_all')->name('todos.superadmin-all');
-    });
+    Route::get('/todos/show_all', 'TodoController@show_all')->name('todos.superadmin-all');
 
 });
