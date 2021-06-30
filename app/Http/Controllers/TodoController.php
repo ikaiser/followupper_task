@@ -28,7 +28,7 @@ class TodoController extends Controller
       $search["quotation_search"]   = ( isset( $_GET["quotation_search"] ) ) ? $_GET["quotation_search"] : "";
       $search["activities_search"]  = ( isset( $_GET["activities_search"] ) ) ? $_GET["activities_search"] : "";
 
-      $search["order_by"] = ( isset( $_GET["order_by"] ) ) ? $_GET["order_by"] : "user";
+      $search["order_by"] = ( isset( $_GET["order_by"] ) ) ? $_GET["order_by"] : "quotation";
 
       if ( ( isset( $_GET["search_start_date"] ) ) && $_GET["search_start_date"] !== "" ) {
           $search["search_start_date"] = $_GET["search_start_date"];
