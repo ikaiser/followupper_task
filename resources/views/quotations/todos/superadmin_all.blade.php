@@ -159,7 +159,7 @@
                                     <td> {{$quotationTodoArray["quotation"]->name}} </td>
 
                                     @foreach( $daysArray as $key => $day )
-                                      <td class="pointer add-todo-element" data-date="{{ date( "d-m-Y", strtotime($day["date"]) ) }}" data-quotation="{{$quotationTodoArray["quotation"]->id}}" data-user="{{$projectUserTodos["user"]->id}}">
+                                      <td class="pointer add-todo-element" data-date="{{ date( "d-m-Y", strtotime($day["date"]) ) }}" data-quotation="{{$quotationTodoArray["quotation"]->id}}" data-quotation-name="{{$quotationTodoArray["quotation"]->name}}" data-user="{{$projectUserTodos["user"]->id}}" data-user-name="{{$projectUserTodos["user"]->name}}">
                                         <ul>
 
                                           <!-- Foreach todo in project for this user -->
