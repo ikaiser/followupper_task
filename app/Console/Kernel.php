@@ -65,7 +65,13 @@ class Kernel extends ConsoleKernel
             Mail::to($user)->send(New DailyTodo($user, $todos));
           }
         }
-      } )->cron('0 9 * * mon-fri'); /* Daily at 9 not saturday and sunday */
+      } )->daily('09:00')->timezone('Europe/Rome')->skip(function (){
+                              $return = false;
+                              if( date('D', strtotime("today") === 'Sat' ) || date('D', strtotime("today") === 'Sun' ) ) {
+                                $return = true;
+                              }
+                              return $return;
+                           }); /* Daily at 9 not saturday and sunday */
 
       /* Collaborators daily STATUS A1 */
       $schedule->call( function () {
