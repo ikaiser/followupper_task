@@ -9,7 +9,7 @@
           @lang('edit Todo for user')
           <span class="black-text">{{$todo->user->name}}</span>
           @lang('and quotation')
-          <span class="black-text">{{$todo->quotation->name}} ( {{$todo->quotation->code}} )</span>
+          <span class="black-text">{{$todo->quotation->name}} ( {{get_code($todo->quotation)}} )</span>
         </blockquote>
 
         @csrf

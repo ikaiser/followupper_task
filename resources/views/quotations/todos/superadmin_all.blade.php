@@ -88,10 +88,10 @@
 
                                     <!-- Foreach quotation get user name and user todo -->
                                     <td> {{ $userTodoArray["user"]->name }} </td>
-                                    <td> {{$userProjectTodos["quotation"]->name}} ( {{$userProjectTodos["quotation"]->code}} ) </td>
+                                    <td> {{$userProjectTodos["quotation"]->name}} ( {{get_code($userProjectTodos["quotation"])}} ) </td>
 
                                     @foreach( $daysArray as $key => $day )
-                                      <td class="pointer add-todo-element" data-date="{{ date( "d-m-Y", strtotime($day["date"]) ) }}" data-quotation="{{$userProjectTodos["quotation"]->id}}" data-quotation-name="{{$userProjectTodos["quotation"]->name}}( {{$userProjectTodos["quotation"]->code}} )" data-user="{{$userTodoArray["user"]->id}}" data-user-name="{{$userTodoArray["user"]->name}}">
+                                      <td class="pointer add-todo-element" data-date="{{ date( "d-m-Y", strtotime($day["date"]) ) }}" data-quotation="{{$userProjectTodos["quotation"]->id}}" data-quotation-name="{{$userProjectTodos["quotation"]->name}}( {{get_code($userProjectTodos["quotation"])}} )" data-user="{{$userTodoArray["user"]->id}}" data-user-name="{{$userTodoArray["user"]->name}}">
                                         <ul>
 
                                           <!-- Foreach todo in project for this user -->
@@ -156,10 +156,10 @@
 
                                     <!-- Foreach quotation get user name and user todo -->
                                     <td> {{$projectUserTodos["user"]->name}} </td>
-                                    <td> {{$quotationTodoArray["quotation"]->name}} ( {{$quotationTodoArray["quotation"]->code}} ) </td>
+                                    <td> {{$quotationTodoArray["quotation"]->name}} ( {{get_code($quotationTodoArray["quotation"])}} ) </td>
 
                                     @foreach( $daysArray as $key => $day )
-                                      <td class="pointer add-todo-element" data-date="{{ date( "d-m-Y", strtotime($day["date"]) ) }}" data-quotation="{{$quotationTodoArray["quotation"]->id}}" data-quotation-name="{{$quotationTodoArray["quotation"]->name}} ( {{$quotationTodoArray["quotation"]->code}} )" data-user="{{$projectUserTodos["user"]->id}}" data-user-name="{{$projectUserTodos["user"]->name}}">
+                                      <td class="pointer add-todo-element" data-date="{{ date( "d-m-Y", strtotime($day["date"]) ) }}" data-quotation="{{$quotationTodoArray["quotation"]->id}}" data-quotation-name="{{$quotationTodoArray["quotation"]->name}} ( {{get_code($quotationTodoArray["quotation"])}} )" data-user="{{$projectUserTodos["user"]->id}}" data-user-name="{{$projectUserTodos["user"]->name}}">
                                         <ul>
 
                                           <!-- Foreach todo in project for this user -->
