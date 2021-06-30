@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Mail\NewTodo;
 
 use App\Todo;
+use App\User;
 
 class Todo extends Model
 {
@@ -157,6 +158,36 @@ class Todo extends Model
       return $userTodoList;
     }
 
+    public static function getUserTable( $user, $quotations, $todos ){
+
+      $userTodoList = [];
+      $authUser     = Auth::user();
+
+      foreach ($quotations as $quotation) {
+
+        $mainUser      = $quotation->user;
+        $collaborators = $quotation->collaborators->pluck("id")->toArray();
+        $researchers   = array_merge([$mainUser->id],$collaborators);
+
+        if ( in_array( $user->id, $researchers ) || $user->hasRole("SuperAdmin") ){
+          $userTodoList[$quotation->id]["quotation"] = $quotation;
+          $userTodoList[$quotation->id]["todos"]     = [];
+
+          foreach ( $todos as $key => $todo ) {
+            if( $todo->quotation_id == $quotation->id && $todo->user_id == $user->id ){
+
+              $startDate=date("Y-m-d",strtotime($todo->start_date));
+              $userTodoList[$todo->quotation_id]["todos"][$startDate][$todo->id] = $todo;
+            }
+          }
+        }
+
+      }
+
+      return $userTodoList;
+    }
+
+    /* Only if exist the TODO */
     public static function getTodoByQuotations( $quotation, $todos ){
       $quotationTodoList = [];
 
@@ -165,6 +196,37 @@ class Todo extends Model
           $startDate=date("Y-m-d",strtotime($todo->start_date));
           $quotationTodoList[$todo->user_id]["user"] = $todo->user;
           $quotationTodoList[$todo->user_id]["todos"][$startDate][$todo->id] = $todo;
+        }
+      }
+
+      return $quotationTodoList;
+    }
+
+    /* Complete table of quotation with target characteristics */
+    public static function getQuotationTable( $quotation, $users, $todos ){
+
+      $mainUser      = $quotation->user;
+      $collaborators = $quotation->collaborators->pluck("id")->toArray();
+      $researchers   = array_merge([$mainUser->id],$collaborators);
+      $researchers[] = 1; // Add also superadmin
+
+      $quotationTodoList = [];
+
+      foreach ($researchers as $researcherId ) {
+
+        $user = User::find($researcherId);
+        $usersIds = $users->pluck("id")->toArray();
+
+        if ( in_array( $user->id, $usersIds ) || $user->hasRole("SuperAdmin") ){
+          $quotationTodoList[$researcherId]["user"]  = $user;
+          $quotationTodoList[$researcherId]["todos"] = [];
+
+          foreach ($todos as $todo){
+            if( $todo->quotation_id == $quotation->id && $todo->user_id == $researcherId ){
+              $startDate=date("Y-m-d",strtotime($todo->start_date));
+              $quotationTodoList[$todo->user_id]["todos"][$startDate][$todo->id] = $todo;
+            }
+          }
         }
       }
 

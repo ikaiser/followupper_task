@@ -32,12 +32,20 @@ class TodoController extends Controller
 
       if ( ( isset( $_GET["search_start_date"] ) ) && $_GET["search_start_date"] !== "" ) {
           $search["search_start_date"] = $_GET["search_start_date"];
-          $currDate = strtotime( 'last monday', strtotime($_GET["search_start_date"]) );
-          $date = date("Y-m-d", $currDate );
+          if(date('D', strtotime($_GET["search_start_date"])) === 'Mon') {
+            $date = date("Y-m-d", strtotime($_GET["search_start_date"]) );
+          }else{
+            $currDate = strtotime( 'last monday', strtotime($_GET["search_start_date"]) );
+            $date = date("Y-m-d", $currDate );
+          }
       }else{
           $search["search_start_date"] = date("Y-m-d");
-          $currDate = strtotime( 'last monday' );
-          $date     = date("Y-m-d", $currDate );
+          if(date('D', strtotime("today")) === 'Mon') {
+            $date     = date("Y-m-d");
+          }else{
+            $currDate = strtotime( 'last monday' );
+            $date     = date("Y-m-d", $currDate );
+          }
       }
 
       /* Create 7 days array */
@@ -45,15 +53,33 @@ class TodoController extends Controller
       $search["todo_in_days"] = $daysArray;
 
       $query = Todo::searchFilter( $search );
-
       $todos = $query->get();
+
       $quotationAll = Quotation::where( "closed", "=", 0 )
                              ->whereHas('status', function ($statusQuery){
                                   $statusQuery->where('name', 'like', '%C1%');
                                   $statusQuery->orWhere('name', 'like', '%A1%');
                              });
 
+     $quotationFiltered = Quotation::where( "closed", "=", 0 )
+                            ->whereHas('status', function ($statusQuery){
+                                 $statusQuery->where('name', 'like', '%C1%');
+                                 $statusQuery->orWhere('name', 'like', '%A1%');
+                            });
+
+      /* Filter also tables */
+      if ( $search["quotation_search"] !== "" && count($search["quotation_search"]) > 0 ) {
+        $quotationFiltered = $quotationFiltered->whereIn("id",$search["quotation_search"]);
+      }
+
       $userAll = User::all();
+
+      /* Filter also tables */
+      if ( $search["user_search"] !== "" ){
+        $userFiltered = User::whereIn("id",$search["user_search"])->get();
+      }else{
+        $userFiltered = User::all();
+      }
 
       if ( !$user->hasRole("SuperAdmin") ){
         $quotationAll = $quotationAll->where(function($query) use ($user){
@@ -62,8 +88,16 @@ class TodoController extends Controller
                                             $collaborators->whereIn('id', [$user->id]);
                                         });
                                       })->get();
+
+        $quotationFiltered = $quotationFiltered->where(function($query) use ($user){
+                                        $query->where('user_id', '=', $user->id);
+                                        $query->orWhereHas('collaborators', function($collaborators) use ($user) {
+                                            $collaborators->whereIn('id', [$user->id]);
+                                        });
+                                      })->get();
       }else{
-        $quotationAll = $quotationAll->get();
+        $quotationAll      = $quotationAll->get();
+        $quotationFiltered = $quotationFiltered->get();
       }
 
       /* Create users todo list */
@@ -72,19 +106,35 @@ class TodoController extends Controller
       /* Create users todo list */
       $quotationsTodoArray = [];
 
+      // if ( $search["order_by"] == "user") {
+      //   foreach ( $userAll as $key => $userSingle ){
+      //     $userToDoArray = Todo::getTodoByUsers( $userSingle, $todos );
+      //     if( count($userToDoArray) > 0 ){
+      //       $usersTodoArray[$userSingle->id]["user"]            = $userSingle;
+      //       $usersTodoArray[$userSingle->id]["quotation_todos"] = $userToDoArray;
+      //     }
+      //   }
+      // }else{
+      //   foreach ( $quotationAll as $key => $quotationSingle ){
+      //     $quotationsTodoGroup = Todo::getTodoByQuotations( $quotationSingle, $todos );
+      //     if( count($quotationsTodoGroup) > 0 ){
+      //       $quotationsTodoArray[$quotationSingle->id]["quotation"]  = $quotationSingle;
+      //       $quotationsTodoArray[$quotationSingle->id]["user_todos"] = $quotationsTodoGroup;
+      //     }
+      //   }
+      // }
+
       if ( $search["order_by"] == "user") {
-        foreach ( $userAll as $key => $userSingle ){
-          // if ( ( $user->hasRole("SuperAdmin") || $user->id == $userSingle->id  ) ){
-          $userToDoArray = Todo::getTodoByUsers( $userSingle, $todos );
+        foreach ( $userFiltered as $key => $userSingle ){
+          $userToDoArray = Todo::getUserTable( $userSingle, $quotationFiltered, $todos );
           if( count($userToDoArray) > 0 ){
             $usersTodoArray[$userSingle->id]["user"]            = $userSingle;
             $usersTodoArray[$userSingle->id]["quotation_todos"] = $userToDoArray;
           }
-          // }
         }
       }else{
-        foreach ( $quotationAll as $key => $quotationSingle ){
-          $quotationsTodoGroup = Todo::getTodoByQuotations( $quotationSingle, $todos );
+        foreach ( $quotationFiltered as $key => $quotationSingle ){
+          $quotationsTodoGroup = Todo::getQuotationTable( $quotationSingle, $userFiltered, $todos );
           if( count($quotationsTodoGroup) > 0 ){
             $quotationsTodoArray[$quotationSingle->id]["quotation"]  = $quotationSingle;
             $quotationsTodoArray[$quotationSingle->id]["user_todos"] = $quotationsTodoGroup;
@@ -101,7 +151,7 @@ class TodoController extends Controller
 
       $user = Auth::user();
 
-      $title       = $request->post("todo_title");
+      // $title       = $request->post("todo_title");
       $description = (!is_null($request->post("todo_description"))) ? $request->post("todo_description") : "";
       $startDate   = $request->post("start_date");
       $endDate     = $request->post("end_date");
@@ -112,7 +162,7 @@ class TodoController extends Controller
       $todo = new Todo();
 
       $todo->quotation_id = $quotationId;
-      $todo->title        = $title;
+      $todo->title        = "";
       $todo->description  = $description;
 
       $todo->start_date   = date("Y-m-d", strtotime($startDate));
@@ -134,7 +184,7 @@ class TodoController extends Controller
 
       $user = Auth::user();
 
-      $title       = $request->post("todo_title");
+      // $title       = $request->post("todo_title");
       $description = (!is_null($request->post("todo_description"))) ? $request->post("todo_description") : "";
       $startDate   = $request->post("start_date");
       $endDate     = $request->post("end_date");
@@ -147,7 +197,7 @@ class TodoController extends Controller
       $todo = Todo::find($todoId);
 
       $todo->quotation_id = $quotationId;
-      $todo->title        = $title;
+      $todo->title        = "";
       $todo->description  = $description;
 
       $todo->start_date   = date("Y-m-d", strtotime($startDate));

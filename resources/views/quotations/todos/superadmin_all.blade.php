@@ -14,7 +14,7 @@
         <div class="col s12 m6 mt-4">
             <h6>
                 <a href="#" class="pointer">Home</a>
-                <a onclick="document.location.href='{{ route('todos.superadmin-all') }}'" class="pointer">/&nbsp;@lang('Show todos')  - @lang("Starting year"): <b>{{ date( "d/m/Y", strtotime($search["search_start_date"]) ) }}</b> </a>
+                <a onclick="document.location.href='{{ route('todos.superadmin-all') }}'" class="pointer">/&nbsp;@lang('Show todos')  - @lang("Filtered day"): <b>{{ date( "d/m/Y", strtotime($search["search_start_date"]) ) }}</b> </a>
             </h6>
         </div>
         <div class="col s12 m6 mt-4 right-align">
@@ -40,10 +40,33 @@
                       </div>
                     @endif
 
-                    <table class="striped highlight bordered" id="todos_table">
-                      <blockquote>
-                        @lang("Click the day for add a todo in your table")
-                      </blockquote>
+                    <div class="row valign-wrapper">
+                      <div class="col l8 s12">
+                        <blockquote>
+                           * @lang("DoubleClick the cell in corrispondece of user and quotation for add a todo in table") <br/>
+                           * @lang("Click one time the todo to open the edit window")
+                        </blockquote>
+                      </div>
+                      <div class="col l4 s12 mb-2 right-align">
+                        @php
+                          $plusOneWeek   = strtotime( '+1 week', strtotime($search["search_start_date"]) );
+                          $minusOneWeek  = strtotime( '-1 week', strtotime($search["search_start_date"]) );
+
+                          if( date('D', $plusOneWeek) === 'Mon' && date('D', $minusOneWeek) === 'Mon' ) {
+                            $nextMonday    = date( "d-m-Y",$plusOneWeek);
+                            $prevMonday    = date( "d-m-Y",$minusOneWeek);
+                          }else{
+                            $nextMonday    = date( "d-m-Y",strtotime( 'last monday', $plusOneWeek ));
+                            $prevMonday    = date( "d-m-Y",strtotime( 'last monday', $minusOneWeek ));
+                          }
+
+                        @endphp
+                        <a href="{{route("todos.superadmin-all",["search_start_date"=>$prevMonday])}}" class="btn btn-floating waves-effect waves-light"><i class="material-icons">arrow_back</i></a>
+                        <a href="{{route("todos.superadmin-all",["search_start_date"=>$nextMonday])}}" class="btn btn-floating waves-effect waves-light"><i class="material-icons">arrow_forward</i></a>
+                      </div>
+                    </div>
+
+                    <table class="striped highlight bordered responsive-table" id="todos_table">
                       <thead class="blue white-text">
                         <tr>
                           <th> @lang("Users") &darr; </th>
@@ -51,7 +74,7 @@
 
                           <!-- List 7 days from last monday -->
                           @foreach( $daysArray as $key => $day )
-                            <th class="pointer add-todo-element" data-date="{{ date( "d-m-Y", strtotime($day["date"]) ) }}"> {{ $day["label"] }} </th>
+                            <th data-date="{{ date( "d-m-Y", strtotime($day["date"]) ) }}"> {{ $day["label"] }} </th>
                           @endforeach
                         </tr>
                       </thead>
@@ -68,7 +91,7 @@
                                     <td> {{$userProjectTodos["quotation"]->name}} </td>
 
                                     @foreach( $daysArray as $key => $day )
-                                      <td>
+                                      <td class="pointer add-todo-element" data-date="{{ date( "d-m-Y", strtotime($day["date"]) ) }}" data-quotation="{{$userProjectTodos["quotation"]->id}}" data-quotation-name="{{$userProjectTodos["quotation"]->name}}" data-user="{{$userTodoArray["user"]->id}}" data-user-name="{{$userTodoArray["user"]->name}}">
                                         <ul>
 
                                           <!-- Foreach todo in project for this user -->
@@ -79,12 +102,12 @@
                                               @if($wk == $day["date"])
                                                 <li>
 
-                                                  <div class="pointer tippy-tooltip @if($todo->completed) green-text @else red-text @endif" data-template="user_{{$wk}}_{{$userTodoArray["user"]->id}}_{{$todo->id}}">
-                                                    <a href="#" class="modal-trigger @if($todo->completed) green-text @else red-text @endif" data-target="user_{{$wk}}_{{$userTodoArray["user"]->id}}_{{$todo->id}}_edit_modal">
+                                                  <div class="tippy-tooltip @if($todo->completed) green-text @else red-text @endif" data-template="user_{{$wk}}_{{$userTodoArray["user"]->id}}_{{$todo->id}}">
+                                                    <a href="#!" class="edit-todo-element @if($todo->completed) green-text @else red-text @endif" data-target="user_{{$wk}}_{{$userTodoArray["user"]->id}}_{{$todo->id}}_edit_modal">
                                                       @php
                                                         $activityName = (!is_null($todo->activities->first())) ? $todo->activities->first()->name : __("No activity")
                                                       @endphp
-                                                      - {{$todo->title}} ( {{$activityName}} )
+                                                      {{$activityName}}
                                                     </a>
                                                   </div>
 
@@ -94,16 +117,13 @@
                                                       @lang("ATTIVITA'"): {{$activityName}}
                                                     </div>
                                                     <div>
-                                                      @lang("TITLE"): {{$todo->title}}
-                                                    </div>
-                                                    <div>
-                                                      @lang("DESCRIPTION"): {{$todo->description}}
-                                                    </div>
-                                                    <div>
                                                       @lang("Date"): {{ date( "d/m/Y" , strtotime( $todo->start_date ) ) }}
                                                     </div>
                                                     <div>
                                                       @lang("Completed"): @if($todo->completed) @lang("Yes") @else @lang("No") @endif
+                                                    </div>
+                                                    <div>
+                                                      @lang("DESCRIPTION"): {{$todo->description}}
                                                     </div>
                                                   </div>
 
@@ -139,7 +159,7 @@
                                     <td> {{$quotationTodoArray["quotation"]->name}} </td>
 
                                     @foreach( $daysArray as $key => $day )
-                                      <td>
+                                      <td class="pointer add-todo-element" data-date="{{ date( "d-m-Y", strtotime($day["date"]) ) }}" data-quotation="{{$quotationTodoArray["quotation"]->id}}" data-user="{{$projectUserTodos["user"]->id}}">
                                         <ul>
 
                                           <!-- Foreach todo in project for this user -->
@@ -155,7 +175,7 @@
                                                       @php
                                                         $activityName = (!is_null($todo->activities->first())) ? $todo->activities->first()->name : __("No activity")
                                                       @endphp
-                                                      - {{$todo->title}} ( {{$activityName}} )
+                                                      - {{$activityName}}
                                                     </a>
                                                   </div>
 
@@ -165,16 +185,13 @@
                                                       @lang("ATTIVITA'"): {{$activityName}}
                                                     </div>
                                                     <div>
-                                                      @lang("TITLE"): {{$todo->title}}
-                                                    </div>
-                                                    <div>
-                                                      @lang("DESCRIPTION"): {{$todo->description}}
-                                                    </div>
-                                                    <div>
                                                       @lang("Date"): {{ date( "d/m/Y" , strtotime( $todo->start_date ) ) }}
                                                     </div>
                                                     <div>
                                                       @lang("Completed"): @if($todo->completed) @lang("Yes") @else @lang("No") @endif
+                                                    </div>
+                                                    <div>
+                                                      @lang("DESCRIPTION"): {{$todo->description}}
                                                     </div>
                                                   </div>
 

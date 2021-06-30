@@ -18,13 +18,33 @@ function initDateTimePicker(){
 
 }
 
-function setAddTodoElementModal(){
-  var date = $(this).data("date");
+function setAddTodoElementModal( e ){
+
+  var date      = $(this).data("date");
+  var quotation = $(this).data("quotation");
+  var user      = $(this).data("user");
+  var quotationName = $(this).data("quotation-name");
+  var userName      = $(this).data("user-name");
+
+  if (quotation !== undefined) {
+    $("#todo_quotation").val(quotation)
+    $(".quotation-name").html(quotationName)
+  }
+
+  if (user !== undefined) {
+    $("#todo_user").val(user)
+    $(".user-name").html(userName)
+  }
 
   $('#start_date').val(date);
   $('#end_date').val(date);
 
   $('#todo_add').modal('open');
+}
+
+function setEditTodoElementModal( e ){
+  var target = $(this).data("target");
+  $('#'+target).modal('open');
 }
 
 function addTodoFormSubmitValidation(){
@@ -118,7 +138,7 @@ function editTodoFormSubmitValidation(){
     todo_completed: completed,
     todo_activity: activity,
   }
-
+  console.log(noError);
   if ( noError ){
     $.ajax({
         url:"/todos/edit/"+todoId,
@@ -149,7 +169,8 @@ $(document).ready(function () {
 
   initDateTimePicker();
 
-  $(document).on("click", ".add-todo-element", setAddTodoElementModal );
+  $(document).on("dblclick", ".add-todo-element", setAddTodoElementModal );
+  $(document).on("click", ".edit-todo-element", setEditTodoElementModal );
   $(document).on("click", "#todo_add_btn", addTodoFormSubmitValidation );
   $(document).on("click", ".todo_edit_form_submit", editTodoFormSubmitValidation );
 

@@ -4,10 +4,18 @@
 
     <div class="modal-content">
         <h5 class="modal-title"> @lang('Add todo')</h5>
+        <blockquote class="modal-subtitle">
+          @lang('add new Todo for user')
+          <span class="user-name black-text"></span>
+          @lang('and quotation')
+          <span class="quotation-name black-text"></span>
+        </blockquote>
 
         @csrf
 
-        <input type="hidden" name="end_date" id="end_date">
+        <input type="hidden" name="end_date"       id="end_date">
+        <input type="hidden" name="todo_user"      id="todo_user">
+        <input type="hidden" name="todo_quotation" id="todo_quotation">
 
         <div class="row">
           <div class="col l12 s12">
@@ -16,34 +24,6 @@
               <!-- todo_start_date_datetimepicker -->
               <input type="text" name="start_date" id="start_date" readonly>
             </div>
-          </div>
-
-          <div class="col l12 s12">
-            <div class="input-field my-3">
-              <select name="todo_quotation" id="todo_quotation">
-                  <option value="" hidden selected> @lang('Select a quotation') </option>
-                  @foreach($quotationAll as $quotationSingle)
-                      <option class="select2" value="{{$quotationSingle->id}}">{{$quotationSingle->name}}</option>
-                  @endforeach
-              </select>
-              <label for="quotations"> @lang('Quotations') </label>
-            </div>
-          </div>
-          <div class="col l12 s12">
-            @if( $user->hasRole("SuperAdmin") )
-              <div class="input-field my-3">
-                <select name="todo_user" id="todo_user">
-                    <option value="" hidden selected> @lang('Select a user') </option>
-                    @foreach($userAll as $userSingle)
-                        @if( $userSingle->hasRole("SuperAdmin") ) @continue @endif
-                        <option value="{{$userSingle->id}}">{{$userSingle->name}} ( {{$userSingle->roles->first()->name}} )</option>
-                    @endforeach
-                </select>
-                <label for="researcher"> @lang('Researcher') </label>
-              </div>
-            @else
-              <input type="hidden" name="todo_user" id="todo_user" value="{{$user->id}}">
-            @endif
           </div>
           <div class="col l12 s12">
             <div class="input-field my-3">
@@ -56,12 +36,12 @@
               <label for="activity"> @lang('Activity') </label>
             </div>
           </div>
-          <div class="col l12 s12">
+          <!-- <div class="col l12 s12">
             <div class="input-field my-3">
                 <label for="title"> @lang('TODO title') </label>
                 <input type="text" id="todo_title" name="todo_title">
             </div>
-          </div>
+          </div> -->
           <div class="col l12 s12">
             <div class="input-field my-3">
                 <label for="description"> @lang('TODO description') </label>

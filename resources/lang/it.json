@@ -245,5 +245,11 @@
     "Sign as completed"    : "Segna come completato",
     "Todo edited successfully"    : "Todo aggiornato con successo",
     "TODO list to complete"    : "Lista TODO da completare",
-    "New TODO created"    : "Creazione nuovo TODO"
+    "New TODO created"    : "Creazione nuovo TODO",
+    "Show todos"    : "Lista todo",
+    "add new Todo for user"    : "aggiungi nuovo Todo per utente",
+    "edit Todo for user"    : "modifica Todo per utente",
+    "and quotation"    : "e preventivo",
+    "DoubleClick the cell in corrispondece of user and quotation for add a todo in table"    : "Effettua un doppio click in corrisponednza di un utente e una quotation per aggiungere un Todo nella tabella",
+    "Click one time the todo to open the edit window": "Effettua un singolo click sul Todo per aprire la tendina di modifica"
 }
