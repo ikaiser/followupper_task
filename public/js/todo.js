@@ -71,11 +71,11 @@ function addTodoFormSubmitValidation(){
     error += 'You must select a user<br />'
   }
 
-  var title = $("#todo_title").val()
-  if ( title === "" ){
-    noError = false
-    error   += "You must chose a TODO title <br />"
-  }
+  // var title = $("#todo_title").val()
+  // if ( title === "" ){
+  //   noError = false
+  //   error   += "You must chose a TODO title <br />"
+  // }
 
   if ( noError ){
     form.submit()
@@ -109,11 +109,11 @@ function editTodoFormSubmitValidation(){
     error += 'You must select an activity<br />'
   }
 
-  var title = form.find(".todo_title_edit").val()
-  if ( title === "" ){
-    noError = false
-    error   += "You must chose a TODO title <br />"
-  }
+  // var title = form.find(".todo_title_edit").val()
+  // if ( title === "" ){
+  //   noError = false
+  //   error   += "You must chose a TODO title <br />"
+  // }
 
   var description = form.find(".todo_description_edit").val()
   var startDate   = form.find(".start_date_edit").val()
