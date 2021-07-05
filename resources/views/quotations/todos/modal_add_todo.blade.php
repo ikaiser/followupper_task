@@ -28,7 +28,7 @@
           <div class="col l12 s12">
             <div class="input-field my-3">
               <select name="todo_activity" id="todo_activity">
-                  <option value="" disabled hidden selected> @lang('Select an activity') </option>
+                  <option value="" hidden selected> @lang('Select an activity') </option>
                   @foreach($activities as $activity)
                       <option value="{{$activity->id}}">{{$activity->name}}</option>
                   @endforeach

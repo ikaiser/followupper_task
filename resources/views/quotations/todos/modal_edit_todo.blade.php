@@ -32,7 +32,7 @@
                 $selActivity = (!is_null($todo->activities->first())) ? $todo->activities->first() : ""
               @endphp
               <select name="todo_activity" class="todo_activity_edit">
-                  <option value="" disabled hidden selected> @lang('Select an activity') </option>
+                  <option value="" hidden selected> @lang('Select an activity') </option>
                   @foreach($activities as $activity)
                       <option value="{{$activity->id}}" @if( $selActivity->id == $activity->id) selected @endif>{{$activity->name}}</option>
                   @endforeach
