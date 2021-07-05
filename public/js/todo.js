@@ -129,7 +129,7 @@ function editTodoFormSubmitValidation(){
 
   params = {
     _token : $('input[name="_token"]').val(),
-    todo_title: title,
+    // todo_title: title,
     todo_description: description,
     start_date: startDate,
     end_date: endDate,
