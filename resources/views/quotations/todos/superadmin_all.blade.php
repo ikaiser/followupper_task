@@ -60,13 +60,18 @@
                             $prevMonday    = date( "d-m-Y",strtotime( 'last monday', $minusOneWeek ));
                           }
 
+                          $prevSearchLink = $search;
+                          $nextSearchLink = $search;
+                          $prevSearchLink["search_start_date"] = $prevMonday;
+                          $nextSearchLink["search_start_date"] = $nextMonday;
+
                         @endphp
-                        <a href="{{route("todos.superadmin-all",["search_start_date"=>$prevMonday])}}" class="btn btn-floating waves-effect waves-light"><i class="material-icons">arrow_back</i></a>
-                        <a href="{{route("todos.superadmin-all",["search_start_date"=>$nextMonday])}}" class="btn btn-floating waves-effect waves-light"><i class="material-icons">arrow_forward</i></a>
+                        <a href="{{route("todos.superadmin-all",$prevSearchLink)}}" class="btn btn-floating waves-effect waves-light"><i class="material-icons">arrow_back</i></a>
+                        <a href="{{route("todos.superadmin-all",$nextSearchLink)}}" class="btn btn-floating waves-effect waves-light"><i class="material-icons">arrow_forward</i></a>
                       </div>
                     </div>
 
-                    <table class="striped highlight bordered responsive-table" id="todos_table">
+                    <table class="striped highlight bordered responsive-table scrollable-table" id="todos_table">
                       <thead class="blue white-text">
                         <tr>
                           <th> @lang("Users") &darr; </th>

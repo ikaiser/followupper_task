@@ -72,7 +72,7 @@ class TodoController extends Controller
         $quotationFiltered = $quotationFiltered->whereIn("id",$search["quotation_search"]);
       }
 
-      $userAll = User::all();
+      $userAll = User::orderBy("name")->get();
 
       /* Filter also tables */
       if ( $search["user_search"] !== "" ){
@@ -87,7 +87,7 @@ class TodoController extends Controller
                                         $query->orWhereHas('collaborators', function($collaborators) use ($user) {
                                             $collaborators->whereIn('id', [$user->id]);
                                         });
-                                      })->get();
+                                      })->orderBy("name","ASC")->get();
 
         $quotationFiltered = $quotationFiltered->where(function($query) use ($user){
                                         $query->where('user_id', '=', $user->id);
@@ -96,7 +96,7 @@ class TodoController extends Controller
                                         });
                                       })->get();
       }else{
-        $quotationAll      = $quotationAll->get();
+        $quotationAll      = $quotationAll->orderBy("name","ASC")->get();
         $quotationFiltered = $quotationFiltered->get();
       }
 
@@ -142,7 +142,7 @@ class TodoController extends Controller
         }
       }
 
-      $activities = Activity::all();
+      $activities = Activity::orderBy('name')->get();
 
       return view( 'quotations.todos.superadmin_all', compact( 'usersTodoArray', 'quotationsTodoArray', 'daysArray', 'user', 'quotationAll', 'userAll', 'search', 'activities' ) );
     }

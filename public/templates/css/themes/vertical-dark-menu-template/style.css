@@ -4343,7 +4343,7 @@ li.home:before
 }
 
 /*----------------------------------------
-  Grid 
+  Grid
 ------------------------------------------*/
 .section
 {
@@ -10503,8 +10503,14 @@ table.bordered th,
 table.bordered td
 {
     padding: 15px !important;
-
     border: 1px solid rgba(0, 0, 0, .12) !important;
+}
+
+table.bordered table.datepicker-table th,
+table.bordered table.datepicker-table td
+{
+    padding: 0 !important;
+    border: 0 !important;
 }
 
 /*----------------------------------------

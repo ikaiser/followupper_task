@@ -217,7 +217,7 @@ class Todo extends Model
         $user = User::find($researcherId);
         $usersIds = $users->pluck("id")->toArray();
 
-        if ( in_array( $user->id, $usersIds ) || $user->hasRole("SuperAdmin") ){
+        if ( in_array( $user->id, $usersIds ) ){
           $quotationTodoList[$researcherId]["user"]  = $user;
           $quotationTodoList[$researcherId]["todos"] = [];
 

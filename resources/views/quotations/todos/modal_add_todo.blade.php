@@ -22,7 +22,7 @@
             <div class="select-field my-3">
               <label for="start_date" class="dateslabel"> @lang('Date') </label>
               <!-- todo_start_date_datetimepicker -->
-              <input type="text" name="start_date" id="start_date" readonly>
+              <input class="start_date_datetimepicker_search" type="text" name="start_date" id="start_date">
             </div>
           </div>
           <div class="col l12 s12">

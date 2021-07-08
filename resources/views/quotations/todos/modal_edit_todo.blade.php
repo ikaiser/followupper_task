@@ -23,7 +23,7 @@
           <div class="col l12 s12">
             <div class="select-field my-3">
               <label for="start_date" class="dateslabel"> @lang('Date') </label>
-              <input type="text" name="start_date" class="start_date_edit" value="{{date("d-m-Y",strtotime($todo->start_date))}}" readonly>
+              <input type="text" name="start_date" class="start_date_edit start_date_datetimepicker_search" value="{{date("d-m-Y",strtotime($todo->start_date))}}">
             </div>
           </div>
           <div class="col l12 s12">

@@ -62,7 +62,7 @@
                     <select name="quotation_search[]" id="quotation_search" multiple>
                       <option value="" disabled>@lang("Filter by quotation")</option>
                       @foreach( $quotationAll as $quotation )
-                        <option value="{{$quotation->id}}" @if( !empty($search['quotation_search']) && in_array($quotation->id, $search['quotation_search'] ) ) selected @endif>{{$quotation->name}}</option>
+                        <option value="{{$quotation->id}}" @if( !empty($search['quotation_search']) && in_array($quotation->id, $search['quotation_search'] ) ) selected @endif>{{$quotation->name}} ({{get_code($quotation)}})</option>
                       @endforeach
                     </select>
                     <label> @lang('Quotation') </label>

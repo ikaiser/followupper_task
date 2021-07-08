@@ -207,23 +207,6 @@ WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BET
     width: 80% !important;
 }
 
-@media only screen and (min-width: 601px) {
-    .input-button {
-        width: 80% !important;
-    }
-}
-
-@media only screen and (max-width: 600px) {
-    .input-button {
-        width: 60% !important;
-    }
-
-    .card-content {
-        padding-left: 5px !important;
-        padding-right: 5px !important;
-    }
-}
-
 .modal.modal-search{ width: 75% !important ; height: 75% !important ; }
 
 /* Customize select in modal add */
@@ -249,4 +232,39 @@ WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BET
   position: absolute;
   bottom: 0;
   left: 0;
+}
+
+/* Media queries */
+
+@media only screen and (min-width: 601px) {
+    .input-button {
+        width: 80% !important;
+    }
+}
+
+@media only screen and (min-width: 990px) {
+  .scrollable-table tbody {
+    display: block;
+    max-height: 400px;
+    overflow-y: scroll;
+  }
+
+  .scrollable-table thead,
+  .scrollable-table tbody tr
+  {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+    .input-button {
+        width: 60% !important;
+    }
+
+    .card-content {
+        padding-left: 5px !important;
+        padding-right: 5px !important;
+    }
 }

@@ -7322,7 +7322,7 @@ body.keyboard-focused .dropdown-content li:focus
     display: none;
     overflow-y: auto;
 
-    width: 55%;
+    width: 62%;
     max-height: 70%;
     margin: auto;
     padding: 0;
